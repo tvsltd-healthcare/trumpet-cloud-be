@@ -1,12 +1,10 @@
-from application_layer.entities import get_resource_types
-from typing import Optional, List, Any, Dict
-from wrap_restify import Server, Frameworks
-
-from lib_archi.base_repository import BaseRepository
-from lib_archi.base_application_service import BaseApplicationService
-# from lib_archi.base_controller import BaseController
-from application_layer.abstractions.icontroller import IController
+from typing import Any, Dict
+from wrap_restify import Frameworks, Server
 from adapters.lib_archi.controller import Controller
+from application_layer.abstractions.icontroller import IController
+from application_layer.entities import get_resource_types
+from lib_archi.base_application_service import BaseApplicationService
+from lib_archi.base_repository import BaseRepository
 
 # Entity
 
@@ -42,11 +40,23 @@ _routes: Dict[str, Dict[str, str]] = {
 
 
 def hello():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
     return "Hello"
 
 
 def build_application_layer(server: Server) -> Any:
+    """_summary_
 
+    Args:
+        server (Server): _description_
+
+    Returns:
+        Any: _description_
+    """
     # One router for all resources and their APIs
     router = server.router()
 
@@ -56,10 +66,10 @@ def build_application_layer(server: Server) -> Any:
     for resource, routes in _routes.items():
         klass = entity_resources[resource]
 
-        userRepo: BaseRepository[klass] = BaseRepository[klass]()
-        userAppService: BaseApplicationService[klass] = BaseApplicationService[klass](
-            userRepo)
-        controller: IController = Controller[klass](userAppService)
+        user_repo: BaseRepository[klass] = BaseRepository[klass]()
+        user_app_service: BaseApplicationService[klass] = BaseApplicationService[klass](
+            user_repo)
+        controller: IController = Controller[klass](user_app_service)
 
         for verb, _endpoint in routes.items():
             if (verb == "post"):
@@ -75,6 +85,8 @@ def build_application_layer(server: Server) -> Any:
 
 
 def launch_application_layer():
+    """_summary_
+    """
     server = Server(Frameworks.FASTAPI())
 
     router = build_application_layer(server)
