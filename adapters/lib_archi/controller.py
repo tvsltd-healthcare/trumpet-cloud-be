@@ -11,7 +11,7 @@ class Controller(IController, Generic[Entity]):
         self.controller = BaseController(apps_service)
 
     def post(self, entity: Entity):
-        return self.controller.post(entity.id, entity)
+        return self.controller.post(entity)
 
     def get(self, id: str) -> Optional[Entity]:
         return self.controller.get(id)
