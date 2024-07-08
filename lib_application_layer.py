@@ -4,7 +4,9 @@ from wrap_restify import Server, Frameworks
 
 from lib_archi.base_repository import BaseRepository
 from lib_archi.base_application_service import BaseApplicationService
-from lib_archi.base_controller import BaseController
+# from lib_archi.base_controller import BaseController
+from application_layer.abstractions.icontroller import IController
+from adapters.lib_archi.controller import Controller
 
 # Entity
 
@@ -32,10 +34,10 @@ _routes: Dict[str, Dict[str, str]] = {
         "post": "/api/products",
         "get": "/api/products/{id}",
     },
-    "users": {
-        "post": "/api/users",
-        "get": "/api/users/{id}",
-    }
+    # "users": {
+    #     "post": "/api/users",
+    #     "get": "/api/users/{id}",
+    # }
 }
 
 
@@ -53,18 +55,18 @@ def build_application_layer(server: Server) -> Any:
 
     for resource, routes in _routes.items():
         klass = entity_resources[resource]
-        # type: ignore
+
         userRepo: BaseRepository[klass] = BaseRepository[klass]()
-        userAppService: BaseApplicationService[klass] = BaseApplicationService[klass](  # type: ignore
+        userAppService: BaseApplicationService[klass] = BaseApplicationService[klass](
             userRepo)
-        controller = BaseController[klass](userAppService)
+        controller: IController = Controller[klass](userAppService)
 
         for verb, _endpoint in routes.items():
             if (verb == "post"):
                 # TODO: fix in instance level. seems working in class/static level
                 # setattr(controller.post.__annotations__, 'entity', klass)
-                controller.post.__annotations__.update({'entity': klass})
-                # controller.post.__annotations__["entity"] = klass
+                # controller.post.__annotations__.update({'entity': klass})
+                controller.post.__annotations__["entity"] = klass
                 router.post(url=_endpoint, endpoint=controller.post)
             elif (verb == "get"):
                 router.get(url=_endpoint, endpoint=controller.get)
