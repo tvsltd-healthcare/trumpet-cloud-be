@@ -4,7 +4,7 @@ import pytest
 from typing import Dict
 
 
-def generate_researcher_signup_varification_email(signup_token: str, from_email: str, to_email: str) -> Dict[str, str]:
+def generate_researcher_signup_verification_email(signup_token: str, from_email: str, to_email: str) -> Dict[str, str]:
     """
     function id - 111
     Generates an email for researcher signup verification.
@@ -43,23 +43,23 @@ def email_params():
 
 @pytest.fixture
 def generated_email(email_params):
-    return generate_researcher_signup_varification_email(
+    return generate_researcher_signup_verification_email(
         email_params["signup_token"], 
         email_params["from_email"], 
         email_params["to_email"]
     )
 
-class TestGenerateResearcherVarificationEmail:
-    def test_generate_researcher_varification_email_from(self, generated_email, email_params):
+class TestGenerateResearcherVerificationEmail:
+    def test_generate_researcher_verification_email_from(self, generated_email, email_params):
         assert generated_email["from"] == email_params["from_email"], "The 'from' email does not match the expected value."
 
-    def test_generate_researcher_signup_varification_email_to(self, generated_email, email_params):
+    def test_generate_researcher_signup_verification_email_to(self, generated_email, email_params):
         assert generated_email["to"] == email_params["to_email"], "The 'to' email does not match the expected value."
 
-    def test_generate_researcher_signup_varification_email_subject(self, generated_email, email_params):
+    def test_generate_researcher_signup_verification_email_subject(self, generated_email, email_params):
         assert generated_email["subject"] == "Invitation for collaboration as a Researcher", "The 'subject' of the email does not match the expected value."
 
-    def test_generate_researcher_signup_varification_email_body_contains_link(self, generated_email, email_params):
+    def test_generate_researcher_signup_verification_email_body_contains_link(self, generated_email, email_params):
         url_pattern = fr'(https?://[^\s]+{email_params["signup_token"]})'
         assert re.search(url_pattern, generated_email["body"]), "The email body does not contain a valid URL with token."
         
