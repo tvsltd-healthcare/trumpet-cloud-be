@@ -3,26 +3,33 @@ import pytest
 from typing import Dict, List
 
 error_message_mappings = {
-        "organization_name": {
-            0: 'valid',
-            1: 'Enter organization name',
-            2: 'Organization name must be less than 255 characters'
-        },
-        "organization_address": {
-            0: 'valid',
-            1: 'Enter organization address',
-            2: 'Organization address must be less than 255 characters'
-        },
-        "organization_phone_no": {
-            0: 'valid',
-            1: 'Enter organization phone no',
-            2: 'Please enter a valid organization phone no'
-        },
+    "organization_name": {
+        0: 'valid',
+        1: 'Enter organization name',
+        2: 'Organization name must be less than 255 characters'
+    },
+    "organization_address": {
+        0: 'valid',
+        1: 'Enter organization address',
+        2: 'Organization address must be less than 255 characters'
+    },
+    "organization_phone_no": {
+        0: 'valid',
+        1: 'Enter organization phone no',
+        2: 'Please enter a valid organization phone no'
+    },
+    "file": {
+        0: 'valid',
+        1: 'Upload not more than 5 files',
+        2: 'Each file should be less than 5 mb',
+        3: 'Upload only .doc, .pdf, .jpg, .png files',
     }
+}
 
 
 def show_organization_error_message(data: Dict[str, int]) -> List[str]:
     """
+    function id: 105
     Generates a list of error messages based on the input data.
 
     Args:
@@ -70,6 +77,22 @@ class TestShowErrorMessages(object):
         
         assert "Enter organization phone no" not in show_organization_error_message({'organization_phone_no': 0})
         assert "Please enter a valid organization phone no" not in show_organization_error_message({'organization_phone_no': 0})
+    
+    def test_file_too_many_uploads(self):
+        assert "Upload not more than 5 files" in show_organization_error_message({'file': 1})
+        assert "Upload not more than 5 files" not in show_organization_error_message({'file': 0})
+
+    def test_file_size_limit_exceeded(self):
+        assert "Each file should be less than 5 mb" in show_organization_error_message({'file': 2})
+        assert "Each file should be less than 5 mb" not in show_organization_error_message({'file': 0})
+
+    def test_file_invalid_format(self):
+        assert "Upload only .doc, .pdf, .jpg, .png files" in show_organization_error_message({'file': 3})
+        assert "Upload only .doc, .pdf, .jpg, .png files" not in show_organization_error_message({'file': 0})
+
+    def test_unknown_file_error_code(self):
+        assert "Unknown error" in show_organization_error_message({'file': 99})
+        assert "Unknown error" not in show_organization_error_message({'file': 0})
 
     def test_unknown_error_code(self):
         # Test for unknown error code for a known field
