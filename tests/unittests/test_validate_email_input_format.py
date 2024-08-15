@@ -1,7 +1,6 @@
 import os
 import re
 
-import pytest
 import tempfile
 
 
@@ -11,6 +10,23 @@ file_path = os.path.dirname(os.path.abspath(os.path.abspath(__file__)))
 def read_file(filename: str) -> list:
     with open(filename, 'r') as f:
         return [line.strip() for line in f]
+
+
+def test_read_file():
+    # create a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, mode='w') as temp_file:
+        temp_filename = temp_file.name
+        # Write some lines to the temporary file
+        temp_file.write("line1\nline2\nline3\n")
+
+    try:
+        # call the read_file function
+        result = read_file(temp_filename)
+        # Verify the result
+        assert result == ["line1", "line2", "line3"]
+    finally:
+        # clean up the temporary file
+        os.remove(temp_filename)
 
 
 def is_valid_email(email: str) -> bool:
@@ -49,23 +65,6 @@ def is_valid_email(email: str) -> bool:
         return False
 
     return True
-
-
-def test_read_file():
-    # create a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, mode='w') as temp_file:
-        temp_filename = temp_file.name
-        # Write some lines to the temporary file
-        temp_file.write("line1\nline2\nline3\n")
-
-    try:
-        # call the read_file function
-        result = read_file(temp_filename)
-        # Verify the result
-        assert result == ["line1", "line2", "line3"]
-    finally:
-        # clean up the temporary file
-        os.remove(temp_filename)
 
 
 class TestValidateEmailFormat(object):
