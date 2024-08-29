@@ -18,3 +18,5 @@ class UsersDomainServices:
     """
 
     def get(self, id):
+        # TODO: implement users domain service
+        return 0
