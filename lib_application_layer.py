@@ -1,7 +1,7 @@
 from typing import Any, Dict
 from wrap_restify import Frameworks, Server
 from adapters.lib_archi.controller import Controller
-from application_layer.abstractions.icontroller import IController
+from application_layer.abstractions.applicaiton_interface.icontroller import IController
 from application_layer.entities import get_resource_types
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_repository import BaseRepository
@@ -66,10 +66,10 @@ def build_application_layer(server: Server) -> Any:
     for resource, routes in _routes.items():
         klass = entity_resources[resource]
 
-        user_repo: BaseRepository[klass] = BaseRepository[klass]()
-        user_app_service: BaseApplicationService[klass] = BaseApplicationService[klass](
-            user_repo)
-        controller: IController = Controller[klass](user_app_service)
+        repo: BaseRepository[klass] = BaseRepository[klass]()
+        app_service: BaseApplicationService[klass] = BaseApplicationService[klass](
+            repo)
+        controller: IController = Controller[klass](app_service)
 
         for verb, _endpoint in routes.items():
             if (verb == "post"):

@@ -1,5 +1,5 @@
 from typing import TypeVar, Generic, Optional
-from application_layer.abstractions.icontroller import IController
+from application_layer.abstractions.applicaiton_interface.icontroller import IController
 from lib_archi.base_controller import BaseController
 from lib_archi.base_application_service import BaseApplicationService
 
