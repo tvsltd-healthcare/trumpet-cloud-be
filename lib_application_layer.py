@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from wrap_restify import Frameworks, Server
+from wrap_restify import Libraries, Server
 from adapters.lib_archi.controller import Controller
 from application_layer.abstractions.applicaiton_interface.icontroller import IController
 from application_layer.entities import get_resource_types
@@ -32,10 +32,10 @@ _routes: Dict[str, Dict[str, str]] = {
         "post": "/api/products",
         "get": "/api/products/{id}",
     },
-    # "users": {
-    #     "post": "/api/users",
-    #     "get": "/api/users/{id}",
-    # }
+    "users": {
+        "post": "/api/users",
+        "get": "/api/users/{id}",
+    }
 }
 
 
@@ -87,7 +87,7 @@ def build_application_layer(server: Server) -> Any:
 def launch_application_layer():
     """_summary_
     """
-    server = Server(Frameworks.FASTAPI())
+    server = Server(Libraries.FASTAPI())
 
     router = build_application_layer(server)
     server.use(router)
