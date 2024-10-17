@@ -1,4 +1,5 @@
-from typing import TypeVar, Generic, Optional
+from typing import TypeVar, Generic, Optional, List
+
 from application_layer.abstractions.applicaiton_interface.icontroller import IController
 from lib_archi.base_controller import BaseController
 from lib_archi.base_application_service import BaseApplicationService
@@ -43,3 +44,14 @@ class Controller(IController, Generic[Entity]):
             Optional[Entity]: _description_
         """
         return self.controller.get(id)
+
+    def get_collection(self) -> Optional[List[Entity]]:
+        """_summary_
+
+        Args:
+            id (str): _description_
+
+        Returns:
+            Optional[Entity]: _description_
+        """
+        return self.controller.get_collection()

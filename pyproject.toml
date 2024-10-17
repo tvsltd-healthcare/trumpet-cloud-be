@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 wrap-restify = {git = "https://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@github.com/tvsltd/wrap-restify.git", rev = "develop"}
+wrap-validate = {git = "https://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@github.com/tvsltd/wrap_validate.git", rev = "develop"}
 
 
 [build-system]

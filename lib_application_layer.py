@@ -35,6 +35,7 @@ _routes: Dict[str, Dict[str, str]] = {
     "users": {
         "post": "/api/users",
         "get": "/api/users/{id}",
+        # "get": "/api/users",
     }
 }
 
@@ -89,7 +90,8 @@ def launch_application_layer():
     """
     server = Server(Libraries.FASTAPI())
 
-    router = build_application_layer(server)
-    server.use(router)
+    _router_obj_list = build_application_layer(server)
+    for router_onj in _router_obj_list.router.routes:
+        server.use(router_onj)
 
     server.listen(port=8080)

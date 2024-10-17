@@ -10,14 +10,15 @@ from lib_archi.base_repository import BaseRepository
 ROUTES = {
     "products": {
         "post": "/api/products",
-        "get": "/api/products/{id}",
+        "get": "/api/product/{id}",
+        "gets": "/api/products",
     },
     "users": {
         "post": "/api/users",
         "get": "/api/users/{id}",
+        "gets": "/api/users",
     }
 }
-
 
 
 def build_app_layer(server: Server) -> Any:
@@ -40,6 +41,8 @@ def build_app_layer(server: Server) -> Any:
                 router_obj.post(url=_endpoint, endpoint=controller.post)
             elif verb == "get":
                 router_obj.get(url=_endpoint, endpoint=controller.get)
+            elif verb == "gets":  # here is the conditionals
+                router_obj.get(url=_endpoint, endpoint=controller.get_collection)
 
         server.use(router_obj)
 

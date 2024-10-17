@@ -1138,7 +1138,25 @@ url = "https://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@github.com/tvsltd/wrap-r
 reference = "develop"
 resolved_reference = "4c42a44e2e7b636a40ed634ca0d6593b5ac26471"
 
+[[package]]
+name = "wrap-validate"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = "^3.11"
+files = []
+develop = false
+
+[package.dependencies]
+pydantic = "^2.8.2"
+
+[package.source]
+type = "git"
+url = "https://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@github.com/tvsltd/wrap_validate.git"
+reference = "develop"
+resolved_reference = "2cc35fa15afbe6bc3ef197bcdfd10ef3fa547d31"
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "455e4a688e6e23610073d737f9ba29420a80d3b93bcc2ba27adeb8cec0ea5ab9"
+content-hash = "1a829e019cbb399973fa0a586832620f26fc70ec2cdd91975dce10f7f2f8a21d"

@@ -40,3 +40,15 @@ class BaseController(Generic[Entity]):
             Optional[Entity]: _description_
         """
         return self.app_service.get(_id)
+
+
+    def get_collection(self) -> Optional[Entity]:
+        """_summary_
+
+        Args:
+            id (str): _description_
+
+        Returns:
+            Optional[Entity]: _description_
+        """
+        return self.app_service.get_collection()
