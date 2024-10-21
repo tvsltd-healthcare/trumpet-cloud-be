@@ -54,18 +54,6 @@ class BaseRepository(ABC, Generic[Entity]):
         pass
 
     @abstractmethod
-    def update(self, entity: Entity) -> Optional[Entity]:
-        """Update an existing entity.
-
-        Args:
-            entity (Entity): The entity with updated information.
-
-        Returns:
-            Optional[Entity]: The updated entity, or None if the update fails.
-        """
-        pass
-
-    @abstractmethod
     def delete(self, id: str) -> Optional[Entity]:
         """Delete an entity by its unique identifier.
 

@@ -1,11 +1,8 @@
-import functools
 import os
 import json
 
 from typing import Dict
-from functools import partial
 
-from starlette.responses import JSONResponse
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 
@@ -13,7 +10,6 @@ from application_layer.entities import get_resource_types
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_controller import BaseController
 from adapters.lib_archi_adoption.inmemory_repository import InMemoryRepository
-from adapters.entity_generation.entity_adapter import EntityAdapter
 
 from dotenv import load_dotenv
 
@@ -38,12 +34,6 @@ def get_verbs_mapping(controller, router_obj) -> Dict:
         "patch": (controller.patch, router_obj.patch),
         "delete": (controller.delete, router_obj.delete)
     }
-
-
-
-
-
-
 
 entity_resources = get_resource_types()
 
