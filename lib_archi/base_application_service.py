@@ -21,11 +21,11 @@ class BaseApplicationService(Generic[Entity]):
     def post(self, entity: Entity) -> None:
         self.repository.post(entity)
 
-    def put(self, id: str, entity: Entity) -> None:
-        self.repository.update(id, entity)
+    def put(self, entity: Entity) -> None:
+        self.repository.update(entity)
 
-    def patch(self, id: str, entity: Entity) -> None:
-        self.repository.update(id, entity)
+    def patch(self, entity: Entity) -> None:
+        self.repository.update(entity)
 
     def delete(self, id: str) -> bool:
         self.repository.delete(id)

@@ -1,3 +1,4 @@
+import functools
 import os
 import json
 
@@ -16,6 +17,7 @@ from adapters.entity_generation.entity_adapter import EntityAdapter
 
 from dotenv import load_dotenv
 
+from lib_archi.base_repository import BaseRepository
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 # CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
@@ -84,7 +86,7 @@ entity_resources = get_resource_types()
 #         return response
 
 
-def build_app_layer(server: Server) -> IRouter:
+def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     """Builds the application layer by registering routes and controllers.
 
     This function reads the application's configuration from a JSON file and sets
@@ -95,6 +97,7 @@ def build_app_layer(server: Server) -> IRouter:
     Args:
         server (Server): The server instance where routers and controllers
             are to be registered.
+        repository (BaseRepository): The repository to register the routes and controllers
 
     Returns:
         Any: The result of building the app layer, though typically the
@@ -115,7 +118,8 @@ def build_app_layer(server: Server) -> IRouter:
         router_obj = server.router()
         entity_stub_obj = entity_resources.get(model.get('name', None), None)
 
-        repo = InMemoryRepository[entity_stub_obj]()
+        # repo = InMemoryRepository[entity_stub_obj]()
+        repo = repository[entity_stub_obj]()
         app_service = BaseApplicationService[entity_stub_obj](repo)
         controller = BaseController[entity_stub_obj](app_service)
 
@@ -151,8 +155,7 @@ def launch_app_layer():
     """
     server = Server(Libraries.FASTAPI())
 
-
-    _ = build_app_layer(server=server)
+    _ = build_app_layer(repository=InMemoryRepository, server=server)
     # server.use(RequestValidationMiddleware)
 
     server.listen(port=os.getenv("PORT", 8080))

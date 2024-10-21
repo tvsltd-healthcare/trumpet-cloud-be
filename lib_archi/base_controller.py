@@ -68,7 +68,7 @@ class BaseController(Generic[Entity]):
             Returns:
                 Optional[Entity]: The updated entity, or None if the update fails.
             """
-        return self.app_service.patch(entity.id, entity)
+        return self.app_service.patch(entity)
 
     def put(self, entity: Entity) -> Optional[Entity]:
         """Fully updates an existing entity.
@@ -79,7 +79,7 @@ class BaseController(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
-        return self.app_service.put(entity.id, entity)
+        return self.app_service.put(entity)
 
     def delete(self, id: str)-> Optional[Entity]:
         """Deletes an entity by its ID.
