@@ -89,12 +89,7 @@ def build_app_layer(server: Server) -> Any:
 
 def launch_app_layer():
     server = Server(Libraries.FASTAPI())
-
     _ = build_app_layer(server)
 
     server.use(RequestValidationMiddleware)
     server.listen(port=8080)
-
-
-if __name__ == '__main__':
-    launch_app_layer()
