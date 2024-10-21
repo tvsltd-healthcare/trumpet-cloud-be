@@ -1154,7 +1154,7 @@ pydantic = "^2.8.2"
 type = "git"
 url = "https://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@github.com/tvsltd/wrap_validate.git"
 reference = "develop"
-resolved_reference = "2cc35fa15afbe6bc3ef197bcdfd10ef3fa547d31"
+resolved_reference = "d07f5236ae1eefab4af0cd949d0811883dcb6814"
 
 [metadata]
 lock-version = "2.0"
