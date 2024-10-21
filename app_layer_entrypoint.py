@@ -1,12 +1,12 @@
 from typing import Any
 
+from starlette.responses import JSONResponse
 from wrap_restify import Libraries, Server
 from adapters.lib_archi.controller import Controller
 from application_layer.entities import get_resource_types
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_repository import BaseRepository
 from adapters.entity_generation.entity_adapter import EntityAdapter
-from wrap_validate import EntryPoint
 
 
 ROUTES = {
@@ -20,31 +20,56 @@ ROUTES = {
         "get": "/api/users/{id}",
         "gets": "/api/users",
     },
-    "organizations": {
-        "post": "/api/organizations",
-        "get": "/api/organizations/{id}",
-        "gets": "/api/organizations",
-    }
+    # "organizations": {
+    #     "post": "/api/organizations",
+    #     "get": "/api/organizations/{id}",
+    #     "gets": "/api/organizations",
+    # }
 }
 
-def validate_custom(data: dict):
-    # Implement your custom validation logic here
-    if not data.get("name"):
-        raise ValueError("required_field is missing")
-    return data
+entity_resources = get_resource_types()
 
+### Custom Middleware
+import json
+from fastapi import Request, HTTPException
+from starlette.middleware.base import BaseHTTPMiddleware
+
+
+class RequestValidationMiddleware(BaseHTTPMiddleware):
+    """
+    Middleware for validating incoming requests.
+    This middleware intercepts the request before it reaches the request handler.
+    """
+
+    async def dispatch(self, request: Request, call_next):
+        # Optionally validate JSON payload
+        if request.method == 'POST':
+            try:
+                body = await request.json()
+                for main_key, methods in ROUTES.items():
+                    if 'post' in methods and methods['post'] == request.url.path:
+                        entity_model = main_key
+                        if not entity_resources.get(entity_model):
+                            raise HTTPException(status_code=422,
+                                                detail="Invalid entity type")
+                        model_entity = entity_resources[entity_model]
+                        is_valid = EntityAdapter().validate(entity_name=model_entity, data=body)
+                        if is_valid is not True:
+                            return JSONResponse(is_valid)
+                        return JSONResponse({"messages": "Valid"})
+
+            except Exception:
+                raise HTTPException(status_code=400, detail="Invalid JSON format")
+
+        # Continue processing if validation passes
+        response = await call_next(request)
+        return response
 
 
 def build_app_layer(server: Server) -> Any:
-    # entity names and api endpoints required for them (cli input)
-    entity_resources = get_resource_types()
-    entity_adapter_obj = EntityAdapter(EntryPoint())
-
     for resource, routes in ROUTES.items():
-        # Create a new router for each resource to ensure unique memory location
         router_obj = server.router()
-
-        klass = entity_adapter_obj.create(entity_name=resource, input_dict=entity_resources[resource])
+        klass = entity_resources[resource]
 
         repo = BaseRepository[klass]()
         app_service = BaseApplicationService[klass](repo)
@@ -54,10 +79,9 @@ def build_app_layer(server: Server) -> Any:
             if verb == "post":
                 controller.post.__annotations__["entity"] = klass
                 router_obj.post(url=_endpoint, endpoint=controller.post)
-
             elif verb == "get":
                 router_obj.get(url=_endpoint, endpoint=controller.get)
-            elif verb == "gets":  # here is the conditionals
+            elif verb == "gets":
                 router_obj.get(url=_endpoint, endpoint=controller.get_collection)
 
         server.use(router_obj)
@@ -65,5 +89,12 @@ def build_app_layer(server: Server) -> Any:
 
 def launch_app_layer():
     server = Server(Libraries.FASTAPI())
+
     _ = build_app_layer(server)
+
+    server.use(RequestValidationMiddleware)
     server.listen(port=8080)
+
+
+if __name__ == '__main__':
+    launch_app_layer()
