@@ -1,54 +1,93 @@
-from typing import TypeVar, Generic, Optional
+from typing import TypeVar, Generic, Optional, List
+
 from .base_application_service import BaseApplicationService
+
 
 Entity = TypeVar('Entity')
 
 
 class BaseController(Generic[Entity]):
-    """_summary_
+    """A generic base controller for handling CRUD operations on entities.
+
+    This class defines the standard CRUD (Create, Read, Update, Delete) methods
+    for an entity by utilizing the corresponding application service.
+
+    Attributes:
+        app_service (BaseApplicationService[Entity]): The application service that
+            performs operations on the entity.
 
     Args:
-        Generic (_type_): _description_
+        app_service (BaseApplicationService[Entity]): The service for handling
+            the business logic related to the entity.
     """
-
     def __init__(self, app_service: BaseApplicationService[Entity]):
-        """_summary_
+        """Initializes the BaseController with the provided application service.
 
         Args:
-            app_service (BaseApplicationService[Entity]): _description_
+            app_service (BaseApplicationService[Entity]): The application service
+                for handling entity operations.
         """
         self.app_service: BaseApplicationService[Entity] = app_service
 
-    def post(self, entity: Entity):
-        """_summary_
+    def post(self, entity: Entity) -> Optional[Entity]:
+        """Handles the creation of a new entity.
 
         Args:
-            entity (Entity): _description_
+            entity (Entity): The entity to be created.
 
         Returns:
-            _type_: _description_
+            Optional[Entity]: The created entity, or None if creation fails.
         """
         return self.app_service.post(entity.id, entity)
 
-    def get(self, _id: str) -> Optional[Entity]:
-        """_summary_
+    def get(self, _id: str) -> Entity:
+        """Retrieves an entity by its ID.
 
         Args:
-            id (str): _description_
+            _id (str): The unique identifier of the entity.
 
         Returns:
-            Optional[Entity]: _description_
+            Entity: The entity corresponding to the provided ID.
         """
         return self.app_service.get(_id)
 
-
-    def get_collection(self) -> Optional[Entity]:
-        """_summary_
-
-        Args:
-            id (str): _description_
+    def get_collection(self) -> List[Entity]:
+        """Retrieves a collection of all entities.
 
         Returns:
-            Optional[Entity]: _description_
+            List[Entity]: A list of all entities.
         """
         return self.app_service.get_collection()
+
+    def patch(self, entity: Entity) -> Optional[Entity]:
+        """Partially updates an existing entity.
+
+            Args:
+                entity (Entity): The entity with updated fields.
+
+            Returns:
+                Optional[Entity]: The updated entity, or None if the update fails.
+            """
+        return self.app_service.patch(entity.id, entity)
+
+    def put(self, entity: Entity) -> Optional[Entity]:
+        """Fully updates an existing entity.
+
+        Args:
+            entity (Entity): The entity to be fully updated.
+
+        Returns:
+            Optional[Entity]: The updated entity, or None if the update fails.
+        """
+        return self.app_service.put(entity.id, entity)
+
+    def delete(self, _id: str)-> Optional[Entity]:
+        """Deletes an entity by its ID.
+
+        Args:
+            _id (str): The unique identifier of the entity to be deleted.
+
+        Returns:
+            Optional[Entity]: The deleted entity, or None if deletion fails.
+        """
+        return self.app_service.delete(_id)

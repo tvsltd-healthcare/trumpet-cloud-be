@@ -1,15 +1,14 @@
 import os
 
-from typing import Any, Dict
+from typing import Dict
 
 from starlette.responses import JSONResponse
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 
-from adapters.lib_archi.controller import Controller
-from application_layer.abstractions.applicaiton_interface.icontroller import IController
 from application_layer.entities import get_resource_types
 from lib_archi.base_application_service import BaseApplicationService
+from lib_archi.base_controller import BaseController
 from lib_archi.base_repository import BaseRepository
 from adapters.entity_generation.entity_adapter import EntityAdapter
 
@@ -113,7 +112,7 @@ def build_app_layer(server: Server) -> IRouter:
 
         repo = BaseRepository[entity_stub_obj]()
         app_service = BaseApplicationService[entity_stub_obj](repo)
-        controller = Controller[entity_stub_obj](app_service)
+        controller = BaseController[entity_stub_obj](app_service)
 
         for routes in model.get('routes', []):
             verbs_mapping = get_verbs_mapping(controller, router_obj)
