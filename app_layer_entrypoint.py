@@ -88,8 +88,21 @@ def build_app_layer(server: Server) -> Any:
 
 
 def launch_app_layer():
+    """Launches the application layer by creating and starting the server.
+
+    This function initializes a FastAPI server, builds the application layer
+    on top of the server, adds a request validation middleware, and listens on
+    port 8080.
+
+    The server is created using the `FASTAPI` library from `Libraries`,
+    and the app layer is built using the `build_app_layer` function.
+    The `RequestValidationMiddleware` is applied to ensure request data validation
+    before listening for requests on port 8080.
+
+    Raises:
+        Any exception that occurs during server startup or middleware usage.
+    """
     server = Server(Libraries.FASTAPI())
     _ = build_app_layer(server)
-
     server.use(RequestValidationMiddleware)
     server.listen(port=8080)
