@@ -1,3 +1,5 @@
+import os
+
 from typing import Any
 
 from starlette.responses import JSONResponse
@@ -7,6 +9,8 @@ from application_layer.entities import get_resource_types
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_repository import BaseRepository
 from adapters.entity_generation.entity_adapter import EntityAdapter
+
+from dotenv import load_dotenv
 
 
 ROUTES = {
@@ -27,6 +31,7 @@ ROUTES = {
     # }
 }
 
+load_dotenv()
 entity_resources = get_resource_types()
 
 ### Custom Middleware
@@ -105,4 +110,4 @@ def launch_app_layer():
     server = Server(Libraries.FASTAPI())
     _ = build_app_layer(server)
     server.use(RequestValidationMiddleware)
-    server.listen(port=8080)
+    server.listen(port=os.getenv("PORT", 8080))
