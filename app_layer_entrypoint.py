@@ -1,4 +1,5 @@
 import os
+import json
 
 from typing import Dict
 from functools import partial
@@ -17,7 +18,8 @@ from dotenv import load_dotenv
 
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
-CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
+# CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
+CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'temp_config.json')
 
 load_dotenv()
 
@@ -28,7 +30,7 @@ def get_verbs_mapping(controller, router_obj) -> Dict:
     """
     return {
         "get": (controller.get, router_obj.get),
-        "get_collection": (controller.get_collection, router_obj.get_collection),
+        "get_collection": (controller.get_collection, router_obj.get),
         "post": (controller.post, router_obj.post),
         "put": (controller.put, router_obj.put),
         "patch": (controller.patch, router_obj.patch),
@@ -43,41 +45,43 @@ def get_verbs_mapping(controller, router_obj) -> Dict:
 
 entity_resources = get_resource_types()
 
-### Custom Middleware
-import json
-from fastapi import Request, HTTPException
-from starlette.middleware.base import BaseHTTPMiddleware
 
 
-class RequestValidationMiddleware(BaseHTTPMiddleware):
-    """
-    Middleware for validating incoming requests.
-    This middleware intercepts the request before it reaches the request handler.
-    """
 
-    async def dispatch(self, request: Request, call_next):
-        # Optionally validate JSON payload
-        if request.method == 'POST':
-            try:
-                body = await request.json()
-                for main_key, methods in ROUTES.items():
-                    if 'post' in methods and methods['post'] == request.url.path:
-                        entity_model = main_key
-                        if not entity_resources.get(entity_model):
-                            raise HTTPException(status_code=422,
-                                                detail="Invalid entity type")
-                        model_entity = entity_resources[entity_model]
-                        is_valid = EntityAdapter().validate(entity_name=model_entity, data=body)
-                        if is_valid is not True:
-                            return JSONResponse(is_valid)
-                        return JSONResponse({"messages": "Valid"})
-
-            except Exception:
-                raise HTTPException(status_code=400, detail="Invalid JSON format")
-
-        # Continue processing if validation passes
-        response = await call_next(request)
-        return response
+# import json
+# from fastapi import Request, HTTPException
+# from starlette.middleware.base import BaseHTTPMiddleware
+#
+#
+# class RequestValidationMiddleware(BaseHTTPMiddleware):
+#     """
+#     Middleware for validating incoming requests.
+#     This middleware intercepts the request before it reaches the request handler.
+#     """
+#
+#     async def dispatch(self, request: Request, call_next):
+#         # Optionally validate JSON payload
+#         if request.method == 'POST':
+#             try:
+#                 body = await request.json()
+#                 for main_key, methods in ROUTES.items():
+#                     if 'post' in methods and methods['post'] == request.url.path:
+#                         entity_model = main_key
+#                         if not entity_resources.get(entity_model):
+#                             raise HTTPException(status_code=422,
+#                                                 detail="Invalid entity type")
+#                         model_entity = entity_resources[entity_model]
+#                         is_valid = EntityAdapter().validate(entity_name=model_entity, data=body)
+#                         if is_valid is not True:
+#                             return JSONResponse(is_valid)
+#                         return JSONResponse({"messages": "Valid"})
+#
+#             except Exception:
+#                 raise HTTPException(status_code=400, detail="Invalid JSON format")
+#
+#         # Continue processing if validation passes
+#         response = await call_next(request)
+#         return response
 
 
 def build_app_layer(server: Server) -> IRouter:
@@ -107,7 +111,7 @@ def build_app_layer(server: Server) -> IRouter:
     with open(CONFIG_FILE_PATH) as config_file:
         configs = json.load(config_file)
 
-    for model in configs.get('models', []):
+    for model in configs[0].get('models', []):
         router_obj = server.router()
         entity_stub_obj = entity_resources.get(model.get('name', None), None)
 
@@ -121,8 +125,8 @@ def build_app_layer(server: Server) -> IRouter:
 
             if route_method in verbs_mapping:
                 method_controller, method_router = verbs_mapping[route_method]
-                if route_method == "post":
-                    controller.post.__annotations__["entity"] = entity_stub_obj
+                if route_method == "post" or route_method == "put" or route_method == "patch":
+                    method_controller.__annotations__["entity"] = entity_stub_obj
                 method_router(url=routes.get('url', ""), endpoint=method_controller)
 
         server.use(router_obj)
@@ -149,6 +153,6 @@ def launch_app_layer():
 
 
     _ = build_app_layer(server=server)
-    server.use(RequestValidationMiddleware)
+    # server.use(RequestValidationMiddleware)
 
     server.listen(port=os.getenv("PORT", 8080))

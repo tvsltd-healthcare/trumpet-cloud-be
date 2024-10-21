@@ -1,4 +1,4 @@
-User = {
+Users = {
     'id': {
         'type': {'value': "string", 'error_code': "id-type-not-string"}
     },

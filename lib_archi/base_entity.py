@@ -6,6 +6,6 @@ class BaseEntity(ABC):
 
     @property
     @abstractmethod
-    def _id(self) -> str:
+    def id(self) -> str:
         """Every entity must have an id property"""
         pass

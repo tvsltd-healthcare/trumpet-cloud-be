@@ -38,18 +38,18 @@ class BaseController(Generic[Entity]):
         Returns:
             Optional[Entity]: The created entity, or None if creation fails.
         """
-        return self.app_service.post(entity.id, entity)
+        return self.app_service.post(entity)
 
-    def get(self, _id: str) -> Entity:
+    def get(self, id: str) -> Entity:
         """Retrieves an entity by its ID.
 
         Args:
-            _id (str): The unique identifier of the entity.
+            id (str): The unique identifier of the entity.
 
         Returns:
             Entity: The entity corresponding to the provided ID.
         """
-        return self.app_service.get(_id)
+        return self.app_service.get(id)
 
     def get_collection(self) -> List[Entity]:
         """Retrieves a collection of all entities.
@@ -81,13 +81,13 @@ class BaseController(Generic[Entity]):
         """
         return self.app_service.put(entity.id, entity)
 
-    def delete(self, _id: str)-> Optional[Entity]:
+    def delete(self, id: str)-> Optional[Entity]:
         """Deletes an entity by its ID.
 
         Args:
-            _id (str): The unique identifier of the entity to be deleted.
+            id (str): The unique identifier of the entity to be deleted.
 
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.
         """
-        return self.app_service.delete(_id)
+        return self.app_service.delete(id)

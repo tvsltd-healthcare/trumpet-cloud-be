@@ -24,16 +24,16 @@ class InMemoryRepository(BaseRepository[Entity]):
         """Initializes the in-memory repository."""
         self.entities: Dict[str, Entity] = {}
 
-    def get(self, _id: str) -> Optional[Entity]:
+    def get(self, id: str) -> Optional[Entity]:
         """Retrieve an entity by its unique identifier.
 
         Args:
-            _id (str): The unique identifier of the entity.
+            id (str): The unique identifier of the entity.
 
         Returns:
             Optional[Entity]: The entity if found, or None if not found.
         """
-        return self.entities.get(_id)
+        return self.entities.get(id)
 
     def get_collection(self) -> List[Entity]:
         """Retrieve all entities in the repository.
@@ -55,8 +55,8 @@ class InMemoryRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If an entity with the same ID already exists.
         """
-        if entity._id not in self.entities:
-            self.entities[entity._id] = entity
+        if entity.id not in self.entities:
+            self.entities[entity.id] = entity
             return entity
 
         raise ValueError(f"Entity with id {entity.id} already exists")
@@ -73,22 +73,22 @@ class InMemoryRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If the entity does not exist in the repository.
         """
-        if entity._id in self.entities:
-            self.entities[entity._id] = entity
+        if entity.id in self.entities:
+            self.entities[entity.id] = entity
             return entity
 
-        raise ValueError(f"Entity with id {entity._id} does not exist")
+        raise ValueError(f"Entity with id {entity.id} does not exist")
 
-    def delete(self, _id: str) -> Optional[Entity]:
+    def delete(self, id: str) -> Optional[Entity]:
         """Delete an entity by its unique identifier.
 
         Args:
-            _id (str): The unique identifier of the entity to be deleted.
+            id (str): The unique identifier of the entity to be deleted.
 
         Returns:
             Optional[Entity]: The deleted entity, or None if no such entity exists.
         """
-        entity = self.entities.pop(_id, None)
+        entity = self.entities.pop(id, None)
         return entity
 
     def patch(self, entity: Entity) -> Optional[Entity]:
@@ -103,16 +103,16 @@ class InMemoryRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If the entity does not exist in the repository.
         """
-        existing_entity = self.get(entity._id)
+        existing_entity = self.get(entity.id)
         if not existing_entity:
-            raise ValueError(f"Entity with id {entity._id} does not exist")
+            raise ValueError(f"Entity with id {entity.id} does not exist")
 
         # Update only the attributes provided
         for attr, value in entity.__dict__.items():
             if value is not None:
                 setattr(existing_entity, attr, value)
 
-        self.entities[entity._id] = existing_entity
+        self.entities[entity.id] = existing_entity
         return existing_entity
 
     def put(self, entity: Entity) -> Optional[Entity]:
@@ -127,8 +127,8 @@ class InMemoryRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If the entity does not exist in the repository.
         """
-        if entity._id in self.entities:
-            self.entities[entity._id] = entity
+        if entity.id in self.entities:
+            self.entities[entity.id] = entity
             return entity
 
-        raise ValueError(f"Entity with id {entity._id} does not exist")
+        raise ValueError(f"Entity with id {entity.id} does not exist")

@@ -21,11 +21,11 @@ class BaseRepository(ABC, Generic[Entity]):
     """
 
     @abstractmethod
-    def get(self, _id: str) -> Entity:
+    def get(self, id: str) -> Entity:
         """Retrieve an entity by its unique identifier.
 
         Args:
-            _id (str): The unique identifier of the entity to retrieve.
+            id (str): The unique identifier of the entity to retrieve.
 
         Returns:
             Entity: The entity corresponding to the provided ID.
@@ -66,11 +66,11 @@ class BaseRepository(ABC, Generic[Entity]):
         pass
 
     @abstractmethod
-    def delete(self, _id: str) -> Optional[Entity]:
+    def delete(self, id: str) -> Optional[Entity]:
         """Delete an entity by its unique identifier.
 
         Args:
-            _id (str): The unique identifier of the entity to delete.
+            id (str): The unique identifier of the entity to delete.
 
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.

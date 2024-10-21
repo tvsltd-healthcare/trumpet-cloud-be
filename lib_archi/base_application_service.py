@@ -18,8 +18,8 @@ class BaseApplicationService(Generic[Entity]):
     def get_collection(self) -> List[Entity]:
         return self.repository.get_collection()
 
-    def post(self, id: str, entity: Entity) -> None:
-        self.repository.create(id, entity)
+    def post(self, entity: Entity) -> None:
+        self.repository.post(entity)
 
     def put(self, id: str, entity: Entity) -> None:
         self.repository.update(id, entity)
