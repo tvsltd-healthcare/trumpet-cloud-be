@@ -1,10 +1,13 @@
 import os
 
-from typing import Any
+from typing import Any, Dict
 
 from starlette.responses import JSONResponse
 from wrap_restify import Libraries, Server
+from wrap_restify.abstractions.routers import IRouter
+
 from adapters.lib_archi.controller import Controller
+from application_layer.abstractions.applicaiton_interface.icontroller import IController
 from application_layer.entities import get_resource_types
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_repository import BaseRepository
@@ -13,25 +16,31 @@ from adapters.entity_generation.entity_adapter import EntityAdapter
 from dotenv import load_dotenv
 
 
-ROUTES = {
-    # "products": {
-    #     "post": "/api/products",
-    #     "get": "/api/product/{id}",
-    #     "gets": "/api/products",
-    # },
-    "users": {
-        "post": "/api/users",
-        "get": "/api/users/{id}",
-        "gets": "/api/users",
-    },
-    # "organizations": {
-    #     "post": "/api/organizations",
-    #     "get": "/api/organizations/{id}",
-    #     "gets": "/api/organizations",
-    # }
-}
+FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 
 load_dotenv()
+
+
+def get_verbs_mapping(controller, router_obj) -> Dict:
+    """
+    Returns a dictionary that maps HTTP verbs to their corresponding controller and router methods.
+    """
+    return {
+        "get": (controller.get, router_obj.get),
+        "get_collection": (controller.get_collection, router_obj.get_collection),
+        "post": (controller.post, router_obj.post),
+        "put": (controller.put, router_obj.put),
+        "patch": (controller.patch, router_obj.patch),
+        "delete": (controller.delete, router_obj.delete)
+    }
+
+
+
+
+
+
+
 entity_resources = get_resource_types()
 
 ### Custom Middleware
@@ -71,25 +80,54 @@ class RequestValidationMiddleware(BaseHTTPMiddleware):
         return response
 
 
-def build_app_layer(server: Server) -> Any:
-    for resource, routes in ROUTES.items():
+def build_app_layer(server: Server) -> IRouter:
+    """Builds the application layer by registering routes and controllers.
+
+    This function reads the application's configuration from a JSON file and sets
+    up the server's routers and controllers based on the defined models and routes.
+    For each model, it creates a repository, service, and controller, and registers
+    the routes with the corresponding HTTP methods (e.g., POST).
+
+    Args:
+        server (Server): The server instance where routers and controllers
+            are to be registered.
+
+    Returns:
+        Any: The result of building the app layer, though typically the
+        return IRouter in the process.
+
+    Raises:
+        FileNotFoundError: If the configuration file specified by `CONFIG_FILE_PATH`
+            is not found.
+        json.JSONDecodeError: If the configuration file contains invalid JSON.
+        KeyError: If expected keys (like 'name' or 'routes') are missing from the
+            model definitions in the configuration.
+    """
+    # get all the routers of the application
+    with open(CONFIG_FILE_PATH) as config_file:
+        configs = json.load(config_file)
+
+    for model in configs.get('models', []):
         router_obj = server.router()
-        klass = entity_resources[resource]
+        entity_stub_obj = entity_resources.get(model.get('name', None), None)
 
-        repo = BaseRepository[klass]()
-        app_service = BaseApplicationService[klass](repo)
-        controller = Controller[klass](app_service)
+        repo = BaseRepository[entity_stub_obj]()
+        app_service = BaseApplicationService[entity_stub_obj](repo)
+        controller = Controller[entity_stub_obj](app_service)
 
-        for verb, _endpoint in routes.items():
-            if verb == "post":
-                controller.post.__annotations__["entity"] = klass
-                router_obj.post(url=_endpoint, endpoint=controller.post)
-            elif verb == "get":
-                router_obj.get(url=_endpoint, endpoint=controller.get)
-            elif verb == "gets":
-                router_obj.get(url=_endpoint, endpoint=controller.get_collection)
+        for routes in model.get('routes', []):
+            verbs_mapping = get_verbs_mapping(controller, router_obj)
+            route_method = str.lower(routes['method'])
+
+            if route_method in verbs_mapping:
+                method_controller, method_router = verbs_mapping[route_method]
+                if route_method == "post":
+                    controller.post.__annotations__["entity"] = entity_stub_obj
+                method_router(url=routes.get('url', ""), endpoint=method_controller)
 
         server.use(router_obj)
+
+        return router_obj
 
 
 def launch_app_layer():
