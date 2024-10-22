@@ -3,13 +3,13 @@ name = "Dev Framework Playground"
 version = "0.1.0"
 description = ""
 authors = ["Nurujjaman Nur <nur@technovativesolutions.co.uk>"]
-readme = "README.md"
+readme = ""
 
 [tool.poetry.dependencies]
 python = "^3.11"
 wrap-restify = {git = "https://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@github.com/tvsltd/wrap-restify.git", rev = "develop"}
-wrap-validate = {git = "https://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@github.com/tvsltd/wrap_validate.git", rev = "develop"}
 python-dotenv = "^1.0.1"
+wrap-validate = {git = "https://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@github.com/tvsltd/wrap_validate.git", rev = "develop"}
 
 
 [build-system]
