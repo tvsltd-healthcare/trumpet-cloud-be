@@ -1,8 +1,6 @@
 import os
 import json
 
-from typing import Dict
-
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from application_layer.entities import get_resource_types
@@ -16,25 +14,10 @@ from dotenv import load_dotenv
 
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
-# CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
-CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'temp_config.json')
+CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 
 load_dotenv()
 entity_resources = get_resource_types()
-
-
-def get_verbs_mapping(controller, router_obj) -> Dict:
-    """
-    Returns a dictionary that maps HTTP verbs to their corresponding controller and router methods.
-    """
-    return {
-        "get": (controller.get, router_obj.get),
-        "get_collection": (controller.get_collection, router_obj.get),
-        "post": (controller.post, router_obj.post),
-        "put": (controller.put, router_obj.put),
-        "patch": (controller.patch, router_obj.patch),
-        "delete": (controller.delete, router_obj.delete)
-    }
 
 
 def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
@@ -65,27 +48,41 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     with open(CONFIG_FILE_PATH) as config_file:
         configs = json.load(config_file)
 
-    for model in configs[0].get('models', []):
+    for model in (configs[0].get('models', [])):
         router_obj = server.router()
-        entity_stub_obj = entity_resources.get(model.get('name', None), None)
+        entity_stub_obj = entity_resources.get(model.get('name'))
 
         repo = repository[entity_stub_obj]()
         app_service = BaseApplicationService[entity_stub_obj](repo)
         controller = BaseController[entity_stub_obj](app_service)
 
+
         for routes in model.get('routes', []):
-            verbs_mapping = get_verbs_mapping(controller, router_obj)
             route_method = str.lower(routes['method'])
 
-            if route_method in verbs_mapping:
-                method_controller, method_router = verbs_mapping[route_method]
-                if route_method == "post" or route_method == "put" or route_method == "patch":
-                    method_controller.__annotations__["entity"] = entity_stub_obj
-                method_router(url=routes.get('url', ""), endpoint=method_controller)
+            if str.lower(route_method) == "post":
+                controller.post.__annotations__["entity"] = entity_stub_obj
+                router_obj.post(url=routes.get('url', ""), endpoint=controller.post)
+            elif str.lower(route_method) == "get":
+                router_obj.get(url=routes.get('url', ""), endpoint=controller.get)
+            elif str.lower(route_method) == "get_collection":
+                router_obj.get(url=routes.get('url', ""), endpoint=controller.get_collection)
+            elif str.lower(route_method) == "put":
+                controller.put.__annotations__["entity"] = entity_stub_obj
+                router_obj.put(url=routes.get('url', ""), endpoint=controller.put)
+            elif str.lower(route_method) == "patch":
+                controller.patch.__annotations__["entity"] = entity_stub_obj
+                router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch)
+            elif str.lower(route_method) == "delete":
+                controller.delete.__annotations__["entity"] = entity_stub_obj
+                router_obj.delete(url=routes.get('url', ""), endpoint=controller.delete)
+            else:
+                raise NotImplementedError("This method is not supported in the base class.")
+
 
         server.use(router_obj)
 
-        return router_obj
+    return router_obj
 
 
 def launch_app_layer():

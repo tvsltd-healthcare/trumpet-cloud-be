@@ -68,24 +68,6 @@ class InMemoryRepository(BaseRepository[Entity]):
 
         raise ValueError(f"Entity with id {entity.id} already exists")
 
-    def update(self, entity: Entity) -> Optional[Entity]:
-        """Update an existing entity in the repository.
-
-        Args:
-            entity (Entity): The entity with updated information.
-
-        Returns:
-            Optional[Entity]: The updated entity.
-
-        Raises:
-            ValueError: If the entity does not exist in the repository.
-        """
-        if entity.id in self.entities:
-            self.entities[entity.id] = entity
-            return entity
-
-        raise ValueError(f"Entity with id {entity.id} does not exist")
-
     def delete(self, id: str) -> Optional[Entity]:
         """Delete an entity by its unique identifier.
 

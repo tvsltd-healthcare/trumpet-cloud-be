@@ -10,8 +10,8 @@ from application_layer.entities import get_resource_types
 
 
 FILE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
-CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'temp_config.json')
+CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
+# CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'temp_config.json')
 
 entity_resources = get_resource_types()
 
