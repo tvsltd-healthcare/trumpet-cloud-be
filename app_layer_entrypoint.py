@@ -69,7 +69,6 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         router_obj = server.router()
         entity_stub_obj = entity_resources.get(model.get('name', None), None)
 
-        # repo = InMemoryRepository[entity_stub_obj]()
         repo = repository[entity_stub_obj]()
         app_service = BaseApplicationService[entity_stub_obj](repo)
         controller = BaseController[entity_stub_obj](app_service)
@@ -107,5 +106,5 @@ def launch_app_layer():
     server = Server(Libraries.FASTAPI())
 
     _ = build_app_layer(repository=InMemoryRepository, server=server)
-    # server.use(ValidationMiddleware)
+    server.use(ValidationMiddleware)
     server.listen(port=os.getenv("PORT", 8080))
