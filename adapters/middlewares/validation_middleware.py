@@ -3,7 +3,7 @@ import json
 
 from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 
 from adapters.entity_adapters.entity_validation import EntityAdapter
 from application_layer.entities import get_resource_types
@@ -11,7 +11,6 @@ from application_layer.entities import get_resource_types
 
 FILE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
-# CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'temp_config.json')
 
 entity_resources = get_resource_types()
 
@@ -37,13 +36,17 @@ class ValidationMiddleware(BaseHTTPMiddleware):
         configs = self._load_config()
 
         if request.method in {'POST', 'PUT', 'PATCH'}:
-            body = await self._get_request_body(request)
+            try:
+                body = await request.json()
+            except Exception:
+                return JSONResponse(content={"message": "Invalid JSON format", }, status_code=422)
+
             model_name = self._get_model_name(request, configs)
 
             if model_name and model_name in entity_resources:
                 validation_result = EntityAdapter().validate(entity_name=entity_resources[model_name], data=body)
                 if validation_result is not True:
-                    return JSONResponse(content=validation_result)
+                    return JSONResponse(content=validation_result, status_code=422)
 
         # Continue with request processing if validation passes
         return await call_next(request)
@@ -63,24 +66,6 @@ class ValidationMiddleware(BaseHTTPMiddleware):
                 return json.load(config_file)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             raise HTTPException(status_code=500, detail=f"Config file error: {str(e)}")
-
-    @staticmethod
-    async def _get_request_body(request: Request) -> dict:
-        """Extract and parse the JSON body from the request.
-
-        Args:
-            request (Request): The incoming HTTP request.
-
-        Returns:
-            dict: The parsed JSON body.
-
-        Raises:
-            HTTPException: If the request body contains invalid JSON.
-        """
-        try:
-            return await request.json()
-        except Exception:
-            raise HTTPException(status_code=422, detail="Invalid JSON format")
 
     @staticmethod
     def _get_model_name(request: Request, configs: dict) -> str | None:
