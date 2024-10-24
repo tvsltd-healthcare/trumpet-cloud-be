@@ -10,6 +10,7 @@ python = "^3.11"
 python-dotenv = "^1.0.1"
 wrap-restify = {git = "https://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@github.com/tvsltd/wrap_restify.git", rev = "develop"}
 wrap-validate = {git = "https://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@github.com/tvsltd/wrap_validate.git", rev = "develop"}
+wrap-orm = {git = "https://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@github.com/tvsltd/wrap_orm.git", rev = "feature/crud-implementation"}
 
 
 [build-system]

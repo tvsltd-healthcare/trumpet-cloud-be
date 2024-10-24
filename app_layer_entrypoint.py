@@ -7,12 +7,19 @@ from application_layer.entities import get_resource_types
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_controller import BaseController
 from adapters.lib_archirs.inmemory_repository import InMemoryRepository
+from adapters.lib_archirs.orm_repository import OrmRepository
+
 from lib_archi.base_repository import BaseRepository
 from adapters.middlewares.validation_middleware import ValidationMiddleware
 from adapters.middlewares.cors import CorsConfig
 
+from adapters.wrap_orm_adapters.orm_adapter import OrmAdapter
+from application_layer.abstractions.orm_interface import IOrm
+
 from dotenv import load_dotenv
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
@@ -20,6 +27,23 @@ CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 load_dotenv()
 entity_resources = get_resource_types()
 
+def _generate_orm_wrapper():
+    username = os.getenv("USERNAME")
+    password = os.getenv("PASSWORD")
+    database = os.getenv("DATABASE")
+    host = os.getenv("HOST")
+    port = os.getenv("DB_PORT")
+
+    # Create a SQLAlchemy engine
+    engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}')
+
+    # Create a session
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    orm: IOrm = OrmAdapter(session)
+
+    return orm
 
 def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     """Builds the application layer by registering routes and controllers.
@@ -49,11 +73,17 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     with open(CONFIG_FILE_PATH) as config_file:
         configs = json.load(config_file)
 
+    orm = _generate_orm_wrapper()
+
     for model in (configs[0].get('models', [])):
         router_obj = server.router()
         entity_stub_obj = entity_resources.get(model.get('name'))
 
-        repo = repository[entity_stub_obj]()
+        if not entity_stub_obj:
+            continue
+
+        repo = repository[entity_stub_obj](orm)
+        # repo = repository[entity_stub_obj]()
         app_service = BaseApplicationService[entity_stub_obj](repo)
         controller = BaseController[entity_stub_obj](app_service)
 
@@ -107,7 +137,8 @@ def launch_app_layer():
     cors_config = CorsConfig(origins=os.getenv('ALLOWED_HOSTS', '*').split(','))
     cors_config.apply_to_server(server=server)
 
-    _ = build_app_layer(repository=InMemoryRepository, server=server)
-
+    # _ = build_app_layer(repository=InMemoryRepository, server=server)
+    _ = build_app_layer(repository=OrmRepository, server=server)
+    
     server.use(ValidationMiddleware)
     server.listen(port=os.getenv("PORT", 8080))
