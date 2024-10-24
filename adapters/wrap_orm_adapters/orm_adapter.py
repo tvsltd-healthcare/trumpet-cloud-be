@@ -23,7 +23,7 @@ class OrmAdapter(IOrm):
     MODEL_PACKAGE_NAME = 'adapters.wrap_orm_adapters.models'
     WRAPPER_TYPE = 'sqlalchemy'
     
-    def __init__(self, connection: object, db_type: str):
+    def __init__(self, connection: object):
         """Initializes the ORM adapter with connection and schema mapping.
 
         Args:
