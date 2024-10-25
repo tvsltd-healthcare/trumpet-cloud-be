@@ -9,6 +9,8 @@ from lib_archi.base_repository import BaseRepository
 from adapters.wrap_orm_adapters.orm_adapter import OrmAdapter
 from application_layer.abstractions.orm_interface import IOrm
 
+from adapters.response_adapters.response_handler import ResponseHandler
+
 Entity = TypeVar('Entity', bound=BaseEntity)
 
 
@@ -30,6 +32,7 @@ class OrmRepository(BaseRepository[Entity]):
         """Initializes the in-memory repository."""
         self.orm_model_key = self._pascal_to_singular_snake(self.entity_type.__name__)
         self.orm = orm
+        self.response = ResponseHandler()
 
     @classmethod
     def __class_getitem__(cls, entity_type: Type[Entity]):
@@ -78,11 +81,24 @@ class OrmRepository(BaseRepository[Entity]):
             ValueError: If an entity with the same ID already exists.
         """
         insert_dict = {
-            "model": self.orm_model_key,
-            'attributes': vars(entity)
-        }
+                "model": self.orm_model_key,
+                'attributes': vars(entity)
+            }
 
-        return self.orm.insert(insert_dict)
+        result_list = self.orm.insert(insert_dict)
+        print(result_list)
+        return result_list
+        # try:
+        #     insert_dict = {
+        #         "model": self.orm_model_key,
+        #         'attributes': vars(entity)
+        #     }
+
+        #     result_list = self.orm.insert(insert_dict)
+        #     return self.response.resource_list(message = 'Success', data=result_list, status_code=201)
+        # except Exception as e:
+        #     print(e)
+        #     return self.response.error_response(message = f'{e}')
         
 
     def update(self, entity: Entity) -> Optional[Entity]:

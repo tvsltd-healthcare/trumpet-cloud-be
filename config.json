@@ -328,7 +328,7 @@
               },
               {
                 "tag": "pattern",
-                "rule": "^[A-Za-z0-9._%-]@[A-Za-z0-9.-]\\\\.[A-Za-z]{2,}$",
+                "rule": "^[A-Za-z0-9._%-].*@[A-Za-z0-9._%-].*\\.[A-Za-z]{2,}$",
                 "error_code": "17",
                 "default_message": ""
               }
@@ -962,7 +962,7 @@
               },
               {
                 "tag": "pattern",
-                "rule": "^[A-Za-z0-9._%-]@[A-Za-z0-9.-]\\\\.[A-Za-z]{2,}$",
+                "rule": "^[A-Za-z0-9._%-].*@[A-Za-z0-9._%-].*\\.[A-Za-z]{2,}$",
                 "error_code": "51",
                 "default_message": ""
               },

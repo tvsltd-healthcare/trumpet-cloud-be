@@ -1,7 +1,6 @@
 from typing import TypeVar, Generic, Optional, List
-
 from .base_application_service import BaseApplicationService
-
+from application_layer.abstractions.response_interface import IResponseHandler
 
 Entity = TypeVar('Entity')
 
@@ -20,7 +19,8 @@ class BaseController(Generic[Entity]):
         app_service (BaseApplicationService[Entity]): The service for handling
             the business logic related to the entity.
     """
-    def __init__(self, app_service: BaseApplicationService[Entity]):
+
+    def __init__(self, app_service: BaseApplicationService[Entity], response_handler: IResponseHandler):
         """Initializes the BaseController with the provided application service.
 
         Args:
@@ -28,6 +28,7 @@ class BaseController(Generic[Entity]):
                 for handling entity operations.
         """
         self.app_service: BaseApplicationService[Entity] = app_service
+        self.response_handler: IResponseHandler = response_handler
 
     def post(self, entity: Entity) -> Optional[Entity]:
         """Handles the creation of a new entity.
@@ -38,7 +39,11 @@ class BaseController(Generic[Entity]):
         Returns:
             Optional[Entity]: The created entity, or None if creation fails.
         """
-        return self.app_service.post(entity)
+        try:
+            created_entity = self.app_service.post(entity)
+            return self.response_handler.resource_detail("Entity created successfully", data=created_entity, status_code=201)
+        except Exception as e:
+            return self.response_handler.error_response(f"{str(e)}", 400)
 
     def get(self, id: int) -> Entity:
         """Retrieves an entity by its ID.
@@ -49,15 +54,23 @@ class BaseController(Generic[Entity]):
         Returns:
             Entity: The entity corresponding to the provided ID.
         """
-        return self.app_service.get(id)
+        try:
+            get_entity = self.app_service.get(id)
+            return self.response_handler.resource_detail("Entity retrieved successfully", data=get_entity)
+        except Exception as e:
+            return self.response_handler.error_response(f"{str(e)}", 400)
 
-    def get_collection(self) -> List[Entity]:
+    def get_collection(self) -> Entity:
         """Retrieves a collection of all entities.
 
         Returns:
             List[Entity]: A list of all entities.
         """
-        return self.app_service.get_collection()
+        try:
+            entities = self.app_service.get_collection()
+            return self.response_handler.resource_list("Entities retrieved successfully", data=entities)
+        except Exception as e:
+            return self.response_handler.error_response(f"{str(e)}", 400)
 
     def patch(self, entity: Entity) -> Optional[Entity]:
         """Partially updates an existing entity.
@@ -68,7 +81,11 @@ class BaseController(Generic[Entity]):
             Returns:
                 Optional[Entity]: The updated entity, or None if the update fails.
             """
-        return self.app_service.patch(entity)
+        try:
+            updated_entity = self.app_service.patch(entity)
+            return self.response_handler.resource_detail("Entity updated successfully", data=updated_entity)
+        except Exception as e:
+            return self.response_handler.error_response(f"{str(e)}", 400)
 
     def put(self, entity: Entity) -> Optional[Entity]:
         """Fully updates an existing entity.
@@ -79,9 +96,13 @@ class BaseController(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
-        return self.app_service.put(entity)
+        try:
+            updated_entity = self.app_service.put(entity)
+            return self.response_handler.resource_detail("Entity fully updated", data=updated_entity)
+        except Exception as e:
+            return self.response_handler.error_response(f"{str(e)}", 400)
 
-    def delete(self, id: str)-> Optional[Entity]:
+    def delete(self, id: str) -> Optional[Entity]:
         """Deletes an entity by its ID.
 
         Args:
@@ -90,4 +111,8 @@ class BaseController(Generic[Entity]):
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.
         """
-        return self.app_service.delete(id)
+        try:
+            deleted_entity = self.app_service.delete(id)
+            return self.response_handler.resource_detail("Entity deleted successfully")
+        except Exception as e:
+            return self.response_handler.error_response(f"{str(e)}", 400)

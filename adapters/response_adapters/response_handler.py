@@ -1,6 +1,4 @@
-import json
 from typing import Dict, List, Any
-
 from application_layer.abstractions.response_interface import IResponseHandler
 
 
@@ -10,57 +8,41 @@ class ResponseHandler(IResponseHandler):
     standardized HTTP responses in a structured JSON format.
     """
 
-    def resource_list(self, message: str, data: List[Any] = None, status_code: int = 200) -> str:
+    def resource_list(self, message: str, data: Dict[str, Any] = None, status_code: int = 200) -> Dict[str, Any]:
         """
         Generates a JSON response for retrieving multiple resource items.
         """
-        response = {
+        return {
             "message": message,
             "data": data or [],
             "status_code": status_code
         }
-        return json.dumps(response)
 
-    def resource_detail(self, message: str, data: Dict[str, Any] = None, status_code: int = 200) -> str:
+    def resource_detail(self, message: str, data: Dict[str, Any] = None, status_code: int = 200) -> Dict[str, Any]:
         """
         Generates a JSON response for retrieving a single resource item.
         """
-        response = {
+        return {
             "message": message,
             "data": data or {},
             "status_code": status_code
         }
-        return json.dumps(response)
 
-    def resource_created(self, message: str, data: Dict[str, Any], status_code: int = 201) -> str:
-        """
-        Generates a JSON response for successfully creating a resource item.
-        """
-        response = {
-            "message": message,
-            "data": data,
-            "status_code": status_code
-        }
-        return json.dumps(response)
-
-    def error_response(self, message: str, status_code: int = 401) -> str:
+    def error_response(self, message: str, status_code: int = 401) -> Dict[str, Any]:
         """
         Generates a JSON response for general error issues.
         """
-        response = {
+        return {
             "message": message,
             "status_code": status_code
         }
-        return json.dumps(response)
 
-    def validation_error(self, message: str, errors: List[Dict[str, str]], status_code: int = 422) -> str:
+    def validation_error(self, message: str, errors: List[Dict[str, str]], status_code: int = 422) -> Dict[str, Any]:
         """
         Generates a JSON response for validation errors.
         """
-        response = {
+        return {
             "message": message,
             "errors": errors,
             "status_code": status_code
         }
-        return json.dumps(response)
-

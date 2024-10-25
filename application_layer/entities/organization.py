@@ -33,7 +33,7 @@ Organizations = {
             "error_code": "16"
         },
         "regex": {
-            "value": "^[A-Za-z0-9._%-]@[A-Za-z0-9.-]\\\\.[A-Za-z]{2,}$",
+            "value": "^[A-Za-z0-9._%-].*@[A-Za-z0-9._%-].*\.[A-Za-z]{2,}$",
             "error_code": "17"
         }
     },

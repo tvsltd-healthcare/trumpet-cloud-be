@@ -20,6 +20,10 @@ Files = {
         }
     },
     "buffer": {
+        "type": {
+            "value": "string",
+            "error_code": "333"
+        },
         "required": {
             "value": True,
             "error_code": "5"
@@ -44,8 +48,12 @@ Files = {
         }
     },
     "updated_by": {
-        "required": {
+         "type": {
             "value": "number",
+            "error_code": "222"
+        },
+        "required": {
+            "value": True,
             "error_code": "9"
         }
     }

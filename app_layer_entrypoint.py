@@ -3,6 +3,7 @@ import json
 
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
+from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_controller import BaseController
@@ -78,6 +79,11 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     for model in (configs[0].get('models', [])):
         router_obj = server.router()
         entity_stub_obj = entity_resources.get(model.get('name'))
+        
+        if not entity_stub_obj:
+            continue
+        
+        response_handler = ResponseHandler()
 
         if not entity_stub_obj:
             continue
@@ -85,8 +91,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         repo = repository[entity_stub_obj](orm)
         # repo = repository[entity_stub_obj]()
         app_service = BaseApplicationService[entity_stub_obj](repo)
-        controller = BaseController[entity_stub_obj](app_service)
-
+        controller = BaseController[entity_stub_obj](app_service, response_handler)
 
         for routes in model.get('routes', []):
             route_method = str.lower(routes['method'])
@@ -109,7 +114,6 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
                 router_obj.delete(url=routes.get('url', ""), endpoint=controller.delete)
             else:
                 raise NotImplementedError("This method is not supported in the base class.")
-
 
         server.use(router_obj)
 

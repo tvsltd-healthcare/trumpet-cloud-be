@@ -15,7 +15,7 @@ Datasets = {
             "error_code": "98"
         }
     },
-    "metadata": {
+    "meta_data": {
         "type": {
             "value": "text",
             "error_code": "99"
@@ -38,16 +38,20 @@ Datasets = {
         }
     },
     # Todo: Fix Enum Issue
-    # "privacy_level": {
-    #     "type": {
-    #         "value": "^(public|confidential|highly_confidential)$",
-    #         "error_code": "104"
-    #     },
-    #     "required": {
-    #         "value": True,
-    #         "error_code": "105"
-    #     }
-    # },
+    "privacy_level": {
+        "type": {
+            "value": "string",
+            "error_code": "104"
+        },
+        "regex": {
+            "value": "^(public|confidential|highly_confidential)$",
+            "error_code": "104"
+        },
+        "required": {
+            "value": True,
+            "error_code": "105"
+        }
+    },
     "created_at": {
         "type": {
             "value": "timestamp",
