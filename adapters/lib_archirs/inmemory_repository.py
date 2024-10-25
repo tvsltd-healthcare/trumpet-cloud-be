@@ -78,6 +78,8 @@ class InMemoryRepository(BaseRepository[Entity]):
             Optional[Entity]: The deleted entity, or None if no such entity exists.
         """
         entity = self.entities.pop(id, None)
+        if entity is None:
+            raise ValueError(f"Entity with id {id} does not exist")
         return entity
 
     def patch(self, entity: Entity) -> Optional[Entity]:

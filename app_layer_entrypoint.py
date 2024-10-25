@@ -79,10 +79,9 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     for model in (configs[0].get('models', [])):
         router_obj = server.router()
         entity_stub_obj = entity_resources.get(model.get('name'))
-        
+
         if not entity_stub_obj:
             continue
-        
         response_handler = ResponseHandler()
 
         if not entity_stub_obj:
