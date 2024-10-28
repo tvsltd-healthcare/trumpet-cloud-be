@@ -16,6 +16,7 @@ from adapters.middlewares.cors import CorsConfig
 
 from adapters.wrap_orm_adapters.orm_adapter import OrmAdapter
 from application_layer.abstractions.orm_interface import IOrm
+from adapters.middlewares.response_middleware import ResponseMiddleware
 
 from dotenv import load_dotenv
 
@@ -144,4 +145,5 @@ def launch_app_layer():
     _ = build_app_layer(repository=OrmRepository, server=server)
     
     server.use(ValidationMiddleware)
+    server.use(ResponseMiddleware)
     server.listen(port=os.getenv("PORT", 8080))
