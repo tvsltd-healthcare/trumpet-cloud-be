@@ -31,7 +31,7 @@ class InMemoryRepository(BaseRepository[Entity]):
         cls.entity_type = entity_type
         return cls
 
-    def get(self, id: str) -> Optional[Entity]:
+    def get(self, id: int) -> Optional[Entity]:
         """Retrieve an entity by its unique identifier.
 
         Args:

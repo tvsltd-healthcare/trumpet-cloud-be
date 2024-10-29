@@ -26,7 +26,7 @@ class BaseApplicationService(Generic[Entity]):
         """
         self.repository = repository
 
-    def get(self, id: str) -> Entity:
+    def get(self, id: int) -> Entity:
         """Retrieves an entity by its unique identifier.
 
         Args:

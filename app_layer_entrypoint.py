@@ -103,11 +103,11 @@ def launch_app_layer():
     """
     server = Server(Libraries.FASTAPI())
 
-    # Configure and apply CORS
+    # # Configure and apply CORS
     cors_config = CorsConfig(origins=os.getenv('ALLOWED_HOSTS', '*').split(','))
     cors_config.apply_to_server(server=server)
 
     _ = build_app_layer(repository=InMemoryRepository, server=server)
-    server.use(ValidationMiddleware)
 
+    server.use(ValidationMiddleware)
     server.listen(port=os.getenv("PORT", 8080))

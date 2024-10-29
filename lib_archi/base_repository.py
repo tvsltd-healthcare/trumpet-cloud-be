@@ -21,7 +21,7 @@ class BaseRepository(ABC, Generic[Entity]):
     """
 
     @abstractmethod
-    def get(self, id: str) -> Entity:
+    def get(self, id: int) -> Entity:
         """Retrieve an entity by its unique identifier.
 
         Args:

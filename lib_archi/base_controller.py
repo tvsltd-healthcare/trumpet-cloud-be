@@ -40,7 +40,7 @@ class BaseController(Generic[Entity]):
         """
         return self.app_service.post(entity)
 
-    def get(self, id: str) -> Entity:
+    def get(self, id: int) -> Entity:
         """Retrieves an entity by its ID.
 
         Args:
