@@ -1,4 +1,5 @@
 from typing import TypeVar, List, Optional, Dict, Type
+from datetime import datetime
 
 import stringcase
 import inflect
@@ -54,7 +55,10 @@ class OrmRepository(BaseRepository[Entity]):
             "filter": f"id={id}",
         }
 
-        return self.orm.query(query_dict)
+        result = self.orm.query(query_dict)
+
+        return result[0] if isinstance(result, list) and len(result) == 1 else result
+
 
     def get_collection(self) -> List[Entity]:
         """Retrieve all entities in the repository.
@@ -80,25 +84,17 @@ class OrmRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If an entity with the same ID already exists.
         """
+        entity_dict = vars(entity)
+        entity_dict.pop('id')
+        
         insert_dict = {
-                "model": self.orm_model_key,
-                'attributes': vars(entity)
-            }
+            "model": self.orm_model_key,
+            'attributes': entity_dict
+        }
 
-        result_list = self.orm.insert(insert_dict)
-        print(result_list)
-        return result_list
-        # try:
-        #     insert_dict = {
-        #         "model": self.orm_model_key,
-        #         'attributes': vars(entity)
-        #     }
+        result = self.orm.insert(insert_dict)
 
-        #     result_list = self.orm.insert(insert_dict)
-        #     return self.response.resource_list(message = 'Success', data=result_list, status_code=201)
-        # except Exception as e:
-        #     print(e)
-        #     return self.response.error_response(message = f'{e}')
+        return result[0] if isinstance(result, list) and len(result) == 1 else result
         
 
     def update(self, entity: Entity) -> Optional[Entity]:
@@ -119,10 +115,11 @@ class OrmRepository(BaseRepository[Entity]):
         update_dict = {
             "model": self.orm_model_key,
             "filter": f"id={entity_id}",
-            'attributes': vars(entity)
+            'attributes': entity_dict
         }
 
-        return self.orm.update(update_dict)
+        result = self.orm.update(update_dict)
+        return result[0] if isinstance(result, list) and len(result) == 1 else result
 
     def delete(self, id: str) -> Optional[Entity]:
         """Delete an entity by its unique identifier.
@@ -153,16 +150,7 @@ class OrmRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If the entity does not exist in the repository.
         """
-        entity_dict = vars(entity)
-        entity_id = entity_dict.pop('id')
-
-        update_dict = {
-            "model": self.orm_model_key,
-            "filter": f"id={entity_id}",
-            'attributes': vars(entity)
-        }
-
-        return self.orm.update(update_dict)
+        return self.update(entity)
 
     def put(self, entity: Entity) -> Optional[Entity]:
         """Put an existing entity with full updates.
@@ -176,16 +164,7 @@ class OrmRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If the entity does not exist in the repository.
         """
-        entity_dict = vars(entity)
-        entity_id = entity_dict.pop('id')
-
-        update_dict = {
-            "model": self.orm_model_key,
-            "filter": f"id={entity_id}",
-            'attributes': vars(entity)
-        }
-
-        return self.orm.update(update_dict)
+        return self.update(entity)
 
     def _pascal_to_singular_snake(self, pascal_str: str) -> str:
         # Convert PascalCase to snake_case using stringcase

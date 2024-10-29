@@ -1,3 +1,6 @@
+import uuid
+from datetime import datetime
+
 from typing import TypeVar, Generic, Optional, List
 from .base_application_service import BaseApplicationService
 from application_layer.abstractions.response_interface import IResponseHandler
@@ -40,6 +43,8 @@ class BaseController(Generic[Entity]):
             Optional[Entity]: The created entity, or None if creation fails.
         """
         try:
+            entity = self._refine_store_date(entity)
+            entity = self._add_uniq_id(entity)
             created_entity = self.app_service.post(entity)
             return self.response_handler.resource_detail("Entity created successfully", data=created_entity, status_code=201)
         except Exception as e:
@@ -56,6 +61,10 @@ class BaseController(Generic[Entity]):
         """
         try:
             get_entity = self.app_service.get(id)
+            
+            if get_entity is None or not bool(get_entity):
+                return self.response_handler.error_response("item not found", 404)
+            
             return self.response_handler.resource_detail("Entity retrieved successfully", data=get_entity)
         except Exception as e:
             return self.response_handler.error_response(f"{str(e)}", 400)
@@ -82,6 +91,7 @@ class BaseController(Generic[Entity]):
                 Optional[Entity]: The updated entity, or None if the update fails.
             """
         try:
+            entity = self._refine_store_date(entity)
             updated_entity = self.app_service.patch(entity)
             return self.response_handler.resource_detail("Entity updated successfully", data=updated_entity)
         except Exception as e:
@@ -97,6 +107,7 @@ class BaseController(Generic[Entity]):
             Optional[Entity]: The updated entity, or None if the update fails.
         """
         try:
+            entity = self._refine_store_date(entity)
             updated_entity = self.app_service.put(entity)
             return self.response_handler.resource_detail("Entity fully updated", data=updated_entity)
         except Exception as e:
@@ -116,3 +127,16 @@ class BaseController(Generic[Entity]):
             return self.response_handler.resource_detail("Entity deleted successfully")
         except Exception as e:
             return self.response_handler.error_response(f"{str(e)}", 400)
+        
+    def _refine_store_date(self, entity: Entity) -> Entity:
+        if not hasattr(entity, 'updated_at') or entity.updated_at is None:
+            entity.updated_at = datetime.now()
+
+        if not hasattr(entity, 'created_at') or entity.created_at is None:
+            entity.created_at = datetime.now()
+
+        return entity
+    
+    def _add_uniq_id(self, entity: Entity) -> Entity:
+        entity.id = str(uuid.uuid4())
+        return entity

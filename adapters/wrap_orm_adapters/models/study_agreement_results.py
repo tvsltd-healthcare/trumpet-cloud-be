@@ -11,7 +11,7 @@ class StudyAgreementResults(Base):
     study_agreement_id = Column(Integer, ForeignKey('study_agreements.id'), nullable=True,)
     specification = Column(Text, nullable=True,)
     version = Column(String(20), nullable=True,)
-    status = Column(Enum, nullable=True,)
+    status = Column(Enum('pending', 'completed'), nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
