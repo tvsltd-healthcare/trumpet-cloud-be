@@ -9,6 +9,7 @@ from lib_archi.base_controller import BaseController
 from adapters.lib_archirs.inmemory_repository import InMemoryRepository
 from lib_archi.base_repository import BaseRepository
 from adapters.middlewares.validation_middleware import ValidationMiddleware
+from adapters.middlewares.cors import CorsConfig
 
 from dotenv import load_dotenv
 
@@ -102,6 +103,11 @@ def launch_app_layer():
     """
     server = Server(Libraries.FASTAPI())
 
+    # Configure and apply CORS
+    cors_config = CorsConfig(origins=os.getenv('ALLOWED_HOSTS', '*').split(','))
+    cors_config.apply_to_server(server=server)
+
     _ = build_app_layer(repository=InMemoryRepository, server=server)
     server.use(ValidationMiddleware)
+
     server.listen(port=os.getenv("PORT", 8080))
