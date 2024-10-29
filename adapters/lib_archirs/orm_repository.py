@@ -119,7 +119,12 @@ class OrmRepository(BaseRepository[Entity]):
         }
 
         result = self.orm.update(update_dict)
-        return result[0] if isinstance(result, list) and len(result) == 1 else result
+        final_result = result[0] if isinstance(result, list) and len(result) == 1 else result
+
+        if not final_result:
+            raise Exception("Operaion Failed")
+        
+        return final_result
 
     def delete(self, id: str) -> Optional[Entity]:
         """Delete an entity by its unique identifier.
