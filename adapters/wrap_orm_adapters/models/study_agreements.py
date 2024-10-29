@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, Enum, TIMESTAMP, Boolean, func
 from sqlalchemy.orm import relationship
-from base import Base
+from .base import Base
 from .study_agreement_datasets import StudyAgreementDatasets
 from .study_agreement_queries import StudyAgreementQueries
 from .study_agreement_results import StudyAgreementResults

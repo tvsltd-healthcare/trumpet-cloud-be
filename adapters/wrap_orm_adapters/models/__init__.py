@@ -18,7 +18,7 @@
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 load_dotenv()
-from base import Base # temp
+from .base import Base # temp
 #temp end
 
 import os
