@@ -12,7 +12,7 @@ class Studies(Base):
     id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
     name = Column(String(25), nullable=True,)
     description = Column(Text, nullable=False,)
-    status = Column(Enum('active', 'paused', 'completed', name='status_enum'), nullable=True, default='active')
+    status = Column(Enum('active', 'paused', 'completed', name='studies_status_enum'), nullable=True, default='active')
     result = Column(Text, nullable=True,)
     purpose = Column(Text, nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())

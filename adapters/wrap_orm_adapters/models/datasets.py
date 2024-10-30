@@ -13,7 +13,7 @@ class Datasets(Base):
     meta_data = Column(Text, nullable=True,)
     statistics = Column(Text, nullable=False,)
     path = Column(Text, nullable=False,)
-    privacy_level = Column(Enum('public', 'confidential', 'highly_confidential', name='privacy_level_enum'), nullable=True, default='confidential')
+    privacy_level = Column(Enum('public', 'confidential', 'highly_confidential', name='datasets_privacy_level_enum'), nullable=True, default='confidential')
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)

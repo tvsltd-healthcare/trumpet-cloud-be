@@ -8,7 +8,7 @@ class Files(Base):
     __tablename__ = 'files'
 
     id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
-    type = Column(Enum('custom', 'legal', 'personal', 'other', name='type_enum'), nullable=True, default='custom')
+    type = Column(Enum('custom', 'legal', 'personal', 'other', name='files_type_enum'), nullable=True, default='custom')
     buffer = Column(String(255), nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
