@@ -54,11 +54,12 @@ RUN poetry install --only main --no-root
 # mountpoint of our code
 WORKDIR /home/code
 
-COPY ./entrypoint.sh .
+# COPY ./entrypoint.sh .
 COPY . .
 
-RUN chmod +x /home/code/entrypoint.sh
+# RUN chmod +x /home/code/entrypoint.sh
 
 EXPOSE 8080
 
-ENTRYPOINT ["bash", "/home/code/entrypoint.sh"]
+# Run the FastAPI app with Uvicorn
+CMD ["uvicorn", "app_layer_entrypoint:launch_app_layer", "--host", "0.0.0.0", "--port", "8080"]

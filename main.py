@@ -1,6 +1,6 @@
-from app_layer_entrypoint import app
-
+# main.py
+import asyncio
+from app_layer_entrypoint import launch_app_layer
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080, debug=True)
-    # launch_app_layer()
+    asyncio.run(launch_app_layer())
