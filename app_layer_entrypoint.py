@@ -148,3 +148,8 @@ def launch_app_layer():
     server.use(ResponseMiddleware)
     cors_config.apply_to_server(server=server)
     server.listen(port=os.getenv("PORT", 8080))
+    return server
+
+app = launch_app_layer()
+#     return server
+# app = launch_app_layer()

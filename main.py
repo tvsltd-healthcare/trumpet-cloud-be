@@ -1,5 +1,6 @@
-from app_layer_entrypoint import launch_app_layer
+from app_layer_entrypoint import app
 
 
 if __name__ == "__main__":
-    launch_app_layer()
+    app.run(host='0.0.0.0', port=8080, debug=True)
+    # launch_app_layer()
