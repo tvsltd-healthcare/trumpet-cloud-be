@@ -12,7 +12,7 @@ class StudyUsers(Base):
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
-    updated_by = Column(Integer, ForeignKey('users.id'), nullable=False,)
+    updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 
     created_by_user = relationship('Users', foreign_keys=[created_by])
     updated_by_user = relationship('Users', foreign_keys=[updated_by])

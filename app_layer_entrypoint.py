@@ -37,7 +37,7 @@ def _generate_orm_wrapper():
     port = os.getenv("DB_PORT")
 
     # Create a SQLAlchemy engine
-    engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}')
+    engine = create_engine(f'postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}')
 
     # Create a session
     Session = sessionmaker(bind=engine)

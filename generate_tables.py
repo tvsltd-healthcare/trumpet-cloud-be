@@ -32,7 +32,7 @@ host = os.getenv("HOST")
 port = os.getenv("DB_PORT")
 
 # Create a SQLAlchemy engine
-engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}')
+engine = create_engine(f'postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}')
 
 # Create tables
 def initialize_database():
