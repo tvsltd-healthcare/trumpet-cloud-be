@@ -9,6 +9,7 @@ from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_controller import BaseController
 from adapters.lib_archirs.inmemory_repository import InMemoryRepository
 from adapters.lib_archirs.orm_repository import OrmRepository
+from adapters.lib_archirs.fastapi_controller import FastapiController
 
 from lib_archi.base_repository import BaseRepository
 from adapters.middlewares.validation_middleware import ValidationMiddleware
@@ -16,6 +17,7 @@ from adapters.middlewares.cors import CorsConfig
 
 from adapters.wrap_orm_adapters.orm_adapter import OrmAdapter
 from application_layer.abstractions.orm_interface import IOrm
+from application_layer.abstractions.controller_interface import IController
 from adapters.middlewares.response_middleware import ResponseMiddleware
 
 from dotenv import load_dotenv
@@ -89,9 +91,9 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             continue
 
         repo = repository[entity_stub_obj](orm)
-        # repo = repository[entity_stub_obj]()
         app_service = BaseApplicationService[entity_stub_obj](repo)
-        controller = BaseController[entity_stub_obj](app_service, response_handler)
+        base_controller = BaseController[entity_stub_obj](app_service, response_handler)
+        controller: IController = FastapiController(base_controller)
 
         for routes in model.get('routes', []):
             route_method = str.lower(routes['method'])
@@ -141,7 +143,6 @@ def launch_app_layer():
     cors_config = CorsConfig(origins=os.getenv('ALLOWED_HOSTS', '*').split(','))
     cors_config.apply_to_server(server=server)
 
-    # _ = build_app_layer(repository=InMemoryRepository, server=server)
     _ = build_app_layer(repository=OrmRepository, server=server)
     
     server.use(ValidationMiddleware)

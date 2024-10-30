@@ -1,5 +1,5 @@
 from .base_repository import BaseRepository
-from typing import TypeVar, Generic, Optional, List
+from typing import TypeVar, Generic, Optional, List, Dict
 
 
 Entity = TypeVar('Entity')
@@ -26,7 +26,7 @@ class BaseApplicationService(Generic[Entity]):
         """
         self.repository = repository
 
-    def get(self, id: int) -> Entity:
+    def get(self, ids: Dict) -> Entity:
         """Retrieves an entity by its unique identifier.
 
         Args:
@@ -35,9 +35,9 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Entity: The entity retrieved from the repository.
         """
-        return self.repository.get(id)
+        return self.repository.get(ids)
 
-    def get_collection(self) -> List[Entity]:
+    def get_collection(self, ids: Dict) -> List[Entity]:
         """Retrieves a collection of all entities.
 
         Returns:
@@ -50,9 +50,9 @@ class BaseApplicationService(Generic[Entity]):
         else:
             <something>
         """
-        return self.repository.get_collection()
+        return self.repository.get_collection(ids)
 
-    def post(self, entity: Entity) -> Optional[Entity]:
+    def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Creates a new entity in the repository.
 
         Args:
@@ -61,9 +61,9 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The created entity, or None if creation fails.
         """
-        return self.repository.post(entity)
+        return self.repository.post(entity, ids)
 
-    def put(self, entity: Entity) -> Optional[Entity]:
+    def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Fully updates an existing entity in the repository.
 
         Args:
@@ -72,9 +72,9 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
-        return self.repository.put(entity)
+        return self.repository.put(entity, ids)
 
-    def patch(self, entity: Entity) -> Optional[Entity]:
+    def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Partially updates an existing entity in the repository.
 
         Args:
@@ -83,9 +83,9 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
-        return self.repository.patch(entity)
+        return self.repository.patch(entity, ids)
 
-    def delete(self, id: str) -> Optional[Entity]:
+    def delete(self, ids: Dict) -> Optional[Entity]:
         """Deletes an entity by its unique identifier.
 
         Args:
@@ -94,4 +94,4 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.
         """
-        return self.repository.delete(id)
+        return self.repository.delete(ids)

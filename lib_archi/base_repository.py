@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TypeVar, Generic, List, Optional
+from typing import TypeVar, Generic, List, Optional, Dict
 
 from .base_entity import BaseEntity
 
@@ -21,7 +21,8 @@ class BaseRepository(ABC, Generic[Entity]):
     """
 
     @abstractmethod
-    def get(self, id: int) -> Entity:
+
+    def get(self, ids: Dict) -> Entity:
         """Retrieve an entity by its unique identifier.
 
         Args:
@@ -33,7 +34,7 @@ class BaseRepository(ABC, Generic[Entity]):
         pass
 
     @abstractmethod
-    def get_collection(self) -> List[Entity]:
+    def get_collection(self, ids: Dict) -> List[Entity]:
         """Retrieve all entities.
 
         Returns:
@@ -42,7 +43,7 @@ class BaseRepository(ABC, Generic[Entity]):
         pass
 
     @abstractmethod
-    def post(self, entity: Entity) -> Optional[Entity]:
+    def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Create a new entity.
 
         Args:
@@ -54,7 +55,7 @@ class BaseRepository(ABC, Generic[Entity]):
         pass
 
     @abstractmethod
-    def delete(self, id: str) -> Optional[Entity]:
+    def delete(self, ids: Dict) -> Optional[Entity]:
         """Delete an entity by its unique identifier.
 
         Args:
@@ -66,7 +67,7 @@ class BaseRepository(ABC, Generic[Entity]):
         pass
 
     @abstractmethod
-    def patch(self, entity: Entity) -> Optional[Entity]:
+    def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Patch an existing entity with partial updates.
 
         Args:
@@ -78,7 +79,7 @@ class BaseRepository(ABC, Generic[Entity]):
         pass
 
     @abstractmethod
-    def put(self, entity: Entity) -> Optional[Entity]:
+    def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Put an existing entity with full updates or changes.
 
         Args:

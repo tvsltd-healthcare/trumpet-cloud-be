@@ -41,7 +41,7 @@ class OrmRepository(BaseRepository[Entity]):
         cls.entity_type = entity_type
         return cls
 
-    def get(self, id: str) -> Optional[Entity]:
+    def get(self, ids: Dict) -> Optional[Entity]:
         """Retrieve an entity by its unique identifier.
 
         Args:
@@ -50,29 +50,37 @@ class OrmRepository(BaseRepository[Entity]):
         Returns:
             Optional[Entity]: The entity if found, or None if not found.
         """
+
+        filter_string = " AND ".join(f"{key}={value}" for key, value in ids.items())
+
         query_dict = {
             "model": self.orm_model_key,
-            "filter": f"id={id}",
+            "filter": filter_string,
         }
+
+        print(filter_string)
 
         result = self.orm.query(query_dict)
 
         return result[0] if isinstance(result, list) and len(result) == 1 else result
 
 
-    def get_collection(self) -> List[Entity]:
+    def get_collection(self, ids: Dict) -> List[Entity]:
         """Retrieve all entities in the repository.
 
         Returns:
             List[Entity]: A list of all entities in the repository.
         """
+        filter_string = " AND ".join(f"{key}={value}" for key, value in ids.items())
+
         query_dict = {
             "model": self.orm_model_key,
+            "filter": filter_string,
         }
 
         return self.orm.query(query_dict)
 
-    def post(self, entity: Entity) -> Optional[Entity]:
+    def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Create a new entity if it does not already exist.
 
         Args:
@@ -86,6 +94,10 @@ class OrmRepository(BaseRepository[Entity]):
         """
         entity_dict = vars(entity)
         entity_dict.pop('id')
+
+        if ids is not None:
+            for key, value in ids.items():
+                entity_dict[key] = value
         
         insert_dict = {
             "model": self.orm_model_key,
@@ -97,7 +109,7 @@ class OrmRepository(BaseRepository[Entity]):
         return result[0] if isinstance(result, list) and len(result) == 1 else result
         
 
-    def update(self, entity: Entity) -> Optional[Entity]:
+    def update(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Update an existing entity in the repository.
 
         Args:
@@ -112,9 +124,15 @@ class OrmRepository(BaseRepository[Entity]):
         entity_dict = vars(entity)
         entity_id = entity_dict.get('id')
 
+        filter_string = " AND ".join(f"{key}={value}" for key, value in ids.items())
+
+        if ids is not None:
+            for key, value in ids.items():
+                entity_dict[key] = value
+
         update_dict = {
             "model": self.orm_model_key,
-            "filter": f"id={entity_id}",
+            "filter": filter_string,
             'attributes': entity_dict
         }
 
@@ -126,7 +144,7 @@ class OrmRepository(BaseRepository[Entity]):
         
         return final_result
 
-    def delete(self, id: str) -> Optional[Entity]:
+    def delete(self, ids: Dict) -> Optional[Entity]:
         """Delete an entity by its unique identifier.
 
         Args:
@@ -135,15 +153,23 @@ class OrmRepository(BaseRepository[Entity]):
         Returns:
             Optional[Entity]: The deleted entity, or None if no such entity exists.
         """
+
+        filter_string = " AND ".join(f"{key}={value}" for key, value in ids.items())
+
         delete_dict = {
             "model": self.orm_model_key,
-            "filter": f"id={id}",
+            "filter": filter_string,
         }
 
-        return self.orm.delete(delete_dict)
+        result = self.orm.delete(delete_dict)
+
+        if result in {None, 0, '0'}:
+            raise Exception("Operaion Failed")
+        
+        return result
 
 
-    def patch(self, entity: Entity) -> Optional[Entity]:
+    def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Patch an existing entity with partial updates.
 
         Args:
@@ -155,9 +181,9 @@ class OrmRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If the entity does not exist in the repository.
         """
-        return self.update(entity)
+        return self.update(entity, ids)
 
-    def put(self, entity: Entity) -> Optional[Entity]:
+    def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Put an existing entity with full updates.
 
         Args:
@@ -169,7 +195,7 @@ class OrmRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If the entity does not exist in the repository.
         """
-        return self.update(entity)
+        return self.update(entity, ids)
 
     def _pascal_to_singular_snake(self, pascal_str: str) -> str:
         # Convert PascalCase to snake_case using stringcase
