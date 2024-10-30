@@ -13,7 +13,6 @@ wrap-validate = {git = "https://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@github.
 wrap-orm = {git = "https://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@github.com/tvsltd/wrap_orm.git", rev = "feature/crud-implementation"}
 stringcase = "^1.2.0"
 pymysql = "^1.1.1"
-wrap-orm = {git = "https://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@github.com/tvsltd/wrap_orm.git", rev = "feature/crud-implementation"}
 psycopg2-binary = "^2.9.10"
 
 
