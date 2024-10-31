@@ -141,10 +141,10 @@ def launch_app_layer():
 
     # # Configure and apply CORS
     cors_config = CorsConfig(origins=os.getenv('ALLOWED_HOSTS', '*').split(','))
-    cors_config.apply_to_server(server=server)
 
     _ = build_app_layer(repository=OrmRepository, server=server)
     
     server.use(ValidationMiddleware)
     server.use(ResponseMiddleware)
+    cors_config.apply_to_server(server=server)
     server.listen(port=os.getenv("PORT", 8080))
