@@ -16,8 +16,6 @@ wrap-orm = {git = "https://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@github.com/t
 stringcase = "^1.2.0"
 pymysql = "^1.1.1"
 psycopg2-binary = "^2.9.10"
-asyncio = "^3.4.3"
-uvicorn = "^0.32.0"
 
 
 [build-system]

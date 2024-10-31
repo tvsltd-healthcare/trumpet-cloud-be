@@ -7,21 +7,17 @@ from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_controller import BaseController
-from adapters.lib_archirs.inmemory_repository import InMemoryRepository
 from adapters.lib_archirs.orm_repository import OrmRepository
 from adapters.lib_archirs.fastapi_controller import FastapiController
-
 from lib_archi.base_repository import BaseRepository
 from adapters.middlewares.validation_middleware import ValidationMiddleware
 from adapters.middlewares.cors import CorsConfig
-
 from adapters.wrap_orm_adapters.orm_adapter import OrmAdapter
 from application_layer.abstractions.orm_interface import IOrm
 from application_layer.abstractions.controller_interface import IController
 from adapters.middlewares.response_middleware import ResponseMiddleware
 
 from dotenv import load_dotenv
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -30,6 +26,7 @@ CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 
 load_dotenv()
 entity_resources = get_resource_types()
+
 
 def _generate_orm_wrapper():
     username = os.getenv("DB_USERNAME")
@@ -48,6 +45,7 @@ def _generate_orm_wrapper():
     orm: IOrm = OrmAdapter(session)
 
     return orm
+
 
 def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     """Builds the application layer by registering routes and controllers.
@@ -141,22 +139,11 @@ def launch_app_layer():
 
     # # Configure and apply CORS
     cors_config = CorsConfig(origins=os.getenv('ALLOWED_HOSTS', '*').split(','))
-    cors_config.apply_to_server(server=server)
 
     _ = build_app_layer(repository=OrmRepository, server=server)
 
     server.use(ValidationMiddleware)
     server.use(ResponseMiddleware)
     cors_config.apply_to_server(server=server)
-    server.listen(port=os.getenv("PORT", 8080))
-    server
-    server.listen(port=os.getenv("PORT", 8000), host=os.getenv("HOST", "127.0.0.1"))
 
-async def launch_app_layer():
-    config = uvicorn.Config("app_layer_entrypoint:launch_app_layer", host="0.0.0.0", port=8080)
-    server = uvicorn.Server(config)
-    await server.serve()
-    return server
-# app = launch_app_layer()
-#     return server
-# app = launch_app_layer()
+    server.listen(port=os.getenv("PORT", 8000), host=os.getenv("HOST", "127.0.0.1"))
