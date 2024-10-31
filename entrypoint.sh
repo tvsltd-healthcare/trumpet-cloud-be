@@ -2,21 +2,17 @@
 set -e
 
 # Check if the DATABASE environment variable is set
-if [ "$DATABASE" = "trumpet-node-dashboard" ]; then
-    echo "Waiting for Trumpet's dashboard postgres..."
+if [ "$DB_NAME" = "cloud-postgres" ]; then
+    echo "Waiting for Trumpet Cloud server postgres..."
 
     # Wait for the database to be ready
-    while ! nc -z "$SQL_HOST" "$SQL_PORT"; do
+    while ! nc -z "$DB_HOST" "$DB_PORT"; do
       sleep 0.1
     done
 
-    echo "Trumpet's dashboard postgres started!"
+    echo "Trumpet Cloud postgres server started!"
 fi
 
-# Start the Gunicorn server
-exec gunicorn app_layer_entrypoint:app \
-    --bind 0.0.0.0:8080 \
-    --log-level info \
-    --timeout 180 \
-    --workers 3 \
-    --worker-class uvicorn.workers.UvicornWorker "$@"
+python main.py
+
+exec "$@"
