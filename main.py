@@ -1,5 +1,5 @@
-from lib_application_layer import launch_application_layer
+from app_layer_entrypoint import launch_app_layer
 
 
 if __name__ == "__main__":
-    launch_application_layer()
+    launch_app_layer()
