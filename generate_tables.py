@@ -25,10 +25,10 @@ from adapters.wrap_orm_adapters.models.study_agreements import StudyAgreements
 from adapters.wrap_orm_adapters.models.study_users import StudyUsers
 from adapters.wrap_orm_adapters.models.user_roles import UserRoles
 
-username = os.getenv("USERNAME")
-password = os.getenv("PASSWORD")
-database = os.getenv("DATABASE")
-host = os.getenv("HOST")
+username = os.getenv("DB_USERNAME")
+password = os.getenv("DB_PASSWORD")
+database = os.getenv("DB_NAME")
+host = os.getenv("DB_HOST")
 port = os.getenv("DB_PORT")
 
 # Create a SQLAlchemy engine
