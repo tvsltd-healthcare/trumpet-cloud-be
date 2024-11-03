@@ -9,7 +9,7 @@ services:
       - ./.env
     depends_on:
       - cloud-postgres
-#      - fl-core-agg
+      - fl-core-agg
     ports:
       - '9010:8000'
 
@@ -24,12 +24,20 @@ services:
     volumes:
       - ./docker/postgresql/cloud/data:/var/lib/postgresql/data/
 
-#  fl-core-agg:
-#    image: "njnur/fl-core-agg:0.0.1"
-#    restart: on-failure
-#    container_name: fl-core-agg
-#    ports:
-#      - "9011:8000"
-#      - "9083:8080"
-#    environment:
-#      NODE_ID: 0
+  fl-core-agg:
+    image: "njnur/fl-core-agg:0.0.1"
+    restart: on-failure
+    container_name: fl-core-agg
+    ports:
+      - "9090:8000"
+      - "9080:8080"
+    environment:
+      NODE_ID: 0
+
+    networks:
+      shared_fl_network:
+        ipv4_address: 172.19.0.2
+
+networks:
+  shared_fl_network:
+    external: true
