@@ -15,6 +15,12 @@ StudyAgreements = {
             "error_code": "119"
         }
     },
+    "participants": {
+        "type": {
+            "value": "string",
+            "error_code": "999"
+        }
+    },
     "legal": {
         "type": {
             "value": "string",

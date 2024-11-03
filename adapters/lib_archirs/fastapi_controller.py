@@ -1,9 +1,33 @@
+import re
+
 from typing import TypeVar, Optional
+
 from application_layer.abstractions.controller_interface import IController
 from lib_archi.base_controller import BaseController
+from logic_injector.base_logic_injector import BaseLogicInjector
+
 from fastapi import Request
 
+
 Entity = TypeVar('Entity')
+injector = BaseLogicInjector()
+BUSINESS_LOGIC_PATHS = r"^/api/studies/\d+/agreements$"
+
+
+def path_matches(path: str) -> bool:
+    """
+    Checks if the given path matches the pattern /api/studies/{id}/agreements.
+
+    Args:
+        path (str): The URL path to be matched (excluding the base URL).
+
+    Returns:
+        bool: True if the path matches the pattern, False otherwise.
+    """
+    # Todo:: Enhance it for any path matching where we need to inject the business logic
+
+    pattern = BUSINESS_LOGIC_PATHS
+    return bool(re.match(pattern, path))
 
 
 class FastapiController(IController):
@@ -47,6 +71,8 @@ class FastapiController(IController):
             Optional[Entity]: The newly created entity, or None if creation fails.
         """
         ids: dict = request.path_params
+        if path_matches(request.url.path):
+            injector.inject_business_logic(entity=entity, entity_id=ids)
         return self.controller.post(entity, ids)
 
     def get(self, request: Request) -> Entity:

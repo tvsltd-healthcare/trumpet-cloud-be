@@ -11,6 +11,7 @@ class StudyAgreements(Base):
 
     id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
     purpose = Column(String(30), nullable=True, unique=True,)
+    participants = Column(String(255), nullable=True)
     legal = Column(String(30), nullable=True, unique=True,)
     study_privacy_budget = Column(Integer, nullable=True, unique=True,)
     expiration_date = Column(TIMESTAMP, nullable=True,)

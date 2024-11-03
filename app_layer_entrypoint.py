@@ -68,7 +68,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         FileNotFoundError: If the configuration file specified by `CONFIG_FILE_PATH`
             is not found.
         json.JSONDecodeError: If the configuration file contains invalid JSON.
-        KeyError: If expected keys (like 'name' or 'routes') are missing from the
+        KeyError: If expected keys (like 'name' or 'routes') are missing from the=
             model definitions in the configuration.
     """
     # get all the routers of the application
