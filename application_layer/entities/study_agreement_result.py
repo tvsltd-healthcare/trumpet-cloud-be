@@ -15,6 +15,16 @@ StudyAgreementResults = {
             "error_code": "146"
         }
     },
+    "file_path": {
+        "type": {
+            "value": "text",
+            "error_code": "145"
+        },
+        "required": {
+            "value": True,
+            "error_code": "146"
+        }
+    },
     "version": {
         "type": {
             "value": "string",
