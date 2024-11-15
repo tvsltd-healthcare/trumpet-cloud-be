@@ -84,18 +84,33 @@ For a Dockerized setup, follow the instructions below.
 
 ### Environment Setup
 
-1. Copy the `env.example` file to `.env`:
-   ```bash
+1. Copy the `env.example` or `.env.example.arm`  file to `.env`:
+```bash
+   # For Linux or Windows OS
    cp env.example .env
+
+   # For Mac OS
+   cp env.example.arm .env
+```
+2. Add your `frontend` host into `.env` file in `ALLOWED_HOSTS` variables with comma separated value.
+3. Forwording / Mapping your `WEB-LISTENER` host using `ngrok`. Run:
+   ```bash
+      ngrok http <web-listener host>
    ```
-2. Update any environment variables in `.env` as needed.
+
+4. Copy the forwording Url  and Update the `LISTENER_WEBHOOK_URL` variables in `.env` file  as like as `<LISTENER_WEBHOOK_URL>/listen`. 
+4. Update any environment variables in `.env` as needed.
 
 ### Docker Compose
 
 To start the project in a Docker environment:
 
 ```bash
-docker compose up --build
+   # For Linux or Windows Os
+   docker compose -f docker-compose.yml up —build -d
+
+   # For Mac Os
+   docker compose -f docker-compose.yml.arm up —build -d
 ```
 
 This command will:
