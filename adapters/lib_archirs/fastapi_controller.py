@@ -71,9 +71,12 @@ class FastapiController(IController):
             Optional[Entity]: The newly created entity, or None if creation fails.
         """
         ids: dict = request.path_params
+        result = self.controller.post(entity, ids)
+
         if path_matches(request.url.path):
-            injector.inject_business_logic(entity=entity, entity_id=ids)
-        return self.controller.post(entity, ids)
+            agreement_id = result['data']['id']
+            injector.inject_business_logic(entity=entity, entity_id=ids, agreement_id=agreement_id)
+        return result
 
     def get(self, request: Request) -> Entity:
         """Retrieves a specific entity based on path parameters.
