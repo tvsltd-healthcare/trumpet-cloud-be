@@ -126,6 +126,8 @@ class OrmRepository(BaseRepository[Entity]):
 
         filter_string = " AND ".join(f"{key}={value}" for key, value in ids.items())
 
+        entity_dict = {key: value for key, value in entity_dict.items() if value is not None}
+
         if ids is not None:
             for key, value in ids.items():
                 entity_dict[key] = value
