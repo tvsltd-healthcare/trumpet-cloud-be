@@ -2,7 +2,6 @@ from sqlalchemy import Column, String, Integer, ForeignKey, Enum, TIMESTAMP, Boo
 from sqlalchemy.orm import relationship
 from .base import Base
 from sqlalchemy.types import Text
-from .study_agreement_datasets import StudyAgreementDatasets
 
 
 class Datasets(Base):

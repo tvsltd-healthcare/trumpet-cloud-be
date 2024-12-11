@@ -2,8 +2,6 @@ from sqlalchemy import Column, String, Integer, ForeignKey, Enum, TIMESTAMP, Boo
 from sqlalchemy.orm import relationship
 from .base import Base
 from sqlalchemy.types import Text
-from .study_users import StudyUsers
-from .study_agreements import StudyAgreements
 
 
 class Studies(Base):

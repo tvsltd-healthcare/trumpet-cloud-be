@@ -1,7 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, Enum, TIMESTAMP, Boolean, func
 from sqlalchemy.orm import relationship
 from .base import Base
-from .organization_users import OrganizationUsers
 
 
 class Organizations(Base):
@@ -12,7 +11,7 @@ class Organizations(Base):
     email = Column(String(40), nullable=True, unique=True,)
     address = Column(String(50), nullable=False,)
     phone = Column(String(20), nullable=False, unique=True,)
-    status = Column(Enum('approved', 'disapproved', 'blocked', 'pending_approval', name='organizations_status_enum'), nullable=True, default='pending_approval')
+    status = Column(Enum('approved', 'disapproved', 'blocked', 'pending', name='organizations_status_enum'), nullable=True, default='pending')
     type = Column(Enum('data_owner', 'researcher', name='organizations_type_enum'), nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())

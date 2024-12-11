@@ -11,6 +11,27 @@ load_dotenv()
 
 AVAILABLE_DOS = os.getenv("DO_ENDPOINTS").split(",")
 
+PET_CONFIG_MAP = {
+        'None': {},
+        'CD_DP': {
+            "eval_points": [0.001, 0.002, 0.003],
+            "eps1": 0.5,
+            "eps3": 10,
+            "epochs": 1,
+            "release_proportion": 0.3,
+            "eps2": 0.5,
+            "gamma": 1,
+            "tau": 1e-10,
+        },
+        'ThHE': {
+            "logn": 16,
+            "plaintext_mod": 0,
+            "log_q": [58, 56, 55, 55],
+            "log_p": [56, 55],
+            "scale": 16,
+        }
+    }
+
 
 class BaseLogicInjector:
     def __init__(self):
@@ -66,7 +87,7 @@ class FLSetupInjector:
             "coordinator": coordinator,
             "model": model,
             "pet": pet,
-            "pet_config" : {},
+            "pet_config" : PET_CONFIG_MAP[pet],
             "rounds": rounds,
             "webhook_url": webhook_url,
             "participants":  participants,
@@ -87,7 +108,7 @@ class FLSetupInjector:
             "coordinator": coordinator,
             "model": model,
             "pet": pet,
-            "pet_config" : {},
+            "pet_config" : PET_CONFIG_MAP[pet],
             "rounds": rounds,
             "webhook_url": webhook_url,
             "participants":  participants,

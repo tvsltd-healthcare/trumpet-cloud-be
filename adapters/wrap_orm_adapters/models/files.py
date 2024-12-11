@@ -1,7 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, Enum, TIMESTAMP, Boolean, func
 from sqlalchemy.orm import relationship
 from .base import Base
-from sqlalchemy.dialects.mysql import LONGBLOB
 
 
 class Files(Base):

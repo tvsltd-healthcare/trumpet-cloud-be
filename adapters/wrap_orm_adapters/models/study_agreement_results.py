@@ -10,7 +10,7 @@ class StudyAgreementResults(Base):
     id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
     study_agreement_id = Column(Integer, ForeignKey('study_agreements.id'), nullable=True,)
     specification = Column(Text, nullable=True,)
-    file_path = Column(Text, nullable=True,)
+    file_path = Column(Text, nullable=False,)
     version = Column(String(20), nullable=True,)
     status = Column(Enum('pending', 'completed', name='study_agreement_results_status_enum'), nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())

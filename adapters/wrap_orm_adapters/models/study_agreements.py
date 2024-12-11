@@ -1,19 +1,18 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, Enum, TIMESTAMP, Boolean, func
 from sqlalchemy.orm import relationship
 from .base import Base
-from .study_agreement_datasets import StudyAgreementDatasets
-from .study_agreement_queries import StudyAgreementQueries
-from .study_agreement_results import StudyAgreementResults
 
 
 class StudyAgreements(Base):
     __tablename__ = 'study_agreements'
 
     id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
-    purpose = Column(String(30), nullable=True, unique=True,)
-    participants = Column(String(255), nullable=True)
-    legal = Column(String(30), nullable=True, unique=True,)
-    study_privacy_budget = Column(Integer, nullable=True, unique=True,)
+    purpose = Column(String(30), nullable=True,)
+    participants = Column(String(255), nullable=True,)
+    pet = Column(Enum('None', 'CD_DP', 'ThHE', name='study_agreements_pet_enum'), nullable=True,)
+    model = Column(Enum('NN', 'NN_FHIR', name='study_agreements_model_enum'), nullable=True, default='NN')
+    legal = Column(String(30), nullable=True,)
+    study_privacy_budget = Column(Integer, nullable=True,)
     expiration_date = Column(TIMESTAMP, nullable=True,)
     study_id = Column(Integer, ForeignKey('studies.id'), nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())

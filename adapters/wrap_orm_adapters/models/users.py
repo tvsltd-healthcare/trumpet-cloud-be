@@ -1,9 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, Enum, TIMESTAMP, Boolean, func
 from sqlalchemy.orm import relationship
 from .base import Base
-from .organization_users import OrganizationUsers
-from .user_roles import UserRoles
-from .study_users import StudyUsers
 
 
 class Users(Base):
@@ -14,7 +11,7 @@ class Users(Base):
     last_name = Column(String(15), nullable=True,)
     email = Column(String(40), nullable=True, unique=True,)
     password = Column(String(30), nullable=True,)
-    status = Column(Enum('approved', 'disapproved', 'blocked', 'pending_registration', name='users_status_enum'), nullable=True, default='pending')
+    status = Column(Enum('approved', 'disapproved', 'blocked', 'pending', name='users_status_enum'), nullable=True, default='pending')
     phone = Column(String(20), nullable=True, unique=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())

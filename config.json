@@ -65,7 +65,7 @@
                 "default_message": ""
               },
               {
-                "tag": "pattern",
+                "tag": "regex",
                 "rule": "^(custom|legal|personal|other)$",
                 "error_code": "4",
                 "default_message": ""
@@ -74,8 +74,8 @@
           },
           {
             "column": "buffer",
-            "type": "LONGBLOB",
-            "length": "",
+            "type": "VARCHAR",
+            "length": 255,
             "auto_increment": false,
             "unique": false,
             "allow_null": true,
@@ -89,6 +89,18 @@
             "is_redundant": false,
             "should_sync": false,
             "validations": [
+              {
+                "tag": "type",
+                "rule": "string",
+                "error_code": "255",
+                "default_message": ""
+              },
+              {
+                "tag": "max_length",
+                "rule": 255,
+                "error_code": "256",
+                "default_message": ""
+              },
               {
                 "tag": "required",
                 "rule": true,
@@ -178,7 +190,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -190,7 +202,7 @@
             "should_sync": false,
             "validations": [
               {
-                "tag": "required",
+                "tag": "type",
                 "rule": "number",
                 "error_code": "9",
                 "default_message": ""
@@ -327,7 +339,7 @@
                 "default_message": ""
               },
               {
-                "tag": "pattern",
+                "tag": "regex",
                 "rule": "^[A-Za-z0-9._%-].*@[A-Za-z0-9._%-].*\\.[A-Za-z]{2,}$",
                 "error_code": "17",
                 "default_message": ""
@@ -422,9 +434,9 @@
               "approved",
               "disapproved",
               "blocked",
-              "pending_approval"
+              "pending"
             ],
-            "default_value": "pending_approval",
+            "default_value": "pending",
             "on_delete": "",
             "on_update": "",
             "is_redundant": false,
@@ -437,7 +449,7 @@
                 "default_message": ""
               },
               {
-                "tag": "pattern",
+                "tag": "regex",
                 "rule": "^(approved|disapproved|blocked|pending_approval)$",
                 "error_code": "25",
                 "default_message": ""
@@ -477,7 +489,7 @@
                 "default_message": ""
               },
               {
-                "tag": "pattern",
+                "tag": "regex",
                 "rule": "^(data_owner|researcher)$",
                 "error_code": "28",
                 "default_message": ""
@@ -571,7 +583,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -773,7 +785,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -961,7 +973,7 @@
                 "default_message": ""
               },
               {
-                "tag": "pattern",
+                "tag": "regex",
                 "rule": "^[A-Za-z0-9._%-].*@[A-Za-z0-9._%-].*\\.[A-Za-z]{2,}$",
                 "error_code": "51",
                 "default_message": ""
@@ -1025,7 +1037,7 @@
               "approved",
               "disapproved",
               "blocked",
-              "pending_registration"
+              "pending"
             ],
             "default_value": "pending",
             "on_delete": "",
@@ -1040,8 +1052,8 @@
                 "default_message": ""
               },
               {
-                "tag": "pattern",
-                "rule": "^(approved|disapproved|blocked|pending_registration)$",
+                "tag": "regex",
+                "rule": "^(approved|disapproved|blocked|pending)$",
                 "error_code": "57",
                 "default_message": ""
               },
@@ -1171,7 +1183,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -1400,7 +1412,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -1452,14 +1464,14 @@
             "associated_model": "Users",
             "foreign_key": "user_id",
             "source_key": "id",
-            "as": "user"
+            "as": "user_role"
           },
           {
             "method": "belongsTo",
             "associated_model": "Roles",
             "foreign_key": "role_id",
             "source_key": "id",
-            "as": "role"
+            "as": "user_role"
           }
         ]
       },
@@ -1622,7 +1634,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -1674,14 +1686,14 @@
             "associated_model": "Organizations",
             "foreign_key": "organization_id",
             "source_key": "id",
-            "as": "organization"
+            "as": "organization_users"
           },
           {
             "method": "belongsTo",
             "associated_model": "Users",
             "foreign_key": "user_id",
             "source_key": "id",
-            "as": "user"
+            "as": "organization_users"
           }
         ]
       },
@@ -1803,7 +1815,7 @@
                 "default_message": ""
               },
               {
-                "tag": "pattern",
+                "tag": "regex",
                 "rule": "^(active|paused|completed)$",
                 "error_code": "86",
                 "default_message": ""
@@ -1959,7 +1971,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -2082,7 +2094,7 @@
             ]
           },
           {
-            "column": "metadata",
+            "column": "meta_data",
             "type": "TEXT",
             "length": "",
             "auto_increment": false,
@@ -2190,7 +2202,7 @@
                 "default_message": ""
               },
               {
-                "tag": "type",
+                "tag": "regex",
                 "rule": "^(public|confidential|highly_confidential)$",
                 "error_code": "104",
                 "default_message": ""
@@ -2284,7 +2296,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -2492,7 +2504,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -2544,14 +2556,14 @@
             "associated_model": "Studies",
             "foreign_key": "study_id",
             "source_key": "id",
-            "as": "study"
+            "as": "study_collaborators"
           },
           {
             "method": "belongsTo",
             "associated_model": "Users",
             "foreign_key": "user_id",
             "source_key": "id",
-            "as": "user"
+            "as": "study_collaborators"
           }
         ]
       },
@@ -2588,7 +2600,7 @@
             "type": "VARCHAR",
             "length": 30,
             "auto_increment": false,
-            "unique": true,
+            "unique": false,
             "allow_null": true,
             "primary_key": false,
             "foreign_key": "",
@@ -2615,11 +2627,105 @@
             ]
           },
           {
+            "column": "participants",
+            "type": "VARCHAR",
+            "length": 255,
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": true,
+            "primary_key": false,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": "",
+            "default_value": "",
+            "on_delete": "",
+            "on_update": "",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "required",
+                "rule": true,
+                "error_code": "999",
+                "default_message": ""
+              }
+            ]
+          },
+          {
+            "column": "pet",
+            "type": "ENUM",
+            "length": 30,
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": true,
+            "primary_key": false,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": [
+              "None",
+              "CD_DP",
+              "ThHE"
+            ],
+            "default_value": "",
+            "on_delete": "",
+            "on_update": "",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "string",
+                "error_code": "1000",
+                "default_message": ""
+              },
+              {
+                "tag": "regex",
+                "rule": "^(None|CD_DP|ThHE)$",
+                "error_code": "1001",
+                "default_message": ""
+              }
+            ]
+          },
+          {
+            "column": "model",
+            "type": "ENUM",
+            "length": 30,
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": true,
+            "primary_key": false,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": [
+              "NN",
+              "NN_FHIR"
+            ],
+            "default_value": "NN",
+            "on_delete": "",
+            "on_update": "",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "string",
+                "error_code": "1002",
+                "default_message": ""
+              },
+              {
+                "tag": "regex",
+                "rule": "^(None|CD_DP|ThHE)$",
+                "error_code": "1003",
+                "default_message": ""
+              }
+            ]
+          },
+          {
             "column": "legal",
             "type": "VARCHAR",
             "length": 30,
             "auto_increment": false,
-            "unique": true,
+            "unique": false,
             "allow_null": true,
             "primary_key": false,
             "foreign_key": "",
@@ -2644,7 +2750,7 @@
             "type": "INT",
             "length": "",
             "auto_increment": false,
-            "unique": true,
+            "unique": false,
             "allow_null": true,
             "primary_key": false,
             "foreign_key": "",
@@ -2795,7 +2901,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -2854,21 +2960,21 @@
             "associated_model": "StudyAgreementQueries",
             "foreign_key": "study_agreement_id",
             "source_key": "id",
-            "as": "study_agreements"
+            "as": "study_agreement_queries"
           },
           {
             "method": "hasMany",
             "associated_model": "StudyAgreementResults",
             "foreign_key": "study_agreement_id",
             "source_key": "id",
-            "as": "study_agreements"
+            "as": "study_agreement_results"
           },
           {
             "method": "belongsTo",
             "associated_model": "Studies",
             "foreign_key": "study_id",
             "source_key": "id",
-            "as": "study"
+            "as": "study_agreements"
           }
         ]
       },
@@ -3062,7 +3168,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -3114,14 +3220,14 @@
             "associated_model": "StudyAgreements",
             "foreign_key": "study_agreement_id",
             "source_key": "id",
-            "as": "study_agreement"
+            "as": "study_agreement_datasets"
           },
           {
             "method": "belongsTo",
             "associated_model": "Datasets",
             "foreign_key": "dataset_id",
             "source_key": "id",
-            "as": "dataset"
+            "as": "study_agreement_datasets"
           }
         ]
       },
@@ -3174,12 +3280,6 @@
                 "tag": "type",
                 "rule": "number",
                 "error_code": "137",
-                "default_message": ""
-              },
-              {
-                "tag": "type",
-                "rule": "number",
-                "error_code": "144",
                 "default_message": ""
               }
             ]
@@ -3290,7 +3390,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -3342,7 +3442,7 @@
             "associated_model": "StudyAgreements",
             "foreign_key": "study_agreement_id",
             "source_key": "id",
-            "as": "study_agreement"
+            "as": "study_agreement_queries"
           }
         ]
       },
@@ -3390,7 +3490,14 @@
             "on_update": "CASCADE",
             "is_redundant": false,
             "should_sync": false,
-            "validations": []
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "number",
+                "error_code": "144",
+                "default_message": ""
+              }
+            ]
           },
           {
             "column": "specification",
@@ -3419,6 +3526,31 @@
                 "tag": "required",
                 "rule": true,
                 "error_code": "146",
+                "default_message": ""
+              }
+            ]
+          },
+          {
+            "column": "file_path",
+            "type": "TEXT",
+            "length": "",
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": false,
+            "primary_key": false,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": "",
+            "default_value": "",
+            "on_delete": "",
+            "on_update": "",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "text",
+                "error_code": "1004",
                 "default_message": ""
               }
             ]
@@ -3470,7 +3602,10 @@
             "primary_key": false,
             "foreign_key": "",
             "fk_reference": "",
-            "enum_or_set_values": "",
+            "enum_or_set_values": [
+              "pending",
+              "completed"
+            ],
             "default_value": "",
             "on_delete": "",
             "on_update": "",
@@ -3479,8 +3614,14 @@
             "validations": [
               {
                 "tag": "type",
-                "rule": "ENUM",
+                "rule": "string",
                 "error_code": "150",
+                "default_message": ""
+              },
+              {
+                "tag": "regex",
+                "rule": "^(pending|completed)$",
+                "error_code": "1501",
                 "default_message": ""
               },
               {
@@ -3572,7 +3713,7 @@
             "length": "",
             "auto_increment": false,
             "unique": false,
-            "allow_null": false,
+            "allow_null": true,
             "primary_key": false,
             "foreign_key": "id",
             "fk_reference": "Users",
@@ -3624,7 +3765,7 @@
             "associated_model": "StudyAgreements",
             "foreign_key": "study_agreement_id",
             "source_key": "id",
-            "as": "study_agreement"
+            "as": "study_agreement_results"
           }
         ]
       }
