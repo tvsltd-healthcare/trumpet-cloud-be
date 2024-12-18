@@ -13,7 +13,7 @@ AVAILABLE_DOS = os.getenv("DO_ENDPOINTS").split(",")
 
 PET_CONFIG_MAP = {
         'None': {},
-        'CD_DP': {
+        'CDC_DP': {
             "eval_points": [0.001, 0.002, 0.003],
             "eps1": 0.5,
             "eps3": 10,

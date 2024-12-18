@@ -9,7 +9,7 @@ class StudyAgreements(Base):
     id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
     purpose = Column(String(30), nullable=True,)
     participants = Column(String(255), nullable=True,)
-    pet = Column(Enum('None', 'CD_DP', 'ThHE', name='study_agreements_pet_enum'), nullable=True,)
+    pet = Column(Enum('None', 'CDC_DP', 'ThHE', name='study_agreements_pet_enum'), nullable=True,)
     model = Column(Enum('NN', 'NN_FHIR', name='study_agreements_model_enum'), nullable=True, default='NN')
     legal = Column(String(30), nullable=True,)
     study_privacy_budget = Column(Integer, nullable=True,)

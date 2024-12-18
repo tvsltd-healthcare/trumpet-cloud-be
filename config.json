@@ -2663,7 +2663,7 @@
             "fk_reference": "",
             "enum_or_set_values": [
               "None",
-              "CD_DP",
+              "CDC_DP",
               "ThHE"
             ],
             "default_value": "",
@@ -2680,7 +2680,7 @@
               },
               {
                 "tag": "regex",
-                "rule": "^(None|CD_DP|ThHE)$",
+                "rule": "^(None|CDC_DP|ThHE)$",
                 "error_code": "1001",
                 "default_message": ""
               }
@@ -2714,7 +2714,7 @@
               },
               {
                 "tag": "regex",
-                "rule": "^(None|CD_DP|ThHE)$",
+                "rule": "^(NN|NN_FHIR)$",
                 "error_code": "1003",
                 "default_message": ""
               }
