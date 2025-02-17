@@ -17,7 +17,7 @@ class BaseApplicationService(Generic[Entity]):
             for CRUD operations on entities.
     """
 
-    def __init__(self, repository: BaseRepository[Entity]):
+    def __init__(self, repository: BaseRepository[Entity], logic_map: Dict = None):
         """Initializes the service with a repository instance.
 
         Args:
@@ -25,6 +25,8 @@ class BaseApplicationService(Generic[Entity]):
                 entity operations.
         """
         self.repository = repository
+        print('logic_map, BaseApplicationService', logic_map)
+        self.logic_map = logic_map or {}
 
     def get(self, ids: Dict) -> Entity:
         """Retrieves an entity by its unique identifier.
@@ -35,6 +37,8 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Entity: The entity retrieved from the repository.
         """
+        if self.logic_map.get("get"):
+            return self.logic_map["get"]()
         return self.repository.get(ids)
 
     def get_collection(self, ids: Dict) -> List[Entity]:
@@ -50,6 +54,9 @@ class BaseApplicationService(Generic[Entity]):
         else:
             <something>
         """
+        print('===========<>Execute logics', self.logic_map)
+        if self.logic_map.get("get"):
+            return self.logic_map["get"]()
         return self.repository.get_collection(ids)
 
     def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
@@ -61,6 +68,8 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The created entity, or None if creation fails.
         """
+        if self.logic_map.get("put"):
+            return self.logic_map["put"]()
         return self.repository.post(entity, ids)
 
     def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
@@ -83,6 +92,8 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
+        if self.logic_map.get("patch"):
+            return self.logic_map["patch"]()
         return self.repository.patch(entity, ids)
 
     def delete(self, ids: Dict) -> Optional[Entity]:

@@ -1,6 +1,7 @@
 import os
 import json
 
+from logic_loader import load_logics
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
@@ -26,7 +27,7 @@ CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 
 load_dotenv()
 entity_resources = get_resource_types()
-
+logic_map = load_logics()
 
 def _generate_orm_wrapper():
     username = os.getenv("DB_USERNAME")
@@ -89,7 +90,8 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             continue
 
         repo = repository[entity_stub_obj](orm)
-        app_service = BaseApplicationService[entity_stub_obj](repo)
+        print('logic_map.get=model.get', logic_map.get(model.get('name')))
+        app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model.get('name'), {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
         controller: IController = FastapiController(base_controller)
 
