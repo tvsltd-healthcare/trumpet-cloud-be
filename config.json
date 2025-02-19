@@ -213,27 +213,33 @@
         "routes": [
           {
             "url": "/api/files/{id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/files",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/files/{id}",
-            "method": "put"
+            "method": "put",
+            "auth": true
           },
           {
             "url": "/api/files",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/files/{id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/files/{id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": []
@@ -606,27 +612,33 @@
         "routes": [
           {
             "url": "/api/organizations/{id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/organizations",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/organizations/{id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/organizations",
-            "method": "post"
+            "method": "post",
+            "auth": false
           },
           {
             "url": "/api/organizations/{id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/organizations/{id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -808,27 +820,33 @@
         "routes": [
           {
             "url": "/api/roles/{id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/roles",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/roles/{id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/roles",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/roles/{id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/roles/{id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -1206,27 +1224,33 @@
         "routes": [
           {
             "url": "/api/users/{id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/users",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/users/{id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/users",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/users/{id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/users/{id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -1435,27 +1459,33 @@
         "routes": [
           {
             "url": "/api/users/{user_id}/roles/{role_id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/users/{user_id}/roles",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/users/{user_id}/roles/{role_id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/users/{user_id}/roles",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/users/{user_id}/roles/{role_id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/users/{user_id}/roles/{role_id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -1657,27 +1687,33 @@
         "routes": [
           {
             "url": "/api/organizations/{organization_id}/users/{user_id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/organizations/{organization_id}/users",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/organizations/{organization_id}/users/{user_id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/organizations/{organization_id}/users",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/organizations/{organization_id}/users/{user_id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/organizations/{organization_id}/users/{user_id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -1994,27 +2030,33 @@
         "routes": [
           {
             "url": "/api/studies/{id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/studies",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/studies/{id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/studies",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/studies/{id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/studies/{id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -2319,27 +2361,33 @@
         "routes": [
           {
             "url": "/api/datasets/{id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/datasets",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/datasets/{id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/datasets",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/datasets/{id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/datasets/{id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -2527,27 +2575,33 @@
         "routes": [
           {
             "url": "/api/studies/{study_id}/users/{user_id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/studies/{study_id}/users",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/studies/{study_id}/users/{user_id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/studies/{study_id}/users",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/studies/{study_id}/users/{user_id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/studies/{study_id}/users/{user_id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -2924,27 +2978,33 @@
         "routes": [
           {
             "url": "/api/studies/{study_id}/agreements/{id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/studies/{study_id}/agreements",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/studies/{study_id}/agreements/{id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/studies/{study_id}/agreements",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/studies/{study_id}/agreements/{id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/studies/{study_id}/agreements/{id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -3191,27 +3251,33 @@
         "routes": [
           {
             "url": "/api/study_agreements/{study_agreement_id}/datasets/{dataset_id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/datasets",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/datasets/{dataset_id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/datasets",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/datasets/{dataset_id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/datasets/{dataset_id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -3413,27 +3479,33 @@
         "routes": [
           {
             "url": "/api/study_agreements/{study_agreement_id}/queries/{id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/queries",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/queries/{id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/queries",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/queries/{id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/queries/{id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [
@@ -3736,27 +3808,33 @@
         "routes": [
           {
             "url": "/api/study_agreements/{study_agreement_id}/results/{id}",
-            "method": "get"
+            "method": "get",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/results",
-            "method": "get_collection"
+            "method": "get_collection",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/results/{id}",
-            "method": "put"
+            "method": "put",
+            "auth":  true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/results",
-            "method": "post"
+            "method": "post",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/results/{id}",
-            "method": "patch"
+            "method": "patch",
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/results/{id}",
-            "method": "delete"
+            "method": "delete",
+            "auth": true
           }
         ],
         "associations": [

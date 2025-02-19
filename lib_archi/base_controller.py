@@ -34,6 +34,7 @@ class BaseController(Generic[Entity]):
         self.response_handler: IResponseHandler = response_handler
 
     def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+        print("controller")
         """Handles the creation of a new entity.
 
         Args:

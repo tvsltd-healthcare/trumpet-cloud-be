@@ -16,6 +16,7 @@ from adapters.wrap_orm_adapters.orm_adapter import OrmAdapter
 from application_layer.abstractions.orm_interface import IOrm
 from application_layer.abstractions.controller_interface import IController
 from adapters.middlewares.response_middleware import ResponseMiddleware
+from adapters.middlewares.auth_middleware import auth_dispatch
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
@@ -45,6 +46,11 @@ def _generate_orm_wrapper():
     orm: IOrm = OrmAdapter(session)
 
     return orm
+
+
+def test_dependency():
+    print("dependency")
+    print("okkk")
 
 
 def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
@@ -98,7 +104,10 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
 
             if str.lower(route_method) == "post":
                 controller.post.__annotations__["entity"] = entity_stub_obj
-                router_obj.post(url=routes.get('url', ""), endpoint=controller.post)
+                if routes['auth']:
+                    router_obj.post(url=routes.get('url', ""), endpoint=controller.post, dependencies=[auth_dispatch])
+                else:
+                    router_obj.post(url=routes.get('url', ""), endpoint=controller.post)
             elif str.lower(route_method) == "get":
                 router_obj.get(url=routes.get('url', ""), endpoint=controller.get)
             elif str.lower(route_method) == "get_collection":
@@ -144,6 +153,7 @@ def launch_app_layer():
 
     server.use(ValidationMiddleware)
     server.use(ResponseMiddleware)
+    # server.use(AuthMiddleware)
     cors_config.apply_to_server(server=server)
 
     server.listen(port=os.getenv("PORT", 8000), host=os.getenv("HOST", "127.0.0.1"))
