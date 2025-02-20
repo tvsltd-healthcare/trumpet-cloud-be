@@ -156,4 +156,4 @@ def launch_app_layer():
     # server.use(AuthMiddleware)
     cors_config.apply_to_server(server=server)
 
-    server.listen(port=os.getenv("PORT", 8000), host=os.getenv("HOST", "127.0.0.1"))
+    server.listen(port=os.getenv("PORT", 8000))
