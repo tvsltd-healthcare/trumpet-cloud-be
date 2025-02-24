@@ -90,7 +90,6 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             continue
 
         repo = repository[entity_stub_obj](orm)
-        print('logic_map.get=model.get', logic_map.get(model.get('name')))
         app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model.get('name'), {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
         controller: IController = FastapiController(base_controller)
