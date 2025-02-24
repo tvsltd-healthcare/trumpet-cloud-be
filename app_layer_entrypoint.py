@@ -1,7 +1,7 @@
 import os
 import json
 
-from logic_loader import load_logics
+from domain_layer.logic_loader import load_logics
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler

@@ -15,7 +15,7 @@ def load_logics() -> Dict[str, Dict[str, Any]]:
     """
     logic_map = {}
 
-    # ✅ Use absolute path
+    # Use absolute path
     abs_logic_folder = os.path.abspath(LOGIC_FOLDER)
     logic_files = glob.glob(os.path.join(abs_logic_folder, '*_logic.py'))
 
