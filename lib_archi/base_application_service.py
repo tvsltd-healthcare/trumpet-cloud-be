@@ -1,7 +1,6 @@
 from .base_repository import BaseRepository
 from typing import Any, TypeVar, Generic, Optional, List, Dict
 
-
 Entity = TypeVar('Entity')
 
 
@@ -26,25 +25,6 @@ class BaseApplicationService(Generic[Entity]):
         """
         self.repository = repository
         self.logic_map = logic_map or {}
-
-    def execute_logic_or_repo(self, verb: str, query_or_entity: Any, query: Dict = None):
-        logic = self.logic_map.get(verb)
-
-        if logic and callable(logic):
-            try:
-                return logic(query_or_entity, self.repository)
-            
-            except Exception as e:
-                return None
-
-        # Fallback to repository
-        repo_method = getattr(self.repository, verb, None)
-        if callable(repo_method):
-            if query:
-                return repo_method(query_or_entity, query)
-            return repo_method(query_or_entity)
-        else:
-            return None
         
     def get(self, ids: Dict) -> Entity:
         """Retrieves an entity by its unique identifier.
@@ -55,7 +35,11 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Entity: The entity retrieved from the repository.
         """
-        return self.execute_logic_or_repo("get", ids)
+        logic = self.logic_map.get("get")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+            return self.repository.get(ids)
 
     def get_collection(self, ids: Dict) -> List[Entity]:
         """Retrieves a collection of all entities.
@@ -70,7 +54,11 @@ class BaseApplicationService(Generic[Entity]):
         else:
             <something>
         """
-        return self.execute_logic_or_repo("get", ids)
+        logic = logic = self.logic_map.get("get")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+            return self.repository.get_collection(ids)
 
     def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Creates a new entity in the repository.
@@ -81,7 +69,11 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The created entity, or None if creation fails.
         """
-        return self.execute_logic_or_repo("post", ids)
+        logic = self.logic_map.get("post")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+            return self.repository.post(entity, ids)
 
     def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Fully updates an existing entity in the repository.
@@ -92,7 +84,11 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
-        return self.execute_logic_or_repo("put", ids)
+        logic = self.logic_map.get("put")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+            return self.repository.put(entity, ids)
 
     def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Partially updates an existing entity in the repository.
@@ -103,7 +99,11 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
-        return self.execute_logic_or_repo("patch", ids)
+        logic = self.logic_map.get("patch")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+           return self.repository.patch(entity, ids)
 
     def delete(self, ids: Dict) -> Optional[Entity]:
         """Deletes an entity by its unique identifier.
@@ -114,4 +114,8 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.
         """
-        return self.execute_logic_or_repo("delete", ids)
+        logic = self.logic_map.get("patch")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+           return self.repository.delete(ids)
