@@ -25,7 +25,18 @@ class BaseApplicationService(Generic[Entity]):
         """
         self.repository = repository
         self.logic_map = logic_map or {}
-        
+
+    def inject_logic(self, verb: str ) -> Optional[Any]:
+        try:
+            logic = self.logic_map.get(verb)
+            if logic:
+                return logic
+            else:
+                return None
+            
+        except Exception as e:
+            return None
+
     def get(self, ids: Dict) -> Entity:
         """Retrieves an entity by its unique identifier.
 
@@ -35,7 +46,7 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Entity: The entity retrieved from the repository.
         """
-        logic = self.logic_map.get("get")
+        logic = self.inject_logic("get")
         if logic:
             return logic(ids, self.repository)
         else:
@@ -54,7 +65,7 @@ class BaseApplicationService(Generic[Entity]):
         else:
             <something>
         """
-        logic = logic = self.logic_map.get("get")
+        logic = self.inject_logic("get_collection")
         if logic:
             return logic(ids, self.repository)
         else:
@@ -69,7 +80,7 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The created entity, or None if creation fails.
         """
-        logic = self.logic_map.get("post")
+        logic = self.inject_logic("post")
         if logic:
             return logic(ids, self.repository)
         else:
@@ -84,7 +95,7 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
-        logic = self.logic_map.get("put")
+        logic = self.inject_logic("put")
         if logic:
             return logic(ids, self.repository)
         else:
@@ -99,7 +110,7 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
-        logic = self.logic_map.get("patch")
+        logic = self.inject_logic("patch")
         if logic:
             return logic(ids, self.repository)
         else:
@@ -114,7 +125,7 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.
         """
-        logic = self.logic_map.get("patch")
+        logic = self.inject_logic("patch")
         if logic:
             return logic(ids, self.repository)
         else:
