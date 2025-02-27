@@ -1838,7 +1838,7 @@ sqlalchemy = "^2.0.35"
 
 [package.source]
 type = "git"
-url = "https://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@github.com/tvsltd/wrap_orm.git"
+url = "https://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@github.com/tvsltd/wrap_orm.git"
 reference = "feature/crud-implementation"
 resolved_reference = "aefacb8966f8da213b9b6ae782257872b5d4e691"
 
@@ -1858,9 +1858,9 @@ pytest-cov = "^5.0.0"
 
 [package.source]
 type = "git"
-url = "https://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@github.com/tvsltd/wrap_restify.git"
-reference = "feat/add_dependency"
-resolved_reference = "6559a98f1bda4f38738d93706b35429a6d08d305"
+url = "https://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@github.com/tvsltd/wrap_restify.git"
+reference = "develop"
+resolved_reference = "0a414a510102e92efdb322d80300ffb489f09ae0"
 
 [[package]]
 name = "wrap-validate"
@@ -1876,11 +1876,11 @@ pydantic = "^2.8.2"
 
 [package.source]
 type = "git"
-url = "https://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@github.com/tvsltd/wrap_validate.git"
+url = "https://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@github.com/tvsltd/wrap_validate.git"
 reference = "develop"
 resolved_reference = "34e9bf0572f0cac825174c02f37704b2f8c6b177"
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "b34c76bae70e5d331e32ab0a3f7e20b4c1cb6fd573bfbbf5aa6fecb6735997fa"
+content-hash = "50894b1fb92ba502507e6a5636082cf97f79a166f34ab85cfda0bfbe54dca16e"
