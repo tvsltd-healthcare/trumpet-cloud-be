@@ -109,18 +109,33 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
                 else:
                     router_obj.post(url=routes.get('url', ""), endpoint=controller.post)
             elif str.lower(route_method) == "get":
-                router_obj.get(url=routes.get('url', ""), endpoint=controller.get)
+                if routes['auth']:
+                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get, dependencies=[auth_dispatch])
+                else:
+                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get)
             elif str.lower(route_method) == "get_collection":
-                router_obj.get(url=routes.get('url', ""), endpoint=controller.get_collection)
+                if routes['auth']:
+                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get_collection, dependencies=[auth_dispatch])
+                else:
+                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get_collection)
             elif str.lower(route_method) == "put":
                 controller.put.__annotations__["entity"] = entity_stub_obj
-                router_obj.put(url=routes.get('url', ""), endpoint=controller.put)
+                if routes['auth']:
+                    router_obj.put(url=routes.get('url', ""), endpoint=controller.put, dependencies=[auth_dispatch])
+                else:
+                    router_obj.put(url=routes.get('url', ""), endpoint=controller.put)
             elif str.lower(route_method) == "patch":
                 controller.patch.__annotations__["entity"] = entity_stub_obj
-                router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch)
+                if routes['auth']:
+                    router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch, dependencies=[auth_dispatch])
+                else:
+                    router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch)
             elif str.lower(route_method) == "delete":
                 controller.delete.__annotations__["entity"] = entity_stub_obj
-                router_obj.delete(url=routes.get('url', ""), endpoint=controller.delete)
+                if routes['auth']:
+                    router_obj.delete(url=routes.get('url', ""), endpoint=controller.delete, dependencies=[auth_dispatch])
+                else:
+                    router_obj.delete(url=routes.get('url', ""), endpoint=controller.delete)
             else:
                 raise NotImplementedError("This method is not supported in the base class.")
 
@@ -153,7 +168,6 @@ def launch_app_layer():
 
     server.use(ValidationMiddleware)
     server.use(ResponseMiddleware)
-    # server.use(AuthMiddleware)
     cors_config.apply_to_server(server=server)
 
     server.listen(port=os.getenv("PORT", 8000))

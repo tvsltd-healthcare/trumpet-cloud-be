@@ -13,9 +13,5 @@ class IAuthenticationHandler(ABC):
         pass
 
     @abstractmethod
-    def generate_refresh_token(self, params: Dict) -> str:
-        pass
-
-    @abstractmethod
-    def validate_refresh_token(self, refresh_token: str) -> bool:
+    def read_data(self, token: str) -> Dict:
         pass
