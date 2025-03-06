@@ -48,11 +48,6 @@ def _generate_orm_wrapper():
     return orm
 
 
-def test_dependency():
-    print("dependency")
-    print("okkk")
-
-
 def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     """Builds the application layer by registering routes and controllers.
 
