@@ -25,6 +25,12 @@ StudyAgreements = {
             'error_code': '999',
         },
     },
+    'samples': {
+        'type': {
+            'value': 'number',
+            'error_code': '1006',
+        },
+    },
     'pet': {
         'type': {
             'value': 'string',
@@ -41,7 +47,7 @@ StudyAgreements = {
             'error_code': '1002',
         },
         'regex': {
-            'value': '^(NN|NN_FHIR)$',
+            'value': '^(NN_HNC|NN_HNC_NECRO_JAW|NN_HNC_DYSPHAGIA|NN_HNC_ORAL_MUCOSITIS|REG_LOG_HNC|REG_LOG_HNC_NECRO_JAW|REG_LOG_HNC_DYSPHAGIA|REG_LOG_HNC_ORAL_MUCOSITIS)$',
             'error_code': '1003',
         },
     },
