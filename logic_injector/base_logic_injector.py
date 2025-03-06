@@ -72,7 +72,7 @@ class BaseLogicInjector:
             )
 
             do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(
-                do_url=do_endpoint, model=entity.get('model', "NN_HNC"))
+                do_url=do_endpoint, model=entity.get('model', "NN_HNC"), samples = entity.get('samples', 1000))
 
 class FLSetupInjector:
     setup_uri = "/setup"
@@ -121,12 +121,12 @@ class FLSetupInjector:
             return False
         return True, response.json()
 
-    def call_participants_do_fl_core_query(self, do_url: str, model: str, sample: Optional[int] = 1000, query: Optional[str] = None):
+    def call_participants_do_fl_core_query(self, do_url: str, model: str, samples: Optional[int] = 1000, query: Optional[str] = None):
         _request_body = {
             "model": model,
         }
-        if sample:
-            _request_body["sample"] = sample
+        if samples:
+            _request_body["sample"] = samples
 
         response = requests.post(url=do_url + self.do_load_data_uri, json=_request_body)
         if response.status_code != 200:
