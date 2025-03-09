@@ -1,5 +1,8 @@
 import os
+import re
 import json
+
+from typing import Dict
 
 from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -80,6 +83,19 @@ class ValidationMiddleware(BaseHTTPMiddleware):
         """
         for model in configs[0].get('models', []):
             for route in model.get('routes', []):
-                if route.get('method', '').lower() == request.method.lower() and route.get('url', '').lower() == request.url.path.lower():
+                if route.get('method', '').lower() == request.method.lower() and ValidationMiddleware._is_route_and_request_same(route, request):
                     return model.get('name')
         return None
+    
+    @staticmethod
+    def _is_route_and_request_same(route: Dict, request: Request) -> bool:
+        route_path = ValidationMiddleware._normalize_path(route.get('url', '').lower())
+        current_request_path = ValidationMiddleware._normalize_path(request.url.path.lower())
+        return route_path == current_request_path
+    
+    @staticmethod
+    def _normalize_path(path):
+        # Replace any number or content within `{}` with a placeholder
+        path = re.sub(r"/\d+/", "/{id}/", path)
+        path = re.sub(r"\{.*?\}", "{id}", path)
+        return path

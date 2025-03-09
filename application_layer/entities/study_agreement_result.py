@@ -1,67 +1,82 @@
 StudyAgreementResults = {
-    "id": {
-        "type": {
-            "value": "number",
-            "error_code": "143"
-        }
-    },
-    "specification": {
-        "type": {
-            "value": "text",
-            "error_code": "145"
+    'id': {
+        'type': {
+            'value': 'number',
+            'error_code': '143',
         },
-        "required": {
-            "value": True,
-            "error_code": "146"
-        }
     },
-    "version": {
-        "type": {
-            "value": "string",
-            "error_code": "147"
+    'study_agreement_id': {
+        'type': {
+            'value': 'number',
+            'error_code': '144',
         },
-        "required": {
-            "value": True,
-            "error_code": "148"
+    },
+    'specification': {
+        'type': {
+            'value': 'text',
+            'error_code': '145',
         },
-        "max": {
-            "value": 20,
-            "error_code": "149"
-        }
+        'required': {
+            'value': True,
+            'error_code': '146',
+        },
     },
-    # Todo: Fix this ASAP
-    # "status": {
-    #     "type": {
-    #         "value": "ENUM",
-    #         "error_code": "150"
-    #     },
-    #     "required": {
-    #         "value": True,
-    #         "error_code": "151"
-    #     }
-    # },
-    "created_at": {
-        "type": {
-            "value": "timestamp",
-            "error_code": "152"
-        }
+    'file_path': {
+        'type': {
+            'value': 'text',
+            'error_code': '1004',
+        },
     },
-    "updated_at": {
-        "type": {
-            "value": "timestamp",
-            "error_code": "153"
-        }
+    'version': {
+        'type': {
+            'value': 'string',
+            'error_code': '147',
+        },
+        'required': {
+            'value': True,
+            'error_code': '148',
+        },
+        'max': {
+            'value': 20,
+            'error_code': '149',
+        },
     },
-    "created_by": {
-        "type": {
-            "value": "number",
-            "error_code": "154"
-        }
+    'status': {
+        'type': {
+            'value': 'string',
+            'error_code': '150',
+        },
+        'regex': {
+            'value': '^(pending|completed)$',
+            'error_code': '1501',
+        },
+        'required': {
+            'value': True,
+            'error_code': '151',
+        },
     },
-    "updated_by": {
-        "type": {
-            "value": "number",
-            "error_code": "155"
-        }
-    }
+    'created_at': {
+        'type': {
+            'value': 'timestamp',
+            'error_code': '152',
+        },
+    },
+    'updated_at': {
+        'type': {
+            'value': 'timestamp',
+            'error_code': '153',
+        },
+    },
+    'created_by': {
+        'type': {
+            'value': 'number',
+            'error_code': '154',
+        },
+    },
+    'updated_by': {
+        'type': {
+            'value': 'number',
+            'error_code': '155',
+        },
+    },
 }

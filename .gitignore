@@ -276,3 +276,6 @@ pyrightconfig.json
 # Ignore all local history of files
 .history
 .ionide
+
+# Custom
+docker/postgresql/cloud/data

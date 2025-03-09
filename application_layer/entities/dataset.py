@@ -1,75 +1,78 @@
 Datasets = {
-    "id": {
-        "type": {
-            "value": "string",
-            "error_code": "96"
-        }
-    },
-    "name": {
-        "required": {
-            "value": True,
-            "error_code": "97"
+    'id': {
+        'type': {
+            'value': 'string',
+            'error_code': '96',
         },
-        "max": {
-            "value": 25,
-            "error_code": "98"
-        }
     },
-    "metadata": {
-        "type": {
-            "value": "text",
-            "error_code": "99"
+    'name': {
+        'required': {
+            'value': True,
+            'error_code': '97',
         },
-        "required": {
-            "value": True,
-            "error_code": "100"
-        }
+        'max': {
+            'value': 25,
+            'error_code': '98',
+        },
     },
-    "statistics": {
-        "type": {
-            "value": "text",
-            "error_code": "101"
-        }
+    'meta_data': {
+        'type': {
+            'value': 'text',
+            'error_code': '99',
+        },
+        'required': {
+            'value': True,
+            'error_code': '100',
+        },
     },
-    "path": {
-        "type": {
-            "value": "text",
-            "error_code": "102"
-        }
+    'statistics': {
+        'type': {
+            'value': 'text',
+            'error_code': '101',
+        },
     },
-    # Todo: Fix Enum Issue
-    # "privacy_level": {
-    #     "type": {
-    #         "value": "^(public|confidential|highly_confidential)$",
-    #         "error_code": "104"
-    #     },
-    #     "required": {
-    #         "value": True,
-    #         "error_code": "105"
-    #     }
-    # },
-    "created_at": {
-        "type": {
-            "value": "timestamp",
-            "error_code": "106"
-        }
+    'path': {
+        'type': {
+            'value': 'text',
+            'error_code': '102',
+        },
     },
-    "updated_at": {
-        "type": {
-            "value": "timestamp",
-            "error_code": "107"
-        }
+    'privacy_level': {
+        'type': {
+            'value': 'string',
+            'error_code': '103',
+        },
+        'regex': {
+            'value': '^(public|confidential|highly_confidential)$',
+            'error_code': '104',
+        },
+        'required': {
+            'value': True,
+            'error_code': '105',
+        },
     },
-    "created_by": {
-        "type": {
-            "value": "number",
-            "error_code": "108"
-        }
+    'created_at': {
+        'type': {
+            'value': 'timestamp',
+            'error_code': '106',
+        },
     },
-    "updated_by": {
-        "type": {
-            "value": "number",
-            "error_code": "109"
-        }
-    }
+    'updated_at': {
+        'type': {
+            'value': 'timestamp',
+            'error_code': '107',
+        },
+    },
+    'created_by': {
+        'type': {
+            'value': 'number',
+            'error_code': '108',
+        },
+    },
+    'updated_by': {
+        'type': {
+            'value': 'number',
+            'error_code': '109',
+        },
+    },
 }
