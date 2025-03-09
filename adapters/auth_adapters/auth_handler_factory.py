@@ -9,7 +9,7 @@ class AuthHandlerFactory:
     Token handler factory class
     """
     @staticmethod
-    def select_adapter(config: Dict) -> IAuthenticationHandler:
+    def get_handler(config: Dict) -> IAuthenticationHandler:
         """
         Select an authentication handler
         Args:

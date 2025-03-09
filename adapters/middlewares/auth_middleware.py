@@ -20,7 +20,7 @@ class AuthMiddleware:
                 auth_config: Configuration dictionary to set up JWT and other auth types
         """
         self.auth_config = auth_config
-        self.auth_factory = AuthHandlerFactory.select_adapter(self.auth_config)
+        self.auth_factory = AuthHandlerFactory.get_handler(self.auth_config)
 
     def __call__(self, request: Request):
         """
