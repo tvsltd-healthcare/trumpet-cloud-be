@@ -20,7 +20,7 @@ class AuthMiddleware:
                 auth_config: Configuration dictionary to set up JWT and other auth types
         """
         self.auth_config = auth_config
-        self.auth_factory = AuthHandlerFactory.get_handler(self.auth_config)
+        self.auth_handler = AuthHandlerFactory.get_handler(self.auth_config)
 
     def __call__(self, request: Request):
         """
@@ -35,10 +35,10 @@ class AuthMiddleware:
 
         token = authorization.split("Bearer ")[1]
         # Validate the token using the selected handler
-        check_token = self.auth_factory.validate_token(token)
+        check_token = self.auth_handler.validate_token(token)
         if check_token:
             # If valid, read data from the token and attach to request state
-            read_token_data = self.auth_factory.read_data(token)
+            read_token_data = self.auth_handler.read_data(token)
             request.state.user_id = read_token_data["user_id"]
         else:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
