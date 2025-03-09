@@ -4,25 +4,25 @@ from adapters.auth_adapters.jwt_adapter import JWTAdapter
 from application_layer.abstractions.auth_interface import IAuthenticationHandler
 
 
-class TokenHandlerFactory:
+class AuthHandlerFactory:
     """
     Token handler factory class
     """
     @staticmethod
-    def select_adapter(adapter: Dict) -> IAuthenticationHandler:
+    def select_adapter(config: Dict) -> IAuthenticationHandler:
         """
         Select an authentication handler
         Args:
-            adapter: String representation of the authentication adapter
+            config: String representation of the authentication adapter
 
         Returns:
             IAuthenticationHandler
 
         """
-        handler_type = adapter.get('type')
+        handler_type = config.get('type')
 
         match handler_type:
             case 'JWT':
-                return JWTAdapter(adapter.get('jwt'))
+                return JWTAdapter(config.get('jwt'))
             case _:
-                raise ValueError(f'Unsupported adapter type: {adapter}')
+                raise ValueError(f'Unsupported adapter type: {config}')
