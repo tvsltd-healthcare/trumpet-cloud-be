@@ -23,6 +23,6 @@ class TokenHandlerFactory:
 
         match handler_type:
             case 'JWT':
-                return JWTAdapter()
+                return JWTAdapter(adapter.get('jwt'))
             case _:
                 raise ValueError(f'Unsupported adapter type: {adapter}')
