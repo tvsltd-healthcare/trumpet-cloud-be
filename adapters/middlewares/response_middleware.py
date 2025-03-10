@@ -76,10 +76,9 @@ class ResponseMiddleware(BaseHTTPMiddleware):
                 }
 
                 # Include optional fields if they exist
-                if "data" in data:
-                    standardized_response["data"] = data["data"]
-                if "errors" in data:
-                    standardized_response["errors"] = data["errors"]
+                for key in ("data", "errors", "detail"):
+                    if key in data:
+                        standardized_response["message" if key == "detail" else key] = data[key]
 
                 return JSONResponse(
                     content=standardized_response,
