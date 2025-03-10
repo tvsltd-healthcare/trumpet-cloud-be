@@ -3,9 +3,8 @@ import os
 import glob
 from typing import Dict, Any
 
-LOGIC_FOLDER = os.getenv("LOGIC_PATH")
 
-def load_logics() -> Dict[str, Dict[str, Any]]:
+def load_logics(path) -> Dict[str, Dict[str, Any]]:
     """
     Dynamically loads logic files following the pattern <api_verb>_<model_name>_logic.py.
 
@@ -18,8 +17,7 @@ def load_logics() -> Dict[str, Dict[str, Any]]:
     logic_map = {}
 
     # Use absolute path to locate logic folder
-    abs_logic_folder = os.path.abspath(LOGIC_FOLDER)
-    logic_files = glob.glob(os.path.join(abs_logic_folder, '*_logic.py'))
+    logic_files = glob.glob(os.path.join(path, '*_logic.py'))
 
     # Supported API verbs
     supported_verbs = {"get", "post", "put", "patch", "delete", "get_collection"}

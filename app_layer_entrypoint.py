@@ -27,7 +27,8 @@ FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 
 entity_resources = get_resource_types()
-logic_map = load_logics()
+logic_folder_path = os.getenv("LOGIC_PATH")
+logic_map = load_logics(logic_folder_path)
 
 # JWT and authentication configuration
 auth_config = {
