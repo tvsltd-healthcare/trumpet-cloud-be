@@ -1,6 +1,7 @@
 import os
 import json
 
+from domain_layer.logic_loader import load_logics
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
@@ -16,6 +17,7 @@ from adapters.wrap_orm_adapters.orm_adapter import OrmAdapter
 from application_layer.abstractions.orm_interface import IOrm
 from application_layer.abstractions.controller_interface import IController
 from adapters.middlewares.response_middleware import ResponseMiddleware
+from adapters.middlewares.auth_middleware import AuthMiddleware
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
@@ -24,8 +26,21 @@ from sqlalchemy.orm import sessionmaker
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 
-load_dotenv()
 entity_resources = get_resource_types()
+logic_folder_path = os.getenv("LOGIC_PATH")
+logic_map = load_logics(logic_folder_path)
+
+# JWT and authentication configuration
+auth_config = {
+    "type": "JWT",  # Authentication type, can be "JWT" or others in the future
+    "jwt": {
+        "secret": os.getenv("JWT_SECRET"),  # Secret for JWT
+        "algorithm": os.getenv("JWT_ALGORITHM"),  # JWT algorithm
+        "expiry": os.getenv("JWT_EXPIRY"),  # Expiry time for JWT
+    }
+}
+# Initialize the AuthMiddleware with the configuration
+auth_middleware = AuthMiddleware(auth_config)
 
 
 def _generate_orm_wrapper():
@@ -89,7 +104,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             continue
 
         repo = repository[entity_stub_obj](orm)
-        app_service = BaseApplicationService[entity_stub_obj](repo)
+        app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model.get('name'), {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
         controller: IController = FastapiController(base_controller)
 
@@ -98,20 +113,41 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
 
             if str.lower(route_method) == "post":
                 controller.post.__annotations__["entity"] = entity_stub_obj
-                router_obj.post(url=routes.get('url', ""), endpoint=controller.post)
+                if routes['auth']:
+                    router_obj.post(url=routes.get('url', ""), endpoint=controller.post, dependencies=[auth_middleware])
+                else:
+                    router_obj.post(url=routes.get('url', ""), endpoint=controller.post)
             elif str.lower(route_method) == "get":
-                router_obj.get(url=routes.get('url', ""), endpoint=controller.get)
+                if routes['auth']:
+                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get, dependencies=[auth_middleware])
+                else:
+                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get)
             elif str.lower(route_method) == "get_collection":
-                router_obj.get(url=routes.get('url', ""), endpoint=controller.get_collection)
+                if routes['auth']:
+                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get_collection,
+                                   dependencies=[auth_middleware])
+                else:
+                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get_collection)
             elif str.lower(route_method) == "put":
                 controller.put.__annotations__["entity"] = entity_stub_obj
-                router_obj.put(url=routes.get('url', ""), endpoint=controller.put)
+                if routes['auth']:
+                    router_obj.put(url=routes.get('url', ""), endpoint=controller.put, dependencies=[auth_middleware])
+                else:
+                    router_obj.put(url=routes.get('url', ""), endpoint=controller.put)
             elif str.lower(route_method) == "patch":
                 controller.patch.__annotations__["entity"] = entity_stub_obj
-                router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch)
+                if routes['auth']:
+                    router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch,
+                                     dependencies=[auth_middleware])
+                else:
+                    router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch)
             elif str.lower(route_method) == "delete":
                 controller.delete.__annotations__["entity"] = entity_stub_obj
-                router_obj.delete(url=routes.get('url', ""), endpoint=controller.delete)
+                if routes['auth']:
+                    router_obj.delete(url=routes.get('url', ""), endpoint=controller.delete,
+                                      dependencies=[auth_middleware])
+                else:
+                    router_obj.delete(url=routes.get('url', ""), endpoint=controller.delete)
             else:
                 raise NotImplementedError("This method is not supported in the base class.")
 

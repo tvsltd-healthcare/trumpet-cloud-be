@@ -1,6 +1,5 @@
 from .base_repository import BaseRepository
-from typing import TypeVar, Generic, Optional, List, Dict
-
+from typing import Any, TypeVar, Generic, Optional, List, Dict
 
 Entity = TypeVar('Entity')
 
@@ -17,7 +16,7 @@ class BaseApplicationService(Generic[Entity]):
             for CRUD operations on entities.
     """
 
-    def __init__(self, repository: BaseRepository[Entity]):
+    def __init__(self, repository: BaseRepository[Entity], logic_map: Dict[str, Any] = None):
         """Initializes the service with a repository instance.
 
         Args:
@@ -25,6 +24,18 @@ class BaseApplicationService(Generic[Entity]):
                 entity operations.
         """
         self.repository = repository
+        self.logic_map = logic_map or {}
+
+    def inject_logic(self, verb: str ) -> Optional[Any]:
+        try:
+            logic = self.logic_map.get(verb)
+            if logic:
+                return logic
+            else:
+                return None
+            
+        except Exception as e:
+            return None
 
     def get(self, ids: Dict) -> Entity:
         """Retrieves an entity by its unique identifier.
@@ -35,7 +46,11 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Entity: The entity retrieved from the repository.
         """
-        return self.repository.get(ids)
+        logic = self.inject_logic("get")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+            return self.repository.get(ids)
 
     def get_collection(self, ids: Dict) -> List[Entity]:
         """Retrieves a collection of all entities.
@@ -50,7 +65,11 @@ class BaseApplicationService(Generic[Entity]):
         else:
             <something>
         """
-        return self.repository.get_collection(ids)
+        logic = self.inject_logic("get_collection")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+            return self.repository.get_collection(ids)
 
     def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Creates a new entity in the repository.
@@ -61,7 +80,11 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The created entity, or None if creation fails.
         """
-        return self.repository.post(entity, ids)
+        logic = self.inject_logic("post")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+            return self.repository.post(entity, ids)
 
     def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Fully updates an existing entity in the repository.
@@ -72,7 +95,11 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
-        return self.repository.put(entity, ids)
+        logic = self.inject_logic("put")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+            return self.repository.put(entity, ids)
 
     def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Partially updates an existing entity in the repository.
@@ -83,7 +110,11 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The updated entity, or None if the update fails.
         """
-        return self.repository.patch(entity, ids)
+        logic = self.inject_logic("patch")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+           return self.repository.patch(entity, ids)
 
     def delete(self, ids: Dict) -> Optional[Entity]:
         """Deletes an entity by its unique identifier.
@@ -94,4 +125,8 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.
         """
-        return self.repository.delete(ids)
+        logic = self.inject_logic("patch")
+        if logic:
+            return logic(ids, self.repository)
+        else:
+           return self.repository.delete(ids)
