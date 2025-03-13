@@ -15,6 +15,7 @@ def load_logics(path) -> Dict[str, Dict[str, Any]]:
         their corresponding API verb logic as values.
     """
     logic_map = {}
+    non_res_key = "non_resources"
 
     # Use absolute path to locate logic folder
     logic_files = glob.glob(os.path.join(path, '*_logic.py'))
@@ -58,6 +59,32 @@ def load_logics(path) -> Dict[str, Dict[str, Any]]:
             if model_key not in logic_map:
                 logic_map[model_key] = {}
             logic_map[model_key][api_verb] = logic_function
+        else:
+            pass
+
+    # non_resource_logic_folder = os.path.abspath(LOGIC_FOLDER) + "/non_resources"
+    logic_files = glob.glob(os.path.join(path + "/non_resources", '*_logic.py'))
+    
+    logic_map[non_res_key] = {}
+
+    for file_path in logic_files:
+        file_name = os.path.basename(file_path)
+        if '__init__.py' in file_name:
+            continue
+
+        # Extract verb and model from filename (e.g., get_users_logic.py OR get_collection_users_logic.py)
+        parts = file_name.replace('_logic.py', '').split('_')
+        logic_key = parts[0]
+
+        # Dynamically import the module
+        spec = importlib.util.spec_from_file_location(f"{logic_key}_logic", file_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        # Ensure the module has an 'execute' function
+        logic_function = getattr(module, "execute", None)
+        if logic_function and callable(logic_function):
+            logic_map[non_res_key][logic_key] = logic_function
         else:
             pass
 

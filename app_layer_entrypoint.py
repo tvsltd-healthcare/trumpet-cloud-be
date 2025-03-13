@@ -1,11 +1,17 @@
 import os
 import json
 
+from adapters.lib_archirs.non_resource_app_service_adapter import NonResourceAppServiceAdapter
+from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
+from application_layer.abstractions.non_resource_app_service_interface import INonResourceAppService
+from application_layer.abstractions.non_resource_controller_interface import INonResourceController
 from domain_layer.logic_loader import load_logics
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
+from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
+from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_controller import BaseController
 from adapters.lib_archirs.orm_repository import OrmRepository
@@ -22,6 +28,9 @@ from adapters.middlewares.auth_middleware import AuthMiddleware
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from lib_archi.non_resource_app_service import NonResourceAppService
+from lib_archi.non_resource_controller import NonResourceController
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
@@ -152,6 +161,26 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
                 raise NotImplementedError("This method is not supported in the base class.")
 
         server.use(router_obj)
+
+    non_resource_app_service:ILibNonResourceService = NonResourceAppService(logic_map.get('non_resources', {}))
+    non_resource_app_service_adapter: INonResourceAppService = NonResourceAppServiceAdapter(non_resource_app_service)
+    
+    non_resource_controller: ILibNonResourceController = NonResourceController(non_resource_app_service_adapter, response_handler)
+    non_resource_controller_adapter: INonResourceController = NonResourceControllerAdapter(non_resource_controller)
+
+    router_obj = server.router()
+    
+    non_resource_config = configs[0].get('non_resources', {})
+    for routes in (non_resource_config.get('routes', [])):
+        route_verb = str.lower(routes['verb'])
+        url = routes.get('url', "")
+
+        if str.lower(route_verb) == "post":
+            router_obj.post(url=url, endpoint=non_resource_controller_adapter.perform)
+        elif str.lower(route_verb) == "get":
+            router_obj.get(url=url, endpoint=non_resource_controller_adapter.perform)
+        
+    server.use(router_obj)
 
     return router_obj
 
