@@ -1,6 +1,12 @@
 import os
 import json
 
+from adapters.lib_repo_discovery.repo_direct_invoker_adapter import RepoDirectInvokerAdapter
+from adapters.lib_repo_discovery.repo_discovery_getter_adapter import RepoDiscoveryGetterAdapter
+from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscoverySetterAdapter
+from application_layer.abstractions.app_repo_discovery_setter_interface import IAppRepoDiscoverySetter
+from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.logic_loader import load_logics
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
@@ -23,6 +29,9 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from lib_archi.repository_gateway_service import RepositoryGatewayService
+from lib_repo_discovery.repo_discovery import RepoDiscovery
+
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 
@@ -42,6 +51,10 @@ auth_config = {
 # Initialize the AuthMiddleware with the configuration
 auth_middleware = AuthMiddleware(auth_config)
 
+
+repo_discovery:RepoDiscovery = RepoDiscovery()
+repo_discovery_getter_adapter:IAppRepoDiscoveryGetter = RepoDiscoveryGetterAdapter(repo_discovery)
+repo_discovery_setter_adapter:IAppRepoDiscoverySetter = RepoDiscoverySetterAdapter(repo_discovery)
 
 def _generate_orm_wrapper():
     username = os.getenv("DB_USERNAME")
@@ -93,8 +106,9 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     orm = _generate_orm_wrapper()
 
     for model in (configs[0].get('models', [])):
+        model_name = model.get('name')
         router_obj = server.router()
-        entity_stub_obj = entity_resources.get(model.get('name'))
+        entity_stub_obj = entity_resources.get(model_name)
 
         if not entity_stub_obj:
             continue
@@ -104,7 +118,12 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             continue
 
         repo = repository[entity_stub_obj](orm)
-        app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model.get('name'), {}))
+
+        repo_gateway_service = RepositoryGatewayService[entity_stub_obj](repo, logic_map.get(model_name, {}))
+        repo_invoker: IAppRepoInvoker = RepoDirectInvokerAdapter(repo_gateway_service)
+        repo_discovery_setter_adapter.set_repo_invoker(model_name, repo_invoker)
+
+        app_service = BaseApplicationService[entity_stub_obj](repo, repo_discovery_getter_adapter, logic_map.get(model_name, {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
         controller: IController = FastapiController(base_controller)
 

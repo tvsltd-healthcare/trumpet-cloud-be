@@ -1,3 +1,4 @@
+from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from .base_repository import BaseRepository
 from typing import Any, TypeVar, Generic, Optional, List, Dict
 
@@ -16,7 +17,7 @@ class BaseApplicationService(Generic[Entity]):
             for CRUD operations on entities.
     """
 
-    def __init__(self, repository: BaseRepository[Entity], logic_map: Dict[str, Any] = None):
+    def __init__(self, repository: BaseRepository[Entity], repo_discovery_getter_adapter: IAppRepoDiscoveryGetter, logic_map: Dict[str, Any] = None):
         """Initializes the service with a repository instance.
 
         Args:
@@ -24,6 +25,7 @@ class BaseApplicationService(Generic[Entity]):
                 entity operations.
         """
         self.repository = repository
+        self.repo_discovery_getter_adapter = repo_discovery_getter_adapter
         self.logic_map = logic_map or {}
 
     def inject_logic(self, verb: str ) -> Optional[Any]:
@@ -48,7 +50,7 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("get")
         if logic:
-            return logic(ids, self.repository)
+            return logic(ids, self.repository, self.repo_discovery_getter_adapter)
         else:
             return self.repository.get(ids)
 
@@ -67,7 +69,7 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("get_collection")
         if logic:
-            return logic(ids, self.repository)
+            return logic(ids, self.repository, self.repo_discovery_getter_adapter)
         else:
             return self.repository.get_collection(ids)
 
