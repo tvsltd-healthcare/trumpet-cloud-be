@@ -12,6 +12,7 @@ from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
+from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_controller import BaseController
 from adapters.lib_archirs.orm_repository import OrmRepository
@@ -55,6 +56,8 @@ auth_middleware = AuthMiddleware(auth_config)
 repo_discovery:RepoDiscovery = RepoDiscovery()
 repo_discovery_getter_adapter:IAppRepoDiscoveryGetter = RepoDiscoveryGetterAdapter(repo_discovery)
 repo_discovery_setter_adapter:IAppRepoDiscoverySetter = RepoDiscoverySetterAdapter(repo_discovery)
+
+RepoDiscoveryManager.set(repo_discovery_getter_adapter)
 
 def _generate_orm_wrapper():
     username = os.getenv("DB_USERNAME")
@@ -123,7 +126,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         repo_invoker: IAppRepoInvoker = RepoDirectInvokerAdapter(repo_gateway_service)
         repo_discovery_setter_adapter.set_repo_invoker(model_name, repo_invoker)
 
-        app_service = BaseApplicationService[entity_stub_obj](repo, repo_discovery_getter_adapter, logic_map.get(model_name, {}))
+        app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_name, {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
         controller: IController = FastapiController(base_controller)
 
