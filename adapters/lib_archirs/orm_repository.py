@@ -1,4 +1,4 @@
-from typing import TypeVar, List, Optional, Dict, Type
+from typing import TypeVar, List, Optional, Dict, Type, Union
 from datetime import datetime
 
 import stringcase
@@ -80,7 +80,7 @@ class OrmRepository(BaseRepository[Entity]):
 
         return self.orm.query(query_dict)
 
-    def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    def post(self, entity:  Union[Entity, dict], ids: Dict) -> Optional[Entity]:
         """Create a new entity if it does not already exist.
 
         Args:
@@ -92,8 +92,8 @@ class OrmRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If an entity with the same ID already exists.
         """
-        entity_dict = vars(entity)
-        entity_dict.pop('id')
+        entity_dict = entity if isinstance(entity, dict) else vars(entity)
+        entity_dict.pop('id', None)
 
         if ids is not None:
             for key, value in ids.items():

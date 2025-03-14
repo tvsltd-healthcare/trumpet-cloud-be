@@ -1,3 +1,4 @@
+import traceback
 from .base_repository import BaseRepository
 from typing import Any, TypeVar, Generic, Optional, List, Dict
 
@@ -71,19 +72,28 @@ class RepositoryGatewayService(Generic[Entity]):
         else:
             return self.repository.get_collection(query, validation_logic) #ToDo: Write validation logic later 
 
-    def transact(self, method: str, query: Dict) -> Optional[Entity]:
-        """Creates a new entity in the repository.
-
-        Args:
-            entity (Entity): The entity to be created.
-
-        Returns:
-            Optional[Entity]: The created entity, or None if creation fails.
+    def transact(self, method: str, query: Dict) -> Optional[object]:
         """
-        logic = self.inject_logic("transact")
-        if logic:
-            return logic(method, query)
-        else:
-            return self.repository.post(method, query) #ToDo: transact logic later 
+        """
 
-    
+        try:
+            logic = self.inject_logic("transact")
+            ids_dict = {}
+
+            if logic:
+                return logic(method, query)
+            else:
+                if method == "POST":
+                    return self.repository.post(query, ids_dict)
+                elif method == "DELETE":
+                    return self.handle_delete(query)
+                elif method == "PUT":
+                    return self.handle_put(query)
+                elif method == "PATCH":
+                    return self.handle_patch(query)
+                else:
+                    raise ValueError(f"Unsupported method: {method}")
+        except Exception as e:
+            print(f"Error processing transaction: {e}")
+            traceback.print_exc()
+            return None

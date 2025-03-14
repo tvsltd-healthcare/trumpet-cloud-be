@@ -13,7 +13,21 @@ def execute(query, repo):
 
     org = org_repo_invoker.get(query, False)
 
+    user_post_dict = {
+        "first_name": "khal",
+        "last_name": "imr",
+        "email": "abc@tvs.com",
+        "password": "string",
+        "status": "pending",
+        "phone": "01715462534"
+        }
+    user_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
+    user = user_repo_invoker.transact("POST", user_post_dict)
+
     print("This is fetched org")
     print(org)
+
+    print("This is created user")
+    print(user)
 
     return "get_collection Executing GET logic for users with query: " + str(query)

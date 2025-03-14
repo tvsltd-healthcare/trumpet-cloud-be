@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TypeVar, Generic, List, Optional, Dict
+from typing import TypeVar, Generic, List, Optional, Dict, Union
 
 from .base_entity import BaseEntity
 
@@ -43,7 +43,7 @@ class BaseRepository(ABC, Generic[Entity]):
         pass
 
     @abstractmethod
-    def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    def post(self, entity: Union[Entity, dict], ids: Dict) -> Optional[Entity]:
         """Create a new entity.
 
         Args:
