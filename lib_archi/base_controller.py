@@ -51,9 +51,9 @@ class BaseController(Generic[Entity]):
             entity = self._refine_store_date(entity)
             entity = self._add_uniq_id(entity)
             created_entity = self.app_service.post(entity, ids)
-            return self.response_handler.resource_detail("Entity created successfully", data=created_entity, status_code=201)
+            return self.response_handler.generate_response("Entity created successfully", data=created_entity, status_code=201)
         except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            return self.response_handler.generate_response(f"{str(e)}", 400)
 
     def get(self, ids: Dict) -> Entity:
         """Retrieves an entity by its ID.
@@ -72,11 +72,11 @@ class BaseController(Generic[Entity]):
             get_entity = self.app_service.get(ids)
             
             if get_entity is None or not bool(get_entity):
-                return self.response_handler.error_response("item not found", 404)
+                return self.response_handler.generate_response("item not found", 404)
             
-            return self.response_handler.resource_detail("Entity retrieved successfully", data=get_entity)
+            return self.response_handler.generate_response("Entity retrieved successfully", data=get_entity)
         except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            return self.response_handler.generate_response(f"{str(e)}", 400)
 
     def get_collection(self, ids: Dict) -> Entity:
         """Retrieves a collection of all entities.
@@ -93,9 +93,9 @@ class BaseController(Generic[Entity]):
         """
         try:
             entities = self.app_service.get_collection(ids)
-            return self.response_handler.resource_list("Entities retrieved successfully", data=entities)
+            return self.response_handler.generate_response("Entities retrieved successfully", data=entities)
         except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            return self.response_handler.generate_response(f"{str(e)}", 400)
 
     def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Partially updates an existing entity.
@@ -114,9 +114,9 @@ class BaseController(Generic[Entity]):
         try:
             entity = self._refine_store_date(entity)
             updated_entity = self.app_service.patch(entity, ids)
-            return self.response_handler.resource_detail("Entity updated successfully", data=updated_entity)
+            return self.response_handler.generate_response("Entity updated successfully", data=updated_entity)
         except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            return self.response_handler.generate_response(f"{str(e)}", 400)
 
     def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
         """Fully updates an existing entity.
@@ -138,9 +138,9 @@ class BaseController(Generic[Entity]):
 
             entity = self._refine_store_date(entity)
             updated_entity = self.app_service.put(entity, ids)
-            return self.response_handler.resource_detail("Entity fully updated", data=updated_entity)
+            return self.response_handler.generate_response("Entity fully updated", data=updated_entity)
         except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            return self.response_handler.generate_response(f"{str(e)}", 400)
 
     def delete(self, ids: Dict) -> Optional[Entity]:
         """Deletes an entity by its ID.
@@ -161,9 +161,9 @@ class BaseController(Generic[Entity]):
                     raise ValueError(f"The value for '{key}' is null or empty.")
 
             deleted_entity = self.app_service.delete(ids)
-            return self.response_handler.resource_detail("Entity deleted successfully")
+            return self.response_handler.generate_response("Entity deleted successfully")
         except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            return self.response_handler.generate_response(f"{str(e)}", 400)
         
     def _refine_store_date(self, entity: Entity) -> Entity:
         if not hasattr(entity, 'updated_at') or entity.updated_at is None:
