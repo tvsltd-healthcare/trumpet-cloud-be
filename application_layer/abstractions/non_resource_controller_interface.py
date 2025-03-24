@@ -1,35 +1,32 @@
 from abc import ABC, abstractmethod
-from typing import Optional
-
-from application_layer.abstractions.non_resource_app_service_interface import INonResourceAppService
-
+from typing import Dict, List, Union
 
 class INonResourceController(ABC):
-    """Abstract base class for handling CRUD operations on entities.
-
-    This interface defines the structure for classes responsible for creating,
-    retrieving, updating, and deleting entities, as well as handling collections of entities.
-    Implementing classes must define methods for each CRUD operation.
     """
-
-    @abstractmethod
-    def __init__(self, non_resource_app_service: INonResourceAppService) -> Optional[object]:
-        pass
+    Abstract base class for non-resource controllers.
+    
+    This interface defines a contract for handling non-resource-related requests 
+    in a structured manner. Implementing classes should provide a concrete 
+    implementation of the `perform` method to process incoming requests.
+    """
     
     @abstractmethod
-    def perform(self, request) -> Optional[object]:
-        """Abstract method for creating a new entity.
-
-         Args:
-             entity (object): The entity object containing data for creation.
-             request (object): Additional request context or parameters.
-
-         Returns:
-             Optional[object]: The created entity object, or None if creation fails.
-
-         Raises:
-             NotImplementedError: This method must be implemented in subclasses.
-         """
+    def perform(self, request) -> Dict[str, Union[str, int, Dict, List]]:
+        """
+        Processes a request and returns a structured response.
+        
+        Args:
+            request: The request object containing necessary parameters.
+        
+        Returns:
+            Dict[str, Union[str, int, Dict, List]]: A dictionary containing 
+            the response data. The response may include:
+                - Strings (e.g., status messages)
+                - Integers (e.g., status codes)
+                - Nested dictionaries (e.g., detailed response data)
+                - Lists of dictionaries (e.g., collections of related information)
+        
+        Implementing classes should define the exact response structure based 
+        on the specific use case.
+        """
         pass
-
-    

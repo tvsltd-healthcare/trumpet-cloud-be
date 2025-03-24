@@ -1,9 +1,7 @@
 import os
 import json
 
-from adapters.lib_archirs.non_resource_app_service_adapter import NonResourceAppServiceAdapter
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
-from application_layer.abstractions.non_resource_app_service_interface import INonResourceAppService
 from application_layer.abstractions.non_resource_controller_interface import INonResourceController
 from domain_layer.logic_loader import load_logics
 from wrap_restify import Libraries, Server
@@ -162,10 +160,8 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
 
         server.use(router_obj)
 
-    non_resource_app_service:ILibNonResourceService = NonResourceAppService(logic_map.get('non_resources', {}))
-    non_resource_app_service_adapter: INonResourceAppService = NonResourceAppServiceAdapter(non_resource_app_service)
-    
-    non_resource_controller: ILibNonResourceController = NonResourceController(non_resource_app_service_adapter, response_handler)
+    non_resource_app_service: ILibNonResourceService = NonResourceAppService(logic_map.get('non_resources', {}))
+    non_resource_controller: ILibNonResourceController = NonResourceController(non_resource_app_service, response_handler)
     non_resource_controller_adapter: INonResourceController = NonResourceControllerAdapter(non_resource_controller)
 
     router_obj = server.router()

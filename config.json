@@ -3856,6 +3856,10 @@
           "url": "/api/login"
         },
         {
+          "verb": "get",
+          "url": "/api/send/email"
+        },
+        {
           "verb": "post",
           "url": "/api/register",
           "body": [
