@@ -1,5 +1,6 @@
 from typing import Dict, List, Union
 
+from adapters.response_adapters.response_handler import ResponseHandler
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
 
@@ -12,7 +13,7 @@ class NonResourceController(ILibNonResourceController):
     using the provided response handler.
     """
 
-    def __init__(self, non_resource_app_service: ILibNonResourceService, response_handler):
+    def __init__(self, non_resource_app_service: ILibNonResourceService, response_handler: ResponseHandler):
         """
         Initializes the controller with a service instance and a response handler.
 
