@@ -1,6 +1,5 @@
 from typing import Dict, List, Union
 
-from adapters.response_adapters.response_handler import ResponseHandler
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
 
@@ -13,7 +12,7 @@ class NonResourceController(ILibNonResourceController):
     using the provided response handler.
     """
 
-    def __init__(self, non_resource_app_service: ILibNonResourceService, response_handler: ResponseHandler):
+    def __init__(self, non_resource_app_service: ILibNonResourceService,):
         """
         Initializes the controller with a service instance and a response handler.
 
@@ -23,7 +22,6 @@ class NonResourceController(ILibNonResourceController):
             response_handler: A handler used for formatting success and error responses.
         """
         self.non_resource_app_service: ILibNonResourceService = non_resource_app_service
-        self.response_handler = response_handler
 
     def perform(self, request) -> Dict[str, Union[str, int, Dict, List]]:
         """
@@ -40,10 +38,4 @@ class NonResourceController(ILibNonResourceController):
             - If successful, formats the response with a success message.
             - If an exception occurs, returns an error response with status code 400.
         """
-        try:
-            service_response = self.non_resource_app_service.perform(request)
-            return self.response_handler.resource_detail(
-                "Operation successful", data=service_response, status_code=200
-            )
-        except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+        return self.non_resource_app_service.perform(request)

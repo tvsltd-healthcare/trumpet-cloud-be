@@ -161,8 +161,8 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         server.use(router_obj)
 
     non_resource_app_service: ILibNonResourceService = NonResourceAppService(logic_map.get('non_resources', {}))
-    non_resource_controller: ILibNonResourceController = NonResourceController(non_resource_app_service, response_handler)
-    non_resource_controller_adapter: INonResourceController = NonResourceControllerAdapter(non_resource_controller)
+    non_resource_controller: ILibNonResourceController = NonResourceController(non_resource_app_service)
+    non_resource_controller_adapter: INonResourceController = NonResourceControllerAdapter(non_resource_controller, response_handler)
 
     router_obj = server.router()
     
