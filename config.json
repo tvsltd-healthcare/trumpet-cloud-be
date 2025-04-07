@@ -3857,7 +3857,7 @@
         },
         {
           "verb": "get",
-          "url": "/api/send/email"
+          "url": "/api/send-email"
         },
         {
           "verb": "post",

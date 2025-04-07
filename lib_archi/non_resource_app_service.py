@@ -37,6 +37,7 @@ class NonResourceAppService(ILibNonResourceService):
 
         if path:
             path = path.replace("/", "_")
+            path = path.replace("-", "_")
 
         return self.logic_map.get(path, None)
 
