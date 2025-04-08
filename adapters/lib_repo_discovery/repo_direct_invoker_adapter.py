@@ -1,3 +1,4 @@
+from typing import List, Optional, Union
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from lib_archi.repository_gateway_service import RepositoryGatewayService
 
@@ -16,12 +17,12 @@ class RepoDirectInvokerAdapter(IAppRepoInvoker):
         """
         self.repo_gateway = repo_gateway
 
-    def get(self, query: dict, is_collection: bool) -> object:
+    def get(self, query: dict, is_collection: bool = False) -> Union[Optional[object], List[object]]:
         """
         Invokes the get method on the wrapped repository invoker.
 
         Args:
-            query (dict): The query to be used for retrieving data.
+            query (Dict): The query parameters used to filter the results. e.g. { "id": 7 }
             is_collection (bool): A flag to indicate whether a collection or a single entity is expected.
 
         Returns:
@@ -42,15 +43,18 @@ class RepoDirectInvokerAdapter(IAppRepoInvoker):
         """
         return self.repo_gateway.validate(query, validation_logic)
 
-    def transact(self, method: str, query: dict) -> object:
+    def transact(self, method: str, data: dict, query: dict = None) -> Union[Optional[object], int]:
         """
         Invokes the transact method on the wrapped repository invoker.
 
         Args:
-            method (str): The method name or action to perform.
-            query (dict): The data for the transaction.
+            method (str): The type of transaction operation (e.g., "POST", "PUT", "DELETE").
+            data (Dict): The entity attributes passed as dictionary. e.g. { "first_name": "jhon", "last_name": "doe" }
+            query (Dict): The query parameters related to the transaction. e.g. { "id": 7 }
 
         Returns:
             object: The result of the transaction.
+            OR
+            int: in case of DELETE operation, the number of items deleted
         """
-        return self.repo_gateway.transact(method, query)
+        return self.repo_gateway.transact(method, data, query)

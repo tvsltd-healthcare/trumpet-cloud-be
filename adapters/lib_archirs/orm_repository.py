@@ -62,7 +62,7 @@ class OrmRepository(BaseRepository[Entity]):
 
         result = self.orm.query(query_dict)
 
-        return result[0] if isinstance(result, list) and len(result) == 1 else result
+        return result[0] if isinstance(result, list) and len(result) > 0 else None
 
 
     def get_collection(self, ids: Dict) -> List[Entity]:
@@ -109,7 +109,7 @@ class OrmRepository(BaseRepository[Entity]):
         return result[0] if isinstance(result, list) and len(result) == 1 else result
         
 
-    def update(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    def update(self, entity: Union[Entity, dict], ids: Dict) -> Optional[Entity]:
         """Update an existing entity in the repository.
 
         Args:
@@ -121,8 +121,7 @@ class OrmRepository(BaseRepository[Entity]):
         Raises:
             ValueError: If the entity does not exist in the repository.
         """
-        entity_dict = vars(entity)
-        entity_id = entity_dict.get('id')
+        entity_dict = entity if isinstance(entity, dict) else vars(entity)
 
         filter_string = " AND ".join(f"{key}={value}" for key, value in ids.items())
 
@@ -171,7 +170,7 @@ class OrmRepository(BaseRepository[Entity]):
         return result
 
 
-    def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    def patch(self, entity: Union[Entity, dict], ids: Dict) -> Optional[Entity]:
         """Patch an existing entity with partial updates.
 
         Args:
@@ -185,7 +184,7 @@ class OrmRepository(BaseRepository[Entity]):
         """
         return self.update(entity, ids)
 
-    def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    def put(self, entity: Union[Entity, dict], ids: Dict) -> Optional[Entity]:
         """Put an existing entity with full updates.
 
         Args:

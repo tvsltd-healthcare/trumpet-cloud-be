@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Dict, List, Optional, Union
 
 class IRepositoryInvoker(ABC):
     """
@@ -7,16 +8,16 @@ class IRepositoryInvoker(ABC):
     """
 
     @abstractmethod
-    def get(self) -> object:
+    def get(self, query: Dict, is_collection: bool = False) -> Union[Optional[object], List[object]]:
         """Method to retrieve data from the repository."""
         pass
 
     @abstractmethod
-    def validate(self) -> bool:
+    def validate(self, query: Dict, validation_logic: object) -> bool:
         """Method to validate data in the repository."""
         pass
 
     @abstractmethod
-    def transact(self) -> object:
+    def transact(self, method: str, data: Dict, query: Dict = None) -> object:
         """Method to perform transactions with the repository."""
         pass
