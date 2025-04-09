@@ -1,24 +1,16 @@
 
+import os
 import anyio
-
-from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
-from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
+from dotenv import load_dotenv
+from fastapi import HTTPException
 from domain_layer.auth_manager import AuthManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
-from fastapi import HTTPException
-import smtplib
-from email.mime.text import MIMEText
-from dotenv import load_dotenv
-import os
+from domain_layer.dependency.email_service_manager import EmailServiceManager
+from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
+from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 
 # Load environment variables
 load_dotenv()
-
-# Mailtrap configuration
-MAILTRAP_HOST = os.getenv("MAILTRAP_HOST")
-MAILTRAP_PORT = int(os.getenv("MAILTRAP_PORT"))
-MAILTRAP_USERNAME = os.getenv("MAILTRAP_USERNAME")
-MAILTRAP_PASSWORD = os.getenv("MAILTRAP_PASSWORD")
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 
 def execute(request):
@@ -35,27 +27,18 @@ def execute(request):
         auth_getter_adapter = AuthManager.get()
         token = auth_getter_adapter.generate_token({"user_id": email})
         token_value = token["token"] if isinstance(token, dict) else token
-        
-        # Create email message
-        # custom template
-        msg = MIMEText(token_value, "html")
-        msg["Subject"] = "Test email"
-        msg["From"] = SENDER_EMAIL
-        msg["To"] = email
+
+        try:
+            email_service = EmailServiceManager.get()
+            email_service.send_email(email, "Test email", token_value, SENDER_EMAIL)
+            return {"message": "Email sent successfully to EMAIL"}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error sending email: {str(e)}")
 
     else:
         return {
             "message": "User already exits",
             "status_code": 403,
         }
-
-    try:
-        # Connect to Mailtrap SMTP server
-        with smtplib.SMTP(MAILTRAP_HOST, MAILTRAP_PORT) as server:
-            server.login(MAILTRAP_USERNAME, MAILTRAP_PASSWORD)
-            server.send_message(msg)
-        return {"message": "Email sent successfully to Mailtrap"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error sending email: {str(e)}")
 
 
