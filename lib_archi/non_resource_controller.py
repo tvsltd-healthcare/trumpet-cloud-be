@@ -19,7 +19,6 @@ class NonResourceController(ILibNonResourceController):
         Args:
             non_resource_app_service (ILibNonResourceService): The application service 
                 responsible for executing non-resource logic.
-            response_handler: A handler used for formatting success and error responses.
         """
         self.non_resource_app_service: ILibNonResourceService = non_resource_app_service
 

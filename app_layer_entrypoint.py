@@ -98,6 +98,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         configs = json.load(config_file)
 
     orm = _generate_orm_wrapper()
+    response_handler = ResponseHandler()
 
     for model in (configs[0].get('models', [])):
         router_obj = server.router()
@@ -105,7 +106,6 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
 
         if not entity_stub_obj:
             continue
-        response_handler = ResponseHandler()
 
         if not entity_stub_obj:
             continue
