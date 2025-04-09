@@ -134,17 +134,21 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             continue
 
         repo = repository[entity_stub_obj](orm)
+        
 
         repo_gateway_service = RepositoryGatewayService[entity_stub_obj](repo, logic_map.get(model_name, {}))
         repo_invoker: IAppRepoInvoker = RepoDirectInvokerAdapter(repo_gateway_service)
         repo_discovery_setter_adapter.set_repo_invoker(model_name, repo_invoker)
 
-        app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_name, {}))
+        model_key = convert_to_snake_case(model_name)
+        # app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_name, {}))
+        app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_key, {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
         controller: IController = FastapiController(base_controller)
 
         for routes in model.get('routes', []):
             route_method = str.lower(routes['method'])
+            routes['auth'] = False
 
             if str.lower(route_method) == "post":
                 controller.post.__annotations__["entity"] = entity_stub_obj
