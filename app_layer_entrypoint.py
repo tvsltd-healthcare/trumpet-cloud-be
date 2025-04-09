@@ -23,7 +23,7 @@ from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
-from email_service.email_service import SmtpEmailService
+from email_service.smtp_email_service import SmtpEmailService
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
 from lib_archi.base_application_service import BaseApplicationService

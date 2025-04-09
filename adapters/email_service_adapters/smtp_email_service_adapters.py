@@ -1,5 +1,5 @@
 from domain_layer.abstractions.email_sending_interface import IEmailService
-from email_service.email_service import SmtpEmailService
+from email_service.smtp_email_service import SmtpEmailService
 
 
 class EmailServiceAdapter(IEmailService):
