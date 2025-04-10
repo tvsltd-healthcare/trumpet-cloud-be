@@ -67,7 +67,7 @@ class BaseRepository(ABC, Generic[Entity]):
         pass
 
     @abstractmethod
-    def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    def patch(self, entity: Union[Entity, dict], ids: Dict) -> Optional[Entity]:
         """Patch an existing entity with partial updates.
 
         Args:
@@ -79,7 +79,7 @@ class BaseRepository(ABC, Generic[Entity]):
         pass
 
     @abstractmethod
-    def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    def put(self, entity: Union[Entity, dict], ids: Dict) -> Optional[Entity]:
         """Put an existing entity with full updates or changes.
 
         Args:
