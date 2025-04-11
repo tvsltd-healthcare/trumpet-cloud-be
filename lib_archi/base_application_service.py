@@ -1,4 +1,3 @@
-from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from .base_repository import BaseRepository
 from typing import Any, TypeVar, Generic, Optional, List, Dict
 

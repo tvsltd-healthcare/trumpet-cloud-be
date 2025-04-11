@@ -6,4 +6,3 @@ class RepoDiscoveryManager:
     @classmethod
     def set(cls, instance):
         cls.instance = instance
-        
