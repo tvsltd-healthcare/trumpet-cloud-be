@@ -1,6 +1,7 @@
 import os
 import json
 
+from adapters.auth_adapters.auth_handler_factory import AuthHandlerFactory
 from adapters.lib_repo_discovery.repo_direct_invoker_adapter import RepoDirectInvokerAdapter
 from adapters.lib_repo_discovery.repo_discovery_getter_adapter import RepoDiscoveryGetterAdapter
 from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscoverySetterAdapter
@@ -9,6 +10,7 @@ from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRe
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
 from application_layer.abstractions.non_resource_controller_interface import INonResourceController
+from domain_layer.auth_manager import AuthManager
 from domain_layer.logic_loader import load_logics
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
@@ -53,18 +55,22 @@ auth_config = {
     "jwt": {
         "secret": os.getenv("JWT_SECRET"),  # Secret for JWT
         "algorithm": os.getenv("JWT_ALGORITHM"),  # JWT algorithm
-        "expiry": os.getenv("JWT_EXPIRY"),  # Expiry time for JWT
+        "expiry": int(os.getenv("JWT_EXPIRY")),  # Expiry time for JWT
     }
 }
 # Initialize the AuthMiddleware with the configuration
 auth_middleware = AuthMiddleware(auth_config)
 
-
-repo_discovery:RepoDiscovery = RepoDiscovery()
-repo_discovery_getter_adapter:IAppRepoDiscoveryGetter = RepoDiscoveryGetterAdapter(repo_discovery)
-repo_discovery_setter_adapter:IAppRepoDiscoverySetter = RepoDiscoverySetterAdapter(repo_discovery)
+repo_discovery: RepoDiscovery = RepoDiscovery()
+repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryGetterAdapter(repo_discovery)
+repo_discovery_setter_adapter: IAppRepoDiscoverySetter = RepoDiscoverySetterAdapter(repo_discovery)
 
 RepoDiscoveryManager.set(repo_discovery_getter_adapter)
+# Manager for Auth
+auth_factory = AuthHandlerFactory.get_handler(auth_config)
+
+AuthManager.set(auth_factory)
+
 
 def _generate_orm_wrapper():
     username = os.getenv("DB_USERNAME")
@@ -184,7 +190,8 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
 
     non_resource_app_service: ILibNonResourceService = NonResourceAppService(logic_map.get('non_resources', {}))
     non_resource_controller: ILibNonResourceController = NonResourceController(non_resource_app_service)
-    non_resource_controller_adapter: INonResourceController = NonResourceControllerAdapter(non_resource_controller, response_handler)
+    non_resource_controller_adapter: INonResourceController = NonResourceControllerAdapter(non_resource_controller,
+                                                                                           response_handler)
 
     router_obj = server.router()
 
