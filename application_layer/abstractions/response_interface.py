@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Dict
+from typing import Any, List, Dict, Optional
 
 
 class IResponseHandler(ABC):
@@ -8,17 +8,6 @@ class IResponseHandler(ABC):
     """
 
     @abstractmethod
-    def resource_list(self, message: str, data: List[Any] = None, status_code: int = 200) -> Dict[str, Any]:
-        pass
-
-    @abstractmethod
-    def resource_detail(self, message: str, data: Dict[str, Any] = None, status_code: int = 200) -> Dict[str, Any]:
-        pass
-
-    @abstractmethod
-    def error_response(self, message: str, status_code: int = 401) -> Dict[str, Any]:
-        pass
-
-    @abstractmethod
-    def validation_error(self, message: str, errors: List[Dict[str, str]], status_code: int = 422) -> Dict[str, Any]:
+    def generate_response(self, message: str, status_code: int = 200, data: Optional[Any] = None,
+                          errors: Optional[List[Dict[str, str]]] = None, ) -> Dict[str, Any]:
         pass
