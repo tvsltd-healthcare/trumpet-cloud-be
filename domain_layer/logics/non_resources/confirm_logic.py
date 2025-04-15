@@ -40,7 +40,7 @@ def execute(request):
     user = user_repo_invoker.get({ "email": email }, False)
     if not user:
         auth_getter_adapter = AuthManager.get()
-        token = auth_getter_adapter.generate_token({"user_id": email})
+        token = auth_getter_adapter.generate_token({"email": email})
         return {
             "message": "User token verify successfully.",
             "data": token,
