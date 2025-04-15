@@ -7,12 +7,16 @@ from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscov
 from application_layer.abstractions.app_repo_discovery_setter_interface import IAppRepoDiscoverySetter
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
+from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
+from application_layer.abstractions.non_resource_controller_interface import INonResourceController
 from domain_layer.logic_loader import load_logics
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
+from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
+from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_controller import BaseController
 from adapters.lib_archirs.orm_repository import OrmRepository
@@ -29,6 +33,9 @@ from adapters.middlewares.auth_middleware import AuthMiddleware
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from lib_archi.non_resource_app_service import NonResourceAppService
+from lib_archi.non_resource_controller import NonResourceController
 
 from lib_archi.repository_gateway_service import RepositoryGatewayService
 from lib_repo_discovery.repo_discovery import RepoDiscovery
@@ -107,6 +114,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         configs = json.load(config_file)
 
     orm = _generate_orm_wrapper()
+    response_handler = ResponseHandler()
 
     for model in (configs[0].get('models', [])):
         model_name = model.get('name')
@@ -115,7 +123,6 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
 
         if not entity_stub_obj:
             continue
-        response_handler = ResponseHandler()
 
         if not entity_stub_obj:
             continue
@@ -174,6 +181,24 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
                 raise NotImplementedError("This method is not supported in the base class.")
 
         server.use(router_obj)
+
+    non_resource_app_service: ILibNonResourceService = NonResourceAppService(logic_map.get('non_resources', {}))
+    non_resource_controller: ILibNonResourceController = NonResourceController(non_resource_app_service)
+    non_resource_controller_adapter: INonResourceController = NonResourceControllerAdapter(non_resource_controller, response_handler)
+
+    router_obj = server.router()
+
+    non_resource_config = configs[0].get('non_resources', {})
+    for routes in (non_resource_config.get('routes', [])):
+        route_verb = str.lower(routes['verb'])
+        url = routes.get('url', "")
+
+        if str.lower(route_verb) == "post":
+            router_obj.post(url=url, endpoint=non_resource_controller_adapter.perform)
+        elif str.lower(route_verb) == "get":
+            router_obj.get(url=url, endpoint=non_resource_controller_adapter.perform)
+
+    server.use(router_obj)
 
     return router_obj
 
