@@ -1,6 +1,12 @@
 import os
 import json
 
+from adapters.lib_repo_discovery.repo_direct_invoker_adapter import RepoDirectInvokerAdapter
+from adapters.lib_repo_discovery.repo_discovery_getter_adapter import RepoDiscoveryGetterAdapter
+from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscoverySetterAdapter
+from application_layer.abstractions.app_repo_discovery_setter_interface import IAppRepoDiscoverySetter
+from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
 from application_layer.abstractions.non_resource_controller_interface import INonResourceController
 from domain_layer.logic_loader import load_logics
@@ -8,6 +14,7 @@ from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
+from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
 from lib_archi.base_application_service import BaseApplicationService
@@ -30,6 +37,9 @@ from sqlalchemy.orm import sessionmaker
 from lib_archi.non_resource_app_service import NonResourceAppService
 from lib_archi.non_resource_controller import NonResourceController
 
+from lib_archi.repository_gateway_service import RepositoryGatewayService
+from lib_repo_discovery.repo_discovery import RepoDiscovery
+
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 
@@ -49,6 +59,12 @@ auth_config = {
 # Initialize the AuthMiddleware with the configuration
 auth_middleware = AuthMiddleware(auth_config)
 
+
+repo_discovery:RepoDiscovery = RepoDiscovery()
+repo_discovery_getter_adapter:IAppRepoDiscoveryGetter = RepoDiscoveryGetterAdapter(repo_discovery)
+repo_discovery_setter_adapter:IAppRepoDiscoverySetter = RepoDiscoverySetterAdapter(repo_discovery)
+
+RepoDiscoveryManager.set(repo_discovery_getter_adapter)
 
 def _generate_orm_wrapper():
     username = os.getenv("DB_USERNAME")
@@ -101,8 +117,9 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     response_handler = ResponseHandler()
 
     for model in (configs[0].get('models', [])):
+        model_name = model.get('name')
         router_obj = server.router()
-        entity_stub_obj = entity_resources.get(model.get('name'))
+        entity_stub_obj = entity_resources.get(model_name)
 
         if not entity_stub_obj:
             continue
@@ -111,7 +128,12 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             continue
 
         repo = repository[entity_stub_obj](orm)
-        app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model.get('name'), {}))
+
+        repo_gateway_service = RepositoryGatewayService[entity_stub_obj](repo, logic_map.get(model_name, {}))
+        repo_invoker: IAppRepoInvoker = RepoDirectInvokerAdapter(repo_gateway_service)
+        repo_discovery_setter_adapter.set_repo_invoker(model_name, repo_invoker)
+
+        app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_name, {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
         controller: IController = FastapiController(base_controller)
 
@@ -165,7 +187,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     non_resource_controller_adapter: INonResourceController = NonResourceControllerAdapter(non_resource_controller, response_handler)
 
     router_obj = server.router()
-    
+
     non_resource_config = configs[0].get('non_resources', {})
     for routes in (non_resource_config.get('routes', [])):
         route_verb = str.lower(routes['verb'])
@@ -175,7 +197,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             router_obj.post(url=url, endpoint=non_resource_controller_adapter.perform)
         elif str.lower(route_verb) == "get":
             router_obj.get(url=url, endpoint=non_resource_controller_adapter.perform)
-        
+
     server.use(router_obj)
 
     return router_obj

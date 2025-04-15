@@ -1,4 +1,4 @@
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from application_layer.abstractions.response_interface import IResponseHandler
 
 
@@ -8,41 +8,32 @@ class ResponseHandler(IResponseHandler):
     standardized HTTP responses in a structured JSON format.
     """
 
-    def resource_list(self, message: str, data: Dict[str, Any] = None, status_code: int = 200) -> Dict[str, Any]:
+    def generate_response(
+            self,
+            message: str,
+            status_code: int = 200,
+            data: Optional[Any] = None,
+            errors: Optional[List[Dict[str, str]]] = None,
+    ) -> Dict[str, Any]:
         """
-        Generates a JSON response for retrieving multiple resource items.
-        """
-        return {
-            "message": message,
-            "data": data or [],
-            "status_code": status_code
-        }
+        Generates a standardized JSON response for various use cases,
+        including success, error, and validation responses.
 
-    def resource_detail(self, message: str, data: Dict[str, Any] = None, status_code: int = 200) -> Dict[str, Any]:
+        :param message: The response message.
+        :param status_code: The HTTP status code (default: 200).
+        :param data: The response data, which can be a dictionary or list (default: None).
+        :param errors: A list of validation errors (default: None).
+        :return: A structured JSON response.
         """
-        Generates a JSON response for retrieving a single resource item.
-        """
-        return {
-            "message": message,
-            "data": data or {},
-            "status_code": status_code
-        }
-
-    def error_response(self, message: str, status_code: int = 401) -> Dict[str, Any]:
-        """
-        Generates a JSON response for general error issues.
-        """
-        return {
+        response = {
             "message": message,
             "status_code": status_code
         }
 
-    def validation_error(self, message: str, errors: List[Dict[str, str]], status_code: int = 422) -> Dict[str, Any]:
-        """
-        Generates a JSON response for validation errors.
-        """
-        return {
-            "message": message,
-            "errors": errors,
-            "status_code": status_code
-        }
+        if data is not None:
+            response["data"] = data if isinstance(data, (dict, list)) else {}
+
+        if errors is not None:
+            response["errors"] = errors
+
+        return response
