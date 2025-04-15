@@ -1,6 +1,7 @@
 import os
 import json
 
+from adapters.middlewares.rate_limit_middleware import RateLimitMiddleware
 from domain_layer.logic_loader import load_logics
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
@@ -180,6 +181,7 @@ def launch_app_layer():
 
     server.use(ValidationMiddleware)
     server.use(ResponseMiddleware)
+    server.use(RateLimitMiddleware)
     cors_config.apply_to_server(server=server)
 
     server.listen(port=os.getenv("PORT", 8000), host=os.getenv("HOST", "127.0.0.1"))
