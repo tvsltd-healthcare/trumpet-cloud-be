@@ -68,9 +68,9 @@ repo_discovery_setter_adapter: IAppRepoDiscoverySetter = RepoDiscoverySetterAdap
 RepoDiscoveryManager.set(repo_discovery_getter_adapter)
 # Manager for Auth
 auth_factory = AuthHandlerFactory.get_handler(auth_config)
-# token = auth_factory.generate_token({'user_id': 1})
-# print(token)
+
 AuthManager.set(auth_factory)
+
 
 def _generate_orm_wrapper():
     username = os.getenv("DB_USERNAME")
@@ -190,7 +190,8 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
 
     non_resource_app_service: ILibNonResourceService = NonResourceAppService(logic_map.get('non_resources', {}))
     non_resource_controller: ILibNonResourceController = NonResourceController(non_resource_app_service)
-    non_resource_controller_adapter: INonResourceController = NonResourceControllerAdapter(non_resource_controller, response_handler)
+    non_resource_controller_adapter: INonResourceController = NonResourceControllerAdapter(non_resource_controller,
+                                                                                           response_handler)
 
     router_obj = server.router()
 
