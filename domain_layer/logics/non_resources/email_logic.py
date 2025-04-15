@@ -25,7 +25,7 @@ def execute(request):
 
     if not user:
         auth_getter_adapter = AuthManager.get()
-        token = auth_getter_adapter.generate_token({"user_id": email})
+        token = auth_getter_adapter.generate_token({"email": email})
         token_value = token["token"] if isinstance(token, dict) else token
 
         try:
