@@ -26,8 +26,8 @@ class NonResourceControllerAdapter(INonResourceController):
         try:
             service_response =  self.non_resource_controller.perform(request)
             
-            return self.response_handler.resource_detail(
+            return self.response_handler.generate_response(
                 "Operation successful", data=service_response, status_code=200
             )
         except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            return self.response_handler.generate_response(f"{str(e)}", 400)
