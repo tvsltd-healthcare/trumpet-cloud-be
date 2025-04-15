@@ -11,7 +11,6 @@ EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
 EMAIL_USERNAME = os.getenv("EMAIL_USERNAME")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 
 class SmtpEmailService(IEmailService):
     def __init__(self):

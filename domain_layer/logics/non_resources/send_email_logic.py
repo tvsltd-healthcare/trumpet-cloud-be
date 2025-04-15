@@ -12,9 +12,10 @@ from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRe
 # Load environment variables
 load_dotenv()
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
+EMAIL_SUBJECT = os.getenv("EMAIL_SUBJECT")
 
 def execute(request):
-    print('===========Hello')
+
     body = anyio.from_thread.run(request.json)
     email = body.get("email")
     query = { "email": email }
@@ -31,9 +32,8 @@ def execute(request):
 
         try:
             email_service = EmailServiceManager.get()
-            email_service.send_email(email, "Test email", token_value, SENDER_EMAIL)
+            email_service.send_email(email, EMAIL_SUBJECT, token_value, SENDER_EMAIL)
             
-
             return {
                 "message": "Email sent successfully", 
                 "status_code": 200
