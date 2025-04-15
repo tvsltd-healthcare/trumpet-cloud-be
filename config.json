@@ -623,7 +623,7 @@
           {
             "url": "/api/organizations/{id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/organizations",
@@ -831,7 +831,7 @@
           {
             "url": "/api/roles/{id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/roles",
@@ -1235,7 +1235,7 @@
           {
             "url": "/api/users/{id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/users",
@@ -1470,7 +1470,7 @@
           {
             "url": "/api/users/{user_id}/roles/{role_id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/users/{user_id}/roles",
@@ -1698,7 +1698,7 @@
           {
             "url": "/api/organizations/{organization_id}/users/{user_id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/organizations/{organization_id}/users",
@@ -2041,7 +2041,7 @@
           {
             "url": "/api/studies/{id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/studies",
@@ -2372,7 +2372,7 @@
           {
             "url": "/api/datasets/{id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/datasets",
@@ -2586,7 +2586,7 @@
           {
             "url": "/api/studies/{study_id}/users/{user_id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/studies/{study_id}/users",
@@ -2989,7 +2989,7 @@
           {
             "url": "/api/studies/{study_id}/agreements/{id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/studies/{study_id}/agreements",
@@ -3262,7 +3262,7 @@
           {
             "url": "/api/study_agreements/{study_agreement_id}/datasets/{dataset_id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/datasets",
@@ -3490,7 +3490,7 @@
           {
             "url": "/api/study_agreements/{study_agreement_id}/queries/{id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/queries",
@@ -3819,7 +3819,7 @@
           {
             "url": "/api/study_agreements/{study_agreement_id}/results/{id}",
             "method": "put",
-            "auth":  true
+            "auth": true
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/results",
@@ -3850,7 +3850,7 @@
     ],
     "non_resources": {
       "name": "non_resource",
-      "routes":  [
+      "routes": [
         {
           "verb": "post",
           "url": "/api/login"
@@ -3917,6 +3917,10 @@
               ]
             }
           ]
+        },
+        {
+          "verb": "post",
+          "url": "/api/confirm"
         }
       ]
     }
