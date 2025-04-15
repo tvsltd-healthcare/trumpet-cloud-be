@@ -3856,7 +3856,7 @@
           "url": "/api/login"
         },
         {
-          "verb": "get",
+          "verb": "post",
           "url": "/api/send-email"
         },
         {
@@ -3917,10 +3917,6 @@
               ]
             }
           ]
-        },
-        {
-          "verb": "post",
-          "url": "/api/email"
         }
       ]
     }

@@ -1,19 +1,13 @@
 import os
 import json
+import re
 
 from adapters.auth_adapters.auth_handler_factory import AuthHandlerFactory
-<<<<<<< HEAD
-=======
 from adapters.email_service_adapters.smtp_email_service_adapters import EmailServiceAdapter
-from adapters.fl_core.fl_setup_injector_adapter import FLSetupInjectorAdapter
 from domain_layer.auth_manager import AuthManager
 from domain_layer.dependency.email_service_manager import EmailServiceManager
-from domain_layer.dependency.fl_service_manager import FLServiceManager
-from adapters.lib_archirs.non_resource_app_service_adapter import NonResourceAppServiceAdapter
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
-from application_layer.abstractions.non_resource_app_service_interface import INonResourceAppService
 from application_layer.abstractions.non_resource_controller_interface import INonResourceController
->>>>>>> 94a97cc (feat: dependency management of email service)
 from adapters.lib_repo_discovery.repo_direct_invoker_adapter import RepoDirectInvokerAdapter
 from adapters.lib_repo_discovery.repo_discovery_getter_adapter import RepoDiscoveryGetterAdapter
 from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscoverySetterAdapter
@@ -28,12 +22,8 @@ from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
-<<<<<<< HEAD
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
-=======
 from email_service.email_service import SmtpEmailService
-from fl_core.fl_setup_injector import FLSetupInjector
->>>>>>> 94a97cc (feat: dependency management of email service)
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
 from lib_archi.base_application_service import BaseApplicationService
@@ -87,6 +77,10 @@ RepoDiscoveryManager.set(repo_discovery_getter_adapter)
 auth_factory = AuthHandlerFactory.get_handler(auth_config)
 
 AuthManager.set(auth_factory)
+
+def convert_to_snake_case(name: str) -> str:
+    # This converts to snake_case and keeps the first letter capitalized
+    return name[0] + re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', name[1:]).lower()
 
 
 def _generate_orm_wrapper():
