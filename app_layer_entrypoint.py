@@ -3,7 +3,7 @@ import json
 import re
 
 from adapters.auth_adapters.auth_handler_factory import AuthHandlerFactory
-from adapters.email_service_adapters.smtp_email_service_adapters import EmailServiceAdapter
+from adapters.email_service_adapters.email_service_handler_factory import EmailServiceHandlerFactory
 from domain_layer.auth_manager import AuthManager
 from domain_layer.dependency.email_service_manager import EmailServiceManager
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
@@ -65,6 +65,20 @@ auth_config = {
         "expiry": int(os.getenv("JWT_EXPIRY")),  # Expiry time for JWT
     }
 }
+
+# SMTP email service configuration
+email_service_configuration = {
+    "name": "SMTP",
+    "config":{
+        "host": os.getenv("EMAIL_HOST"),
+        "port": int(os.getenv("EMAIL_PORT")),
+        "username": os.getenv("EMAIL_USERNAME"),
+        "password": os.getenv("EMAIL_PASSWORD"),
+        "subject": os.getenv("EMAIL_SUBJECT"),
+        "sender_email": os.getenv("SENDER_EMAIL")
+    }
+}
+
 # Initialize the AuthMiddleware with the configuration
 auth_middleware = AuthMiddleware(auth_config)
 
@@ -75,8 +89,11 @@ repo_discovery_setter_adapter: IAppRepoDiscoverySetter = RepoDiscoverySetterAdap
 RepoDiscoveryManager.set(repo_discovery_getter_adapter)
 # Manager for Auth
 auth_factory = AuthHandlerFactory.get_handler(auth_config)
-
 AuthManager.set(auth_factory)
+
+email_service_factory = EmailServiceHandlerFactory.get_handler(email_service_configuration)
+EmailServiceManager.set(email_service_factory)
+    
 
 def convert_to_snake_case(name: str) -> str:
     # This converts to snake_case and keeps the first letter capitalized
@@ -132,10 +149,6 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
 
     orm = _generate_orm_wrapper()
     response_handler = ResponseHandler()
-
-    smtp_email_service = SmtpEmailService()
-    email_service = EmailServiceAdapter(smtp_email_service)
-    EmailServiceManager.set(email_service)
 
     for model in (configs[0].get('models', [])):
         model_name = model.get('name')
