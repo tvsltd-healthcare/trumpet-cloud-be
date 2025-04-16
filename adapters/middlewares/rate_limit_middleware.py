@@ -1,12 +1,16 @@
+import os
+
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 import time
 from collections import defaultdict
+load_dotenv()
 
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app: FastAPI, rate_limit: int = 2, time_window: int = 60):
+    def __init__(self, app: FastAPI, rate_limit: int = int(os.getenv("RATE_LIMIT")), time_window: int = int(os.getenv("TIME_WINDOW"))):
         super().__init__(app)
         self.rate_limit = rate_limit  # Max requests allowed
         self.time_window = time_window  # Time window in seconds
