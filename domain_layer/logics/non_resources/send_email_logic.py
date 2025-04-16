@@ -32,7 +32,7 @@ def execute(request):
 
         try:
             email_service = EmailServiceManager.get()
-            email_service.send_email(email, EMAIL_SUBJECT, token_value, SENDER_EMAIL)
+            email_service.send_email(email, token_value)
             
             return {
                 "message": "Email sent successfully", 

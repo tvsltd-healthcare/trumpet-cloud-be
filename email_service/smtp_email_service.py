@@ -11,20 +11,24 @@ EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
 EMAIL_USERNAME = os.getenv("EMAIL_USERNAME")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL")
+EMAIL_SUBJECT = os.getenv("EMAIL_SUBJECT")
 
-class SmtpEmailService(IEmailService):
+class SmtpEmailService:
     def __init__(self):
         self.host = EMAIL_HOST
         self.port = EMAIL_PORT
         self.username = EMAIL_USERNAME
         self.password = EMAIL_PASSWORD
+        # self.subject = EMAIL_SUBJECT
+        # self.sender_email = SENDER_EMAIL
 
-    def send_email(self, to_email: str, subject: str, body: str, from_email: str) -> None:
+    def send_email(self, to_email: str, body: str ) -> None:
         
         # Create email message
         msg = MIMEText(EMAIL_TEMPLATE.format(token=body), "html")
-        msg["Subject"] = subject
-        msg["From"] = from_email
+        msg["Subject"] = EMAIL_SUBJECT
+        msg["From"] = SENDER_EMAIL
         msg["To"] = to_email
 
         # Connect to SMTP server and send email

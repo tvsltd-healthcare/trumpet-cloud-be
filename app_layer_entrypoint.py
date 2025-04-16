@@ -133,9 +133,9 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
     orm = _generate_orm_wrapper()
     response_handler = ResponseHandler()
 
-    email_service = SmtpEmailService()
-    email_service_adapter = EmailServiceAdapter(email_service)
-    EmailServiceManager.set(email_service_adapter)
+    smtp_email_service = SmtpEmailService()
+    email_service = EmailServiceAdapter(smtp_email_service)
+    EmailServiceManager.set(email_service)
 
     for model in (configs[0].get('models', [])):
         model_name = model.get('name')

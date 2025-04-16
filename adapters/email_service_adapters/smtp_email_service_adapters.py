@@ -7,6 +7,6 @@ class EmailServiceAdapter(IEmailService):
     def __init__(self, email_service: SmtpEmailService):
         self.email_service = email_service
     
-    def send_email(self, to_email: str, subject: str, body: str, from_email: str) -> None:
-        self.email_service.send_email(to_email, subject, body, from_email)
+    def send_email(self, to_email: str, body: str ) -> None:
+        self.email_service.send_email(to_email, body )
         
