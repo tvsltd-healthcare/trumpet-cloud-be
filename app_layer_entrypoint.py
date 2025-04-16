@@ -145,7 +145,6 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
 
         for routes in model.get('routes', []):
             route_method = str.lower(routes['method'])
-            routes['auth'] = False
 
             if str.lower(route_method) == "post":
                 controller.post.__annotations__["entity"] = entity_stub_obj
