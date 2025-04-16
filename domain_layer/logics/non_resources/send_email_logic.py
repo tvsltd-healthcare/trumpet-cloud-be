@@ -1,7 +1,4 @@
-
-import os
 import anyio
-from dotenv import load_dotenv
 from fastapi import HTTPException
 from domain_layer.auth_manager import AuthManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
@@ -9,10 +6,6 @@ from domain_layer.dependency.email_service_manager import EmailServiceManager
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 
-# Load environment variables
-load_dotenv()
-SENDER_EMAIL = os.getenv("SENDER_EMAIL")
-EMAIL_SUBJECT = os.getenv("EMAIL_SUBJECT")
 
 def execute(request):
 
