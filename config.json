@@ -3920,7 +3920,7 @@
         },
         {
           "verb": "post",
-          "url": "/api/confirm"
+          "url": "/api/confirm-email"
         }
       ]
     }
