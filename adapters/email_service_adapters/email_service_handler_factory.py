@@ -1,8 +1,12 @@
+from enum import Enum
 from typing import Dict
-from adapters.email_service_adapters.smtp_email_service_adapters import SMTPEmailServiceAdapter
-from domain_layer.abstractions.email_sending_interface import IEmailService
 from email_service.smtp_email_service import SmtpEmailService
+from domain_layer.abstractions.email_sending_interface import IEmailService
+from adapters.email_service_adapters.smtp_email_service_adapters import SMTPEmailServiceAdapter
 
+class EmailServiceType(Enum):
+    """Supported email service types."""
+    SMTP = "SMTP"
 
 class EmailServiceHandlerFactory:
     """
@@ -22,7 +26,7 @@ class EmailServiceHandlerFactory:
         handler_type = config.get('name')
 
         match handler_type:
-            case 'SMTP':
+            case EmailServiceType.SMTP:
                 return SMTPEmailServiceAdapter(SmtpEmailService(config.get('config')))
             case _:
                 raise ValueError(f'Unsupported adapter type: {config}')

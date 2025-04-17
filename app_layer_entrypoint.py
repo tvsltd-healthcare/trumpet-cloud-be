@@ -3,7 +3,7 @@ import json
 import re
 
 from adapters.auth_adapters.auth_handler_factory import AuthHandlerFactory
-from adapters.email_service_adapters.email_service_handler_factory import EmailServiceHandlerFactory
+from adapters.email_service_adapters.email_service_handler_factory import EmailServiceHandlerFactory, EmailServiceType
 from domain_layer.auth_manager import AuthManager
 from domain_layer.dependency.email_service_manager import EmailServiceManager
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
@@ -68,7 +68,7 @@ auth_config = {
 
 # SMTP email service configuration
 email_service_configuration = {
-    "name": "SMTP",
+    "name": EmailServiceType.SMTP,
     "config":{
         "host": os.getenv("EMAIL_HOST"),
         "port": int(os.getenv("EMAIL_PORT")),
