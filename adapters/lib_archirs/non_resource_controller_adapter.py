@@ -5,6 +5,7 @@ from lib_archi.abstractions.non_resource_controller_interface import ILibNonReso
 
 from fastapi import Request
 
+
 class NonResourceControllerAdapter(INonResourceController):
     """
     Adapter class that wraps an instance of INonResourceController.
@@ -24,10 +25,11 @@ class NonResourceControllerAdapter(INonResourceController):
         :return: The response from the underlying controller's `perform` method.
         """
         try:
-            service_response =  self.non_resource_controller.perform(request)
-            
+            service_response = self.non_resource_controller.perform(request)
+
             return self.response_handler.generate_response(
-                "Operation successful", data=service_response, status_code=200
+                message=service_response.get('message', ''), data=service_response.get('data', ''),
+                status_code=service_response.get('status_code', '')
             )
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)

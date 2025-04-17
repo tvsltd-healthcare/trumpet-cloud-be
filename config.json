@@ -1230,7 +1230,7 @@
           {
             "url": "/api/users",
             "method": "get_collection",
-            "auth": false
+            "auth": true
           },
           {
             "url": "/api/users/{id}",
@@ -3852,7 +3852,7 @@
       "name": "non_resource",
       "routes":  [
         {
-          "verb": "get",
+          "verb": "post",
           "url": "/api/login"
         },
         {
