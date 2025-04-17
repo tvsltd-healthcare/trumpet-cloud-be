@@ -25,7 +25,7 @@ def execute(request):
     try:
         repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
         user_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
-        user = user_repo_invoker.get({ "email": email }, False)
+        user = user_repo_invoker.get({"email": email}, False)
 
         if not user:
             auth_getter_adapter = AuthManager.get()
@@ -43,9 +43,3 @@ def execute(request):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error sending email: {str(e)}")
-
-
-
-    
-
-
