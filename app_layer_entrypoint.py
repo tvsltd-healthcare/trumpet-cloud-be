@@ -32,6 +32,10 @@ from application_layer.abstractions.controller_interface import IController
 from adapters.middlewares.response_middleware import ResponseMiddleware
 from adapters.middlewares.auth_middleware import AuthMiddleware
 
+from adapters.middlewares.authorization_middleware import AuthorizationMiddleware
+from adapters.fga_authorization_adapters import Mechanism as FGA_authorization_mechanism, FgaAuthorizationFactory
+from adapters.fga_authorization_adapters.openfga_authorization_adapter import Configuration as OpenFgaConfiguration
+
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -58,18 +62,28 @@ auth_config = {
         "expiry": int(os.getenv("JWT_EXPIRY")),  # Expiry time for JWT
     }
 }
-# Initialize the AuthMiddleware with the configuration
-auth_middleware = AuthMiddleware(auth_config)
+
+auth_handler = AuthHandlerFactory.get_handler(auth_config)
+AuthManager.set(auth_handler)
+auth_middleware = AuthMiddleware(auth_handler)
+
+open_fga_configuration: OpenFgaConfiguration = {
+    "FGA_API_URL": os.getenv("FGA_API_URL"),
+    "FGA_STORE_ID": os.getenv("FGA_STORE_ID"),
+    "FGA_MODEL_ID": os.getenv("FGA_MODEL_ID")
+}
+
+authorization_handler = FgaAuthorizationFactory.create(
+    FGA_authorization_mechanism.OPEN_FGA,
+    open_fga_configuration
+)
+authorization_middleware = AuthorizationMiddleware(authorizer=authorization_handler)
 
 repo_discovery: RepoDiscovery = RepoDiscovery()
 repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryGetterAdapter(repo_discovery)
 repo_discovery_setter_adapter: IAppRepoDiscoverySetter = RepoDiscoverySetterAdapter(repo_discovery)
 
 RepoDiscoveryManager.set(repo_discovery_getter_adapter)
-# Manager for Auth
-auth_factory = AuthHandlerFactory.get_handler(auth_config)
-
-AuthManager.set(auth_factory)
 
 
 def _generate_orm_wrapper():
@@ -154,7 +168,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
                     router_obj.post(url=routes.get('url', ""), endpoint=controller.post)
             elif str.lower(route_method) == "get":
                 if routes['auth']:
-                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get, dependencies=[auth_middleware])
+                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get, dependencies=[auth_middleware, authorization_middleware])
                 else:
                     router_obj.get(url=routes.get('url', ""), endpoint=controller.get)
             elif str.lower(route_method) == "get_collection":
