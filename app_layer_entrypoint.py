@@ -5,7 +5,7 @@ from adapters.auth_adapters.auth_handler_factory import AuthHandlerFactory
 from adapters.lib_repo_discovery.repo_direct_invoker_adapter import RepoDirectInvokerAdapter
 from adapters.lib_repo_discovery.repo_discovery_getter_adapter import RepoDiscoveryGetterAdapter
 from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscoverySetterAdapter
-from adapters.middlewares.rate_limit_middleware import RateLimitMiddleware
+from adapters.middlewares.rate_limit_middleware import rate_limit_middleware_factory
 from application_layer.abstractions.app_repo_discovery_setter_interface import IAppRepoDiscoverySetter
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
@@ -235,7 +235,10 @@ def launch_app_layer():
 
     server.use(ValidationMiddleware)
     server.use(ResponseMiddleware)
-    server.use(RateLimitMiddleware)
+    rate_limit = int(os.getenv("RATE_LIMIT"))
+    time_window = int(os.getenv("TIME_WINDOW"))
+    server.use(rate_limit_middleware_factory(rate_limit=rate_limit, time_window=time_window))
+    # server.use(RateLimitMiddleware)
     cors_config.apply_to_server(server=server)
 
     server.listen(port=os.getenv("PORT", 8000), host=os.getenv("HOST", "127.0.0.1"))
