@@ -19,4 +19,4 @@ class FgaAuthorizationFactory:
             case Mechanism.OPEN_FGA:
                 return OpenFgaAuthorization(configuration)
             case _:
-                raise "Error. Unknown is unknown authorization mechanism."
+                raise "Error. Unknown authorization mechanism."
