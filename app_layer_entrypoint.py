@@ -163,12 +163,14 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             if str.lower(route_method) == "post":
                 controller.post.__annotations__["entity"] = entity_stub_obj
                 if routes['auth']:
-                    router_obj.post(url=routes.get('url', ""), endpoint=controller.post, dependencies=[auth_middleware])
+                    router_obj.post(url=routes.get('url', ""), endpoint=controller.post,
+                                    dependencies=[auth_middleware])
                 else:
                     router_obj.post(url=routes.get('url', ""), endpoint=controller.post)
             elif str.lower(route_method) == "get":
                 if routes['auth']:
-                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get, dependencies=[auth_middleware, authorization_middleware])
+                    router_obj.get(url=routes.get('url', ""), endpoint=controller.get,
+                                   dependencies=[auth_middleware, authorization_middleware])
                 else:
                     router_obj.get(url=routes.get('url', ""), endpoint=controller.get)
             elif str.lower(route_method) == "get_collection":
@@ -180,21 +182,22 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             elif str.lower(route_method) == "put":
                 controller.put.__annotations__["entity"] = entity_stub_obj
                 if routes['auth']:
-                    router_obj.put(url=routes.get('url', ""), endpoint=controller.put, dependencies=[auth_middleware])
+                    router_obj.put(url=routes.get('url', ""), endpoint=controller.put,
+                                   dependencies=[auth_middleware, authorization_middleware])
                 else:
                     router_obj.put(url=routes.get('url', ""), endpoint=controller.put)
             elif str.lower(route_method) == "patch":
                 controller.patch.__annotations__["entity"] = entity_stub_obj
                 if routes['auth']:
                     router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch,
-                                     dependencies=[auth_middleware])
+                                     dependencies=[auth_middleware, authorization_middleware])
                 else:
                     router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch)
             elif str.lower(route_method) == "delete":
                 controller.delete.__annotations__["entity"] = entity_stub_obj
                 if routes['auth']:
                     router_obj.delete(url=routes.get('url', ""), endpoint=controller.delete,
-                                      dependencies=[auth_middleware])
+                                      dependencies=[auth_middleware, authorization_middleware])
                 else:
                     router_obj.delete(url=routes.get('url', ""), endpoint=controller.delete)
             else:
