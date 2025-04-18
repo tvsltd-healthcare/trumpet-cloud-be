@@ -1,6 +1,4 @@
-import os
 import re
-from typing import Dict
 
 from fastapi import Request, HTTPException
 from starlette import status
@@ -41,6 +39,7 @@ class AuthorizationMiddleware:
         if not authorization_response.get("allowed"):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
 
+
 def _get_user(request):
     user_id = request.headers["userid"]
     return {user_id}
@@ -60,7 +59,8 @@ def _get_resource(request, configs):
 
 def _get_relation(request: Request):
     http_method = request.method
-    return  http_method
+    return http_method
+
 
 def _get_parent(resource_type: str, configs: dict):
     print(resource_type)
