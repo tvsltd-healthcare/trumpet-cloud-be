@@ -38,11 +38,12 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
 
-def rate_limit_middleware_factory(rate_limit: int, time_window: int):
+def rate_limit_middleware_factory(algorithm: str, rate_limit: int, time_window: int):
     """
     Factory function to create a RateLimitMiddleware with specified parameters.
 
     Args:
+        algorithm: Name of algorithm to use.
         rate_limit: Maximum number of requests allowed within the time window
         time_window: Time window in seconds
 
@@ -51,6 +52,10 @@ def rate_limit_middleware_factory(rate_limit: int, time_window: int):
     """
 
     def create_middleware(app: FastAPI):
-        return RateLimitMiddleware(app, rate_limit=rate_limit, time_window=time_window)
+        match algorithm:
+            case "sliding-window":
+                return RateLimitMiddleware(app, rate_limit=rate_limit, time_window=time_window)
+            case _:
+                raise ValueError(f'algorithm "{algorithm}" is not supported')
 
     return create_middleware

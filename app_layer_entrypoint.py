@@ -237,8 +237,8 @@ def launch_app_layer():
     server.use(ResponseMiddleware)
     rate_limit = int(os.getenv("RATE_LIMIT"))
     time_window = int(os.getenv("TIME_WINDOW"))
-    server.use(rate_limit_middleware_factory(rate_limit=rate_limit, time_window=time_window))
-    # server.use(RateLimitMiddleware)
+    algorithm = os.getenv("ALGORITHM")
+    server.use(rate_limit_middleware_factory(algorithm = algorithm, rate_limit=rate_limit, time_window=time_window))
     cors_config.apply_to_server(server=server)
 
     server.listen(port=os.getenv("PORT", 8000), host=os.getenv("HOST", "127.0.0.1"))
