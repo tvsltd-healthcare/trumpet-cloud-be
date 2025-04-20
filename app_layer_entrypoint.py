@@ -235,9 +235,9 @@ def launch_app_layer():
 
     server.use(ValidationMiddleware)
     server.use(ResponseMiddleware)
-    rate_limit = int(os.getenv("RATE_LIMIT"))
-    time_window = int(os.getenv("TIME_WINDOW"))
-    algorithm = os.getenv("ALGORITHM")
+    rate_limit = int(os.getenv("RATE_LIMIT_REQUEST_PER_WINDOW"))
+    time_window = int(os.getenv("RATE_LIMIT_TIME_WINDOW_IN_SECOND"))
+    algorithm = os.getenv("RATE_LIMIT_ALGORITHM")
     server.use(rate_limit_middleware_factory(algorithm = algorithm, rate_limit=rate_limit, time_window=time_window))
     cors_config.apply_to_server(server=server)
 
