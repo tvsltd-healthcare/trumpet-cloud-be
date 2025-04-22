@@ -5,7 +5,9 @@ from adapters.auth_adapters.auth_handler_factory import AuthHandlerFactory
 from adapters.lib_repo_discovery.repo_direct_invoker_adapter import RepoDirectInvokerAdapter
 from adapters.lib_repo_discovery.repo_discovery_getter_adapter import RepoDiscoveryGetterAdapter
 from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscoverySetterAdapter
+from adapters.password_adapters.bcrypt_adapters import PasswordHandler
 from application_layer.abstractions.app_repo_discovery_setter_interface import IAppRepoDiscoverySetter
+from application_layer.abstractions.password_manager_interface import IPasswordManager
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
@@ -16,6 +18,7 @@ from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
+from domain_layer.password_manager import PasswordManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
@@ -71,6 +74,9 @@ auth_factory = AuthHandlerFactory.get_handler(auth_config)
 
 AuthManager.set(auth_factory)
 
+# Manager for Password
+password_handler: IPasswordManager = PasswordHandler()
+PasswordManager.set(password_handler)
 
 def _generate_orm_wrapper():
     username = os.getenv("DB_USERNAME")
