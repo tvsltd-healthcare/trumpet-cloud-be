@@ -2,14 +2,15 @@ from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRe
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 
+from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.utils.enforce_request_interface import enforce_request_type
 
-def execute(query, repo):
+@enforce_request_type()
+def execute(request: IRequest, repo):
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     org_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Organizations")
     
-    query = {
-        "id": 1
-    }
+    query = request.get_path_params()
 
     org = org_repo_invoker.get(query, False)
 

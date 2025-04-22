@@ -3861,6 +3861,10 @@
         },
         {
           "verb": "post",
+          "url": "/api/file/upload"
+        },
+        {
+          "verb": "post",
           "url": "/api/register",
           "body": [
             {

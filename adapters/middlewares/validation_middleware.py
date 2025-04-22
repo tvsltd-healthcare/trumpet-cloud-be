@@ -2,6 +2,7 @@ import os
 import re
 import json
 
+import traceback
 from typing import Dict
 
 from fastapi import Request, HTTPException
@@ -38,10 +39,15 @@ class ValidationMiddleware(BaseHTTPMiddleware):
         """
         configs = self._load_config()
 
-        if request.method in {'POST', 'PUT', 'PATCH'}:
+        # todo: when we will get File from request.file - we will get the associated fields from request.form
+        # for now quick fix on not to check when file is uploaded via form data
+        content_type = request.headers.get("content-type", "")
+        if request.method in {'POST', 'PUT', 'PATCH'} and "application/json" in content_type:
             try:
                 body = await request.json()
             except Exception:
+                tb = traceback.format_exc()
+                print(tb)
                 return JSONResponse(content={"message": "Invalid JSON format", }, status_code=422)
 
             model_name = self._get_model_name(request, configs)

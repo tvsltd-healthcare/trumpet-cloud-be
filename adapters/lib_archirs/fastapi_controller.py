@@ -3,6 +3,7 @@ import re
 from typing import TypeVar, Optional
 
 from application_layer.abstractions.controller_interface import IController
+# from application_layer.abstractions.request_interface import IRequest
 from lib_archi.base_controller import BaseController
 from logic_injector.base_logic_injector import BaseLogicInjector
 
@@ -90,7 +91,7 @@ class FastapiController(IController):
         ids: dict = request.path_params
         return self.controller.get(ids)
 
-    def get_collection(self, request: Request) -> Entity:
+    def get_collection(self, request: IRequest) -> Entity:
         """Retrieves a collection of entities based on path parameters.
 
         Args:
@@ -99,6 +100,11 @@ class FastapiController(IController):
         Returns:
             Entity: A collection of entities matching the request criteria.
         """
+        if not isinstance(request, IRequest):
+            raise TypeError("request must implement IRequest interface")
+        
+        print("request =======", request)
+        print("request query params ========", request.get_query_params())
         ids: dict = request.path_params
         return self.controller.get_collection(ids)
 
