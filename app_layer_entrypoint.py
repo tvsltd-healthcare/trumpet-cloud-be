@@ -263,7 +263,7 @@ def launch_app_layer():
 
     _ = build_app_layer(repository=OrmRepository, server=server)
 
-    server.use(ValidationMiddleware)
+    # server.use(ValidationMiddleware)
     server.use(ResponseMiddleware)
     cors_config.apply_to_server(server=server)
 

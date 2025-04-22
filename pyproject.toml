@@ -18,6 +18,7 @@ pymysql = "^1.1.1"
 psycopg2-binary = "^2.9.10"
 requests = "^2.32.3"
 wrap-auth = {git = "https://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@github.com/tvsltd/wrap-auth.git", rev="develop"}
+pandas = "^2.2.3"
 
 
 [build-system]

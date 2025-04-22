@@ -36,12 +36,14 @@ class ValidationMiddleware(BaseHTTPMiddleware):
         Returns:
             Response: A JSONResponse if validation fails, or the next middleware response if validation passes.
         """
+        print('request:::', dir(request))
         configs = self._load_config()
 
         if request.method in {'POST', 'PUT', 'PATCH'}:
             try:
-                body = await request.json()
+                body = await request.form()
             except Exception:
+                print('===========')
                 return JSONResponse(content={"message": "Invalid JSON format", }, status_code=422)
 
             model_name = self._get_model_name(request, configs)
