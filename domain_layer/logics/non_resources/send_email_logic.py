@@ -1,6 +1,43 @@
+import anyio
+from fastapi import HTTPException
+from domain_layer.auth_manager import AuthManager
+from domain_layer.repo_discovery_manager import RepoDiscoveryManager
+from domain_layer.dependency.email_service_manager import EmailServiceManager
+from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
+from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+
+
 def execute(request):
-    #get roles repo
-    #roles_repo = RepoDiscovery.ge("Roles")
-    #roles.repo.create(role: )
-    print("logic req", request)
-    return {"email_logic_res": "Executing GET logic for users with query: "}
+
+    body = anyio.from_thread.run(request.json)
+    email = body.get("email")
+    query = { "email": email }
+
+    # discovery repo
+    repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    user_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
+    user = user_repo_invoker.get(query, False)
+
+    if not user:
+        auth_getter_adapter = AuthManager.get()
+        token = auth_getter_adapter.generate_token({"email": email})
+        token_value = token["token"] if isinstance(token, dict) else token
+
+        try:
+            email_service = EmailServiceManager.get()
+            email_service.send_email(email, token_value)
+            
+            return {
+                "message": "Email sent successfully", 
+                "status_code": 200
+                }
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error sending email: {str(e)}")
+
+    else:
+        return {
+            "message": "User already exits",
+            "status_code": 403,
+        }
+
+
