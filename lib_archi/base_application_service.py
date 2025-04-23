@@ -85,7 +85,7 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("post")
         if logic:
-            return logic(request, self.repository)
+            return logic(request, self.repository, entity)
         else:
             ids = request.get_path_params()
             return self.repository.post(entity, ids)
@@ -101,7 +101,7 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("put")
         if logic:
-            return logic(request, self.repository)
+            return logic(request, self.repository, entity)
         else:
             ids = request.get_path_params()
             return self.repository.put(entity, ids)
@@ -117,7 +117,7 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("patch")
         if logic:
-            return logic(request, self.repository)
+            return logic(request, self.repository, entity)
         else:
            ids = request.get_path_params()
            return self.repository.patch(entity, ids)

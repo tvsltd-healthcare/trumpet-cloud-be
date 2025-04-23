@@ -35,6 +35,10 @@ class IRequest(Protocol):
         """Return the request URL as a string."""
         pass
 
+    def get_path(self) -> str:
+        """Return the request path as a string."""
+        pass
+
     def get_form_data(self) -> dict:
         """Return the uploaded files"""
         pass
