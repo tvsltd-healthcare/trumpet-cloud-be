@@ -279,3 +279,4 @@ pyrightconfig.json
 
 # Custom
 docker/postgresql/cloud/data
+.DS_Store

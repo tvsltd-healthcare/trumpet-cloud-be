@@ -11,8 +11,10 @@ from application_layer.abstractions.non_resource_controller_interface import INo
 from adapters.lib_repo_discovery.repo_direct_invoker_adapter import RepoDirectInvokerAdapter
 from adapters.lib_repo_discovery.repo_discovery_getter_adapter import RepoDiscoveryGetterAdapter
 from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscoverySetterAdapter
+from adapters.password_adapters.bcrypt_adapters import PasswordHandler
 from adapters.middlewares.rate_limit_middleware import rate_limit_middleware_factory
 from application_layer.abstractions.app_repo_discovery_setter_interface import IAppRepoDiscoverySetter
+from domain_layer.abstractions.password_manager_interface import IPasswordHandler
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
@@ -23,6 +25,7 @@ from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
+from domain_layer.password_manager import PasswordManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from email_service.smtp_email_service import SmtpEmailService
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
@@ -40,7 +43,6 @@ from application_layer.abstractions.controller_interface import IController
 from adapters.middlewares.response_middleware import ResponseMiddleware
 from adapters.middlewares.auth_middleware import AuthMiddleware
 
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -92,6 +94,11 @@ RepoDiscoveryManager.set(repo_discovery_getter_adapter)
 auth_factory = AuthHandlerFactory.get_handler(auth_config)
 AuthManager.set(auth_factory)
 
+
+# Manager for Password
+password_handler: IPasswordHandler = PasswordHandler()
+PasswordManager.set(password_handler)
+
 email_service_factory = EmailServiceHandlerFactory.get_handler(email_service_configuration)
 EmailServiceManager.set(email_service_factory)
     
@@ -99,6 +106,7 @@ EmailServiceManager.set(email_service_factory)
 def convert_to_snake_case(name: str) -> str:
     # This converts to snake_case and keeps the first letter capitalized
     return name[0] + re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', name[1:]).lower()
+
 
 
 def _generate_orm_wrapper():
