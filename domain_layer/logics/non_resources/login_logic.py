@@ -19,8 +19,8 @@ def execute(request):
     user = user_repo_invoker.get(query, False)
     if user:
         # check password
-        password_manager = PasswordManager.get()
-        check_password = password_manager.verify_password(body.get('password'), user.get('password'))
+        password_handler = PasswordManager.get()
+        check_password = password_handler.verify_password(body.get('password'), user.get('password'))
         if check_password:
             auth_getter_adapter = AuthManager.get()
             token = auth_getter_adapter.generate_token({"user_id": user.get('id')})
