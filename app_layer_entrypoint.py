@@ -8,7 +8,7 @@ from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscov
 from adapters.password_adapters.bcrypt_adapters import PasswordHandler
 from adapters.middlewares.rate_limit_middleware import rate_limit_middleware_factory
 from application_layer.abstractions.app_repo_discovery_setter_interface import IAppRepoDiscoverySetter
-from application_layer.abstractions.password_manager_interface import IPasswordManager
+from domain_layer.abstractions.password_manager_interface import IPasswordManager
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
@@ -36,7 +36,6 @@ from application_layer.abstractions.controller_interface import IController
 from adapters.middlewares.response_middleware import ResponseMiddleware
 from adapters.middlewares.auth_middleware import AuthMiddleware
 
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

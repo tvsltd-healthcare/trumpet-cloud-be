@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class IPasswordManager(ABC):
+class IPasswordHandler(ABC):
     """
     Interface for password manager
     """

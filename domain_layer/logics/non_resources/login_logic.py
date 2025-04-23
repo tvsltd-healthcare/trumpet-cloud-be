@@ -1,7 +1,5 @@
 import anyio
 
-from adapters.password_adapters.bcrypt_adapters import PasswordHandler
-from application_layer.abstractions.password_manager_interface import IPasswordManager
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.auth_manager import AuthManager
