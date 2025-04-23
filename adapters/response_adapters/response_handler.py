@@ -29,9 +29,8 @@ class ResponseHandler(IResponseHandler):
             "message": message,
             "status_code": status_code
         }
-
-        if data is not None:
-            response["data"] = data if isinstance(data, (dict, list)) else {}
+        if isinstance(data, (dict, list)) and data:
+            response["data"] = data
 
         if errors is not None:
             response["errors"] = errors
