@@ -1,6 +1,6 @@
-from lib_archi.abstractions.request_interface import IRequest
-
 from functools import wraps
+
+from domain_layer.abstractions.request_interface import IRequest
 
 
 def enforce_request_type():

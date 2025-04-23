@@ -23,7 +23,6 @@ from lib_archi.abstractions.non_resource_controller_interface import ILibNonReso
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_controller import BaseController
 from adapters.lib_archirs.orm_repository import OrmRepository
-# from adapters.lib_archirs.fastapi_controller import FastapiController
 from lib_archi.base_repository import BaseRepository
 from adapters.middlewares.validation_middleware import ValidationMiddleware
 from adapters.middlewares.cors import CorsConfig
@@ -142,7 +141,6 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
 
         app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_name, {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
-        # controller: IController = FastapiController(base_controller)
         controller: IController = base_controller
 
         for routes in model.get('routes', []):
