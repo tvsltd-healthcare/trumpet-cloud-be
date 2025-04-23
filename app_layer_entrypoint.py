@@ -1,12 +1,20 @@
 import os
 import json
+import re
 
 from adapters.auth_adapters.auth_handler_factory import AuthHandlerFactory
+from adapters.email_service_adapters.email_service_handler_factory import EmailServiceHandlerFactory, EmailServiceType
+from domain_layer.auth_manager import AuthManager
+from domain_layer.dependency.email_service_manager import EmailServiceManager
+from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
+from application_layer.abstractions.non_resource_controller_interface import INonResourceController
 from adapters.lib_repo_discovery.repo_direct_invoker_adapter import RepoDirectInvokerAdapter
 from adapters.lib_repo_discovery.repo_discovery_getter_adapter import RepoDiscoveryGetterAdapter
 from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscoverySetterAdapter
+from adapters.password_adapters.bcrypt_adapters import PasswordHandler
 from adapters.middlewares.rate_limit_middleware import rate_limit_middleware_factory
 from application_layer.abstractions.app_repo_discovery_setter_interface import IAppRepoDiscoverySetter
+from domain_layer.abstractions.password_manager_interface import IPasswordHandler
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
@@ -17,7 +25,9 @@ from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 from adapters.response_adapters import ResponseHandler
 from application_layer.entities import get_resource_types
+from domain_layer.password_manager import PasswordManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
+from email_service.smtp_email_service import SmtpEmailService
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
 from lib_archi.base_application_service import BaseApplicationService
@@ -32,7 +42,6 @@ from application_layer.abstractions.controller_interface import IController
 from adapters.middlewares.response_middleware import ResponseMiddleware
 from adapters.middlewares.auth_middleware import AuthMiddleware
 
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -58,6 +67,20 @@ auth_config = {
         "expiry": int(os.getenv("JWT_EXPIRY")),  # Expiry time for JWT
     }
 }
+
+# SMTP email service configuration
+email_service_configuration = {
+    "name": EmailServiceType.SMTP,
+    "config":{
+        "host": os.getenv("EMAIL_HOST"),
+        "port": int(os.getenv("EMAIL_PORT")),
+        "username": os.getenv("EMAIL_USERNAME"),
+        "password": os.getenv("EMAIL_PASSWORD"),
+        "subject": os.getenv("EMAIL_SUBJECT"),
+        "sender_email": os.getenv("SENDER_EMAIL")
+    }
+}
+
 # Initialize the AuthMiddleware with the configuration
 auth_middleware = AuthMiddleware(auth_config)
 
@@ -68,8 +91,21 @@ repo_discovery_setter_adapter: IAppRepoDiscoverySetter = RepoDiscoverySetterAdap
 RepoDiscoveryManager.set(repo_discovery_getter_adapter)
 # Manager for Auth
 auth_factory = AuthHandlerFactory.get_handler(auth_config)
-
 AuthManager.set(auth_factory)
+
+
+# Manager for Password
+password_handler: IPasswordHandler = PasswordHandler()
+PasswordManager.set(password_handler)
+
+email_service_factory = EmailServiceHandlerFactory.get_handler(email_service_configuration)
+EmailServiceManager.set(email_service_factory)
+    
+
+def convert_to_snake_case(name: str) -> str:
+    # This converts to snake_case and keeps the first letter capitalized
+    return name[0] + re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', name[1:]).lower()
+
 
 
 def _generate_orm_wrapper():
@@ -134,12 +170,15 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             continue
 
         repo = repository[entity_stub_obj](orm)
+        
 
         repo_gateway_service = RepositoryGatewayService[entity_stub_obj](repo, logic_map.get(model_name, {}))
         repo_invoker: IAppRepoInvoker = RepoDirectInvokerAdapter(repo_gateway_service)
         repo_discovery_setter_adapter.set_repo_invoker(model_name, repo_invoker)
 
-        app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_name, {}))
+        model_key = convert_to_snake_case(model_name)
+        # app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_name, {}))
+        app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_key, {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
         controller: IController = base_controller
 
