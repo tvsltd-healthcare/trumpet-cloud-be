@@ -1,9 +1,9 @@
 import bcrypt
 
-from domain_layer.abstractions.password_manager_interface import IPasswordManager
+from domain_layer.abstractions.password_manager_interface import IPasswordHandler
 
 
-class PasswordHandler(IPasswordManager):
+class PasswordHandler(IPasswordHandler):
     """
     Implementation of IPasswordManager interface
     """
