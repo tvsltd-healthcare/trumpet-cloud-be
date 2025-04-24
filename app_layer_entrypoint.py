@@ -11,7 +11,6 @@ from adapters.auth_adapters.auth_handler_factory import AuthHandlerFactory
 from adapters.email_service_adapters.email_service_handler_factory import EmailServiceHandlerFactory, EmailServiceType
 from adapters.fga_authorization_adapters import Mechanism as FGA_authorization_mechanism, FgaAuthorizationFactory
 from adapters.fga_authorization_adapters.openfga_authorization_adapter import Configuration as OpenFgaConfiguration
-from adapters.lib_archirs.fastapi_controller import FastapiController
 from adapters.lib_archirs.non_resource_controller_adapter import NonResourceControllerAdapter
 from adapters.lib_archirs.orm_repository import OrmRepository
 from adapters.lib_repo_discovery.repo_direct_invoker_adapter import RepoDirectInvokerAdapter
@@ -68,8 +67,8 @@ auth_handler = AuthHandlerFactory.get_handler(auth_config)
 AuthManager.set(auth_handler)
 auth_middleware = AuthMiddleware(auth_handler)
 
-open_fga_configuration: OpenFgaConfiguration = {"FGA_API_URL": os.getenv("FGA_API_URL"),
-    "FGA_STORE_ID": os.getenv("FGA_STORE_ID"), "FGA_MODEL_ID": os.getenv("FGA_MODEL_ID")}
+open_fga_configuration: OpenFgaConfiguration = {"OPENFGA_API_URL": os.getenv("OPENFGA_API_URL"),
+    "OPENFGA_STORE_ID": os.getenv("OPENFGA_STORE_ID"), "OPENFGA_MODEL_ID": os.getenv("OPENFGA_MODEL_ID")}
 
 authorization_handler = FgaAuthorizationFactory.create(FGA_authorization_mechanism.OPEN_FGA, open_fga_configuration)
 authorization_middleware = AuthorizationMiddleware(authorizer=authorization_handler)
@@ -168,7 +167,6 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         repo_discovery_setter_adapter.set_repo_invoker(model_name, repo_invoker)
 
         model_key = convert_to_snake_case(model_name)
-        # app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_name, {}))
         app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_key, {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
         controller: IController = base_controller
