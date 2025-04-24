@@ -1,12 +1,33 @@
+import re
 import uuid
 from datetime import datetime
 
 from typing import TypeVar, Generic, Optional, Dict
+
+from lib_archi.abstractions.request_interface import IRequest
+from lib_archi.utils.enforce_request_interface import enforce_request_type
 from .base_application_service import BaseApplicationService
 from application_layer.abstractions.response_interface import IResponseHandler
+from logic_injector.base_logic_injector import BaseLogicInjector
 
 Entity = TypeVar('Entity')
+injector = BaseLogicInjector()
+BUSINESS_LOGIC_PATHS = r"^/api/studies/\d+/agreements$"
 
+def path_matches(path: str) -> bool:
+        """
+        Checks if the given path matches the pattern /api/studies/{id}/agreements.
+
+        Args:
+            path (str): The URL path to be matched (excluding the base URL).
+
+        Returns:
+            bool: True if the path matches the pattern, False otherwise.
+        """
+        # Todo:: Enhance it for any path matching where we need to inject the business logic
+
+        pattern = BUSINESS_LOGIC_PATHS
+        return bool(re.match(pattern, path))
 
 class BaseController(Generic[Entity]):
     """A generic base controller for handling CRUD operations on entities.
@@ -33,7 +54,8 @@ class BaseController(Generic[Entity]):
         self.app_service: BaseApplicationService[Entity] = app_service
         self.response_handler: IResponseHandler = response_handler
 
-    def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    @enforce_request_type()
+    def post(self, request: IRequest, entity: Entity) -> Optional[Entity]:
         """Handles the creation of a new entity.
 
         Args:
@@ -50,12 +72,21 @@ class BaseController(Generic[Entity]):
         try:
             entity = self._refine_store_date(entity)
             entity = self._add_uniq_id(entity)
-            created_entity = self.app_service.post(entity, ids)
+            created_entity = self.app_service.post(entity, request)
+
+            # todo: remove this if logic and move to domain_layer logic folder
+            # after merging this branch feat/post_study_aggrement_logic
+            if path_matches(request.get_path()):
+                ids: dict = request.get_path_params()
+                agreement_id = created_entity['id']
+                injector.inject_business_logic(entity=entity, entity_id=ids, agreement_id=agreement_id)
+
             return self.response_handler.generate_response("Entity created successfully", data=created_entity, status_code=201)
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
 
-    def get(self, ids: Dict) -> Entity:
+    @enforce_request_type()
+    def get(self, request: IRequest) -> Entity:
         """Retrieves an entity by its ID.
 
         Args:
@@ -69,7 +100,7 @@ class BaseController(Generic[Entity]):
             Entity: The entity corresponding to the provided ID.
         """
         try:
-            get_entity = self.app_service.get(ids)
+            get_entity = self.app_service.get(request)
             
             if get_entity is None or not bool(get_entity):
                 return self.response_handler.generate_response("item not found", 404)
@@ -78,7 +109,8 @@ class BaseController(Generic[Entity]):
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
 
-    def get_collection(self, ids: Dict) -> Entity:
+    @enforce_request_type()
+    def get_collection(self, request: IRequest) -> Entity:
         """Retrieves a collection of all entities.
 
         Args:
@@ -92,12 +124,13 @@ class BaseController(Generic[Entity]):
             List[Entity]: A list of all entities.
         """
         try:
-            entities = self.app_service.get_collection(ids)
+            entities = self.app_service.get_collection(request)
             return self.response_handler.generate_response("Entities retrieved successfully", data=entities)
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
 
-    def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    @enforce_request_type()
+    def patch(self, request: IRequest, entity: Entity) -> Optional[Entity]:
         """Partially updates an existing entity.
 
             Args:
@@ -113,12 +146,14 @@ class BaseController(Generic[Entity]):
             """
         try:
             entity = self._refine_store_date(entity)
-            updated_entity = self.app_service.patch(entity, ids)
+            
+            updated_entity = self.app_service.patch(entity, request)
             return self.response_handler.generate_response("Entity updated successfully", data=updated_entity)
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
 
-    def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    @enforce_request_type()
+    def put(self, request: IRequest, entity: Entity) -> Optional[Entity]:
         """Fully updates an existing entity.
 
         Args:
@@ -135,14 +170,17 @@ class BaseController(Generic[Entity]):
         try:
             if self._all_attrs_not_provided(entity):
                 raise ValueError("PUT request requires all attributes to be provided.")
+            
+            ids = request.get_path_params()
 
             entity = self._refine_store_date(entity)
-            updated_entity = self.app_service.put(entity, ids)
+            updated_entity = self.app_service.put(entity, request)
             return self.response_handler.generate_response("Entity fully updated", data=updated_entity)
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
 
-    def delete(self, ids: Dict) -> Optional[Entity]:
+    @enforce_request_type()
+    def delete(self, request: IRequest) -> Optional[Entity]:
         """Deletes an entity by its ID.
 
         Args:
@@ -155,6 +193,8 @@ class BaseController(Generic[Entity]):
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.
         """
+        ids = request.get_path_params()
+
         try:
             for key, value in ids.items():
                 if not value:
@@ -188,4 +228,3 @@ class BaseController(Generic[Entity]):
                 return True
         
         return False
-    

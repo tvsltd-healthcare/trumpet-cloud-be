@@ -1,15 +1,15 @@
-import anyio
 from fastapi import HTTPException
 from domain_layer.auth_manager import AuthManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.dependency.email_service_manager import EmailServiceManager
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.utils.enforce_request_interface import enforce_request_type
 
-
-def execute(request):
-
-    body = anyio.from_thread.run(request.json)
+@enforce_request_type()
+def execute(request: IRequest):
+    body = request.get_json()
     email = body.get("email")
     query = { "email": email }
 
@@ -39,5 +39,3 @@ def execute(request):
             "message": "User already exits",
             "status_code": 403,
         }
-
-
