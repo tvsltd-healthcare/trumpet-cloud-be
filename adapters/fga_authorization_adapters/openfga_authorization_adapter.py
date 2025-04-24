@@ -10,9 +10,9 @@ Classes:
 
 Example:
     >>> config = Configuration(
-    ...     FGA_API_URL="https://api.fga.example",
-    ...     FGA_STORE_ID="store123",
-    ...     FGA_MODEL_ID="model123"
+    ...     OPENFGA_API_URL="https://api.fga.example",
+    ...     OPENFGA_STORE_ID="store123",
+    ...     OPENFGA_MODEL_ID="model123"
     ... )
     >>> auth = OpenFgaAuthorization(config)
     >>> result = auth.check({
@@ -37,14 +37,14 @@ class Configuration(TypedDict):
     """Configuration parameters for OpenFGA authorization.
 
     Attributes:
-        FGA_API_URL: Base URL of the OpenFGA API endpoint.
-        FGA_STORE_ID: Identifier of the OpenFGA store.
-        FGA_MODEL_ID: Identifier of the authorization model.
+        OPENFGA_API_URL: Base URL of the OpenFGA API endpoint.
+        OPENFGA_STORE_ID: Identifier of the OpenFGA store.
+        OPENFGA_MODEL_ID: Identifier of the authorization model.
     """
 
-    FGA_API_URL: str
-    FGA_STORE_ID: str
-    FGA_MODEL_ID: str
+    OPENFGA_API_URL: str
+    OPENFGA_STORE_ID: str
+    OPENFGA_MODEL_ID: str
 
 
 class OpenFgaAuthorization(IFGAAuthorizer):
@@ -59,12 +59,12 @@ class OpenFgaAuthorization(IFGAAuthorizer):
 
         Args:
             configuration: Dictionary containing OpenFGA configuration parameters.
-                Must include FGA_API_URL, FGA_STORE_ID, and FGA_MODEL_ID.
+                Must include OPENFGA_API_URL, OPENFGA_STORE_ID, and OPENFGA_MODEL_ID.
         """
         client_configuration = ClientConfiguration(
-            api_url=configuration.get("FGA_API_URL"),
-            store_id=configuration.get("FGA_STORE_ID"),
-            authorization_model_id=configuration.get("FGA_MODEL_ID"),
+            api_url=configuration.get("OPENFGA_API_URL"),
+            store_id=configuration.get("OPENFGA_STORE_ID"),
+            authorization_model_id=configuration.get("OPENFGA_MODEL_ID"),
         )
 
         self.fga_client = OpenFgaClient(client_configuration)
