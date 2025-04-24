@@ -2,7 +2,6 @@ import os
 import re
 import json
 
-import traceback
 from typing import Dict
 
 from fastapi import Request, HTTPException
@@ -46,8 +45,6 @@ class ValidationMiddleware(BaseHTTPMiddleware):
             try:
                 body = await request.json()
             except Exception:
-                tb = traceback.format_exc()
-                print(tb)
                 return JSONResponse(content={"message": "Invalid JSON format", }, status_code=422)
 
             model_name = self._get_model_name(request, configs)

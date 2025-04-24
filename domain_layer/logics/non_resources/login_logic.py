@@ -8,8 +8,6 @@ from domain_layer.utils.enforce_request_interface import enforce_request_type
 
 @enforce_request_type()
 def execute(request: IRequest):
-    # todo: need to fix this implementation
-    # todo: the request implementation should come from wrap-restify
     body = request.get_json()
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")

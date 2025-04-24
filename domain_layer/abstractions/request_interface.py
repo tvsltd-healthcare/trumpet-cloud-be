@@ -1,4 +1,4 @@
-from typing import Protocol, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
 
 
 @runtime_checkable
@@ -7,12 +7,20 @@ class IRequest(Protocol):
     Interface for a response handler to generate structured JSON API responses.
     """
 
+    def get_body(self) -> bytes:
+        """Return the request body as bytes (or an empty bytes object)."""
+        pass
+
     def get_json(self) -> dict:
         """Return the request body parsed as JSON (or an empty dict)."""
         pass
 
-    def get_body(self) -> bytes:
-        """Return the request body as bytes (or an empty bytes object)."""
+    def get_form_data(self) -> dict:
+        """Return the uploaded files"""
+        pass
+
+    def get_files(self) -> dict:
+        """Return the uploaded files"""
         pass
 
     def get_query_params(self) -> dict:
@@ -39,6 +47,6 @@ class IRequest(Protocol):
         """Return the request path as a string."""
         pass
 
-    def get_form_data(self) -> dict:
+    def get_request(self) -> Any:
         """Return the uploaded files"""
         pass

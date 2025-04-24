@@ -1,6 +1,5 @@
 import re
 import uuid
-import traceback
 from datetime import datetime
 
 from typing import TypeVar, Generic, Optional, Dict
@@ -84,8 +83,6 @@ class BaseController(Generic[Entity]):
 
             return self.response_handler.generate_response("Entity created successfully", data=created_entity, status_code=201)
         except Exception as e:
-            traceback_str = traceback.format_exc()  # Get the full traceback as a string
-            print(traceback_str)  # Print it to console/log
             return self.response_handler.generate_response(f"{str(e)}", 400)
 
     @enforce_request_type()
