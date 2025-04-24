@@ -43,6 +43,7 @@ from lib_archi.abstractions.non_resource_app_service_interface import ILibNonRes
 from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
 from lib_archi.base_application_service import BaseApplicationService
 from lib_archi.base_controller import BaseController
+from adapters.lib_archirs.orm_repository import OrmRepository
 from lib_archi.base_repository import BaseRepository
 from lib_archi.non_resource_app_service import NonResourceAppService
 from lib_archi.non_resource_controller import NonResourceController
@@ -170,7 +171,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         # app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_name, {}))
         app_service = BaseApplicationService[entity_stub_obj](repo, logic_map.get(model_key, {}))
         base_controller = BaseController[entity_stub_obj](app_service, response_handler)
-        controller: IController = FastapiController(base_controller)
+        controller: IController = base_controller
 
         for routes in model.get('routes', []):
             route_method = str.lower(routes['method'])
@@ -179,9 +180,9 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
                 controller.post.__annotations__["entity"] = entity_stub_obj
                 if routes['auth']:
                     router_obj.post(url=routes.get('url', ""), endpoint=controller.post,
-                                    dependencies=[auth_middleware])
+                                   entity_class=entity_stub_obj, dependencies=[auth_middleware])
                 else:
-                    router_obj.post(url=routes.get('url', ""), endpoint=controller.post)
+                    router_obj.post(url=routes.get('url', ""), endpoint=controller.post, entity_class=entity_stub_obj)
             elif str.lower(route_method) == "get":
                 if routes['auth']:
                     router_obj.get(url=routes.get('url', ""), endpoint=controller.get,
@@ -198,16 +199,16 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
                 controller.put.__annotations__["entity"] = entity_stub_obj
                 if routes['auth']:
                     router_obj.put(url=routes.get('url', ""), endpoint=controller.put,
-                                   dependencies=[auth_middleware, authorization_middleware])
+                                  entity_class=entity_stub_obj, dependencies=[auth_middleware, authorization_middleware])
                 else:
-                    router_obj.put(url=routes.get('url', ""), endpoint=controller.put)
+                    router_obj.put(url=routes.get('url', ""), endpoint=controller.put, entity_class=entity_stub_obj)
             elif str.lower(route_method) == "patch":
                 controller.patch.__annotations__["entity"] = entity_stub_obj
                 if routes['auth']:
-                    router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch,
+                    router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch, entity_class=entity_stub_obj,
                                      dependencies=[auth_middleware, authorization_middleware])
                 else:
-                    router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch)
+                    router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch, entity_class=entity_stub_obj)
             elif str.lower(route_method) == "delete":
                 controller.delete.__annotations__["entity"] = entity_stub_obj
                 if routes['auth']:

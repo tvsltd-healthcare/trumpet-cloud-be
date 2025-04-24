@@ -1,4 +1,3 @@
-import traceback
 from .base_repository import BaseRepository
 from typing import Any, TypeVar, Generic, Optional, List, Dict, Union
 
@@ -123,6 +122,4 @@ class RepositoryGatewayService(Generic[Entity]):
                 else:
                     raise ValueError(f"Unsupported method: {method}")
         except Exception as e:
-            print(f"Error processing transaction: {e}")
-            traceback.print_exc()
             return None
