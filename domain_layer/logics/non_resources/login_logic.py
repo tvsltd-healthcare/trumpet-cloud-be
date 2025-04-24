@@ -1,4 +1,5 @@
 import anyio
+import time
 
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
@@ -24,15 +25,33 @@ def execute(request):
         if check_password:
             auth_getter_adapter = AuthManager.get()
             token = auth_getter_adapter.generate_token({"user_id": user.get('id')})
-            print(token['token'])
+            # find user role
+            role_user_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("UserRoles")
+            role_user_query = {
+                "user_id": user['id'],
+            }
+            role_user = role_user_repo_invoker.get(role_user_query, False)
+            # find role
+            role_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Roles")
+            role_query = {
+                "id": role_user['role_id'],
+            }
+            role = role_repo_invoker.get(role_query, False)
+            # success response object
             success_response_object = {
                 "access_token": token['token'],
-                "expires_in": token['expires_in'],
+                "expires_in": (int(time.time()) + int(token['expires'])),
+                "user": {
+                    "first_name": user['first_name'],
+                    "last_name": user['last_name'],
+                    "email": user['email'],
+                    "phone_number": user['phone'],
+                    "role": role['name']
+                }
             }
-            print(token)
             return {
                 "message": "User successfully logged in.",
-                "data": token,
+                "data": success_response_object,
                 "status_code": 200,
             }
         else:
