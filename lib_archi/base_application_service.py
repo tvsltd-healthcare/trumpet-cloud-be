@@ -1,3 +1,4 @@
+from lib_archi.abstractions.request_interface import IRequest
 from .base_repository import BaseRepository
 from typing import Any, TypeVar, Generic, Optional, List, Dict
 
@@ -37,7 +38,7 @@ class BaseApplicationService(Generic[Entity]):
         except Exception as e:
             return None
 
-    def get(self, ids: Dict) -> Entity:
+    def get(self, request: IRequest) -> Entity:
         """Retrieves an entity by its unique identifier.
 
         Args:
@@ -48,11 +49,12 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("get")
         if logic:
-            return logic(ids, self.repository)
+            return logic(request, self.repository)
         else:
+            ids = request.get_path_params()
             return self.repository.get(ids)
 
-    def get_collection(self, ids: Dict) -> List[Entity]:
+    def get_collection(self, request: IRequest) -> List[Entity]:
         """Retrieves a collection of all entities.
 
         Returns:
@@ -67,11 +69,12 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("get_collection")
         if logic:
-            return logic(ids, self.repository)
+            return logic(request, self.repository)
         else:
+            ids = request.get_path_params()
             return self.repository.get_collection(ids)
 
-    def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    def post(self, entity: Entity, request: IRequest) -> Optional[Entity]:
         """Creates a new entity in the repository.
 
         Args:
@@ -82,11 +85,12 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("post")
         if logic:
-            return logic(ids, self.repository)
+            return logic(request, self.repository, entity)
         else:
+            ids = request.get_path_params()
             return self.repository.post(entity, ids)
 
-    def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    def put(self, entity: Entity, request: IRequest) -> Optional[Entity]:
         """Fully updates an existing entity in the repository.
 
         Args:
@@ -97,11 +101,12 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("put")
         if logic:
-            return logic(ids, self.repository)
+            return logic(request, self.repository, entity)
         else:
+            ids = request.get_path_params()
             return self.repository.put(entity, ids)
 
-    def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    def patch(self, entity: Entity, request: IRequest) -> Optional[Entity]:
         """Partially updates an existing entity in the repository.
 
         Args:
@@ -112,11 +117,12 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("patch")
         if logic:
-            return logic(ids, self.repository)
+            return logic(request, self.repository, entity)
         else:
+           ids = request.get_path_params()
            return self.repository.patch(entity, ids)
 
-    def delete(self, ids: Dict) -> Optional[Entity]:
+    def delete(self, request: IRequest) -> Optional[Entity]:
         """Deletes an entity by its unique identifier.
 
         Args:
@@ -127,6 +133,7 @@ class BaseApplicationService(Generic[Entity]):
         """
         logic = self.inject_logic("patch")
         if logic:
-            return logic(ids, self.repository)
+            return logic(request, self.repository)
         else:
+           ids = request.get_path_params()
            return self.repository.delete(ids)

@@ -1923,8 +1923,8 @@ pytest-cov = "^5.0.0"
 [package.source]
 type = "git"
 url = "https://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@github.com/tvsltd/wrap_restify.git"
-reference = "develop"
-resolved_reference = "08fbfa96fafac7a0174fe1fd8f1d6de947410c9f"
+reference = "feat/implement-request-object"
+resolved_reference = "bef9fba1c0413599f6015b3ad9cf5c907b2a0140"
 
 [[package]]
 name = "wrap-validate"
@@ -1947,4 +1947,4 @@ resolved_reference = "34e9bf0572f0cac825174c02f37704b2f8c6b177"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "4fb8c4a54064f8ddcdd24660664fcff88929619da41294c70006bb3fba9f0845"
+content-hash = "314124a48aa7d7cb6f0e4f1acc513bd3004c060efacd618c1cdfb8f2094309e7"
