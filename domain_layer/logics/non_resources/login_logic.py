@@ -24,6 +24,12 @@ def execute(request):
         if check_password:
             auth_getter_adapter = AuthManager.get()
             token = auth_getter_adapter.generate_token({"user_id": user.get('id')})
+            print(token['token'])
+            success_response_object = {
+                "access_token": token['token'],
+                "expires_in": token['expires_in'],
+            }
+            print(token)
             return {
                 "message": "User successfully logged in.",
                 "data": token,
