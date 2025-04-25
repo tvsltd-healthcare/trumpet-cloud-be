@@ -12,15 +12,14 @@ class AuthMiddleware:
         AuthMiddleware class to handle JWT authentication logic
     """
 
-    def __init__(self, auth_config: Dict):
+    def __init__(self, auth_handler):
         """
             Initializes the middleware with the authentication configuration.
 
             Args:
                 auth_config: Configuration dictionary to set up JWT and other auth types
         """
-        self.auth_config = auth_config
-        self.auth_handler = AuthHandlerFactory.get_handler(self.auth_config)
+        self.auth_handler = auth_handler
 
     def __call__(self, request: Request):
         """

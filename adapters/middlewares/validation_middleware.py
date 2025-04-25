@@ -99,6 +99,6 @@ class ValidationMiddleware(BaseHTTPMiddleware):
     @staticmethod
     def _normalize_path(path):
         # Replace any number or content within `{}` with a placeholder
-        path = re.sub(r"/\d+/", "/{id}/", path)
+        path = re.sub(r"\d+", "{id}", path)
         path = re.sub(r"\{.*?\}", "{id}", path)
         return path
