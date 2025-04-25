@@ -5,6 +5,17 @@ from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 
+def create_files_body(form_data, upload_file, decode_token):
+    return {
+            "filename": upload_file.get("file_name"),
+            "type": form_data.get("type"),
+            "buffer": form_data.get("buffer"),
+            "path":  f"{upload_file.get("file_path")}",
+            "size": upload_file.get("file_size"),
+            "mime_type": upload_file.get("file_mime_type"),
+            "owner": f"{form_data.get('resource_name')}:{decode_token.get("user_id")}"
+        }
+
 @enforce_request_type()
 def execute(request):
     """
@@ -24,37 +35,24 @@ def execute(request):
         dict: A JSON-serializable dictionary containing a success or error message,
               status code, and file metadata if successful.
     """
-    
     try:
-        
-        body = request.get_form_data()
-        file = body.get("file")
+        form_data = request.get_form_data()
+        file = form_data.get("file")
         upload_file = upload_file_to_disk(file)
 
         # Remove "Bearer " prefix from token and decode data
         decode_token = token_parser(request.get_headers()['authorization'])
 
         # Manage repositary
-        repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
-        files_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Files")
+        repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+        files_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Files")
 
-        create_files_body = {
-            "filename": upload_file['file_name'],
-            "type": body.get("type"),
-            "buffer": body.get("buffer"),
-            "path":  f"{body.get('resource_name')}:{decode_token['user_id']}:{upload_file['file_name']}",
-            "size": file.size,
-            "mime_type": file.headers.get('content-type'),
-            "owner": f"{body.get('resource_name')}:{decode_token['user_id']}",
-        }
-        
-        print('create_files_body=========>>>',create_files_body)
-        create_file = files_repo_invoker.transact("POST", data =create_files_body)
-        print('create_files_body=========>>>create_file', create_file)
+        file_body = create_files_body(form_data, upload_file, decode_token)
+        create_file = files_repo.transact("POST", data = file_body)
         return {
             "message": "File created successfully.",
-            "data": create_files_body,
-            "status_code": 200,
+            "data": create_file,
+            "status_code": 200
         }
         
     except Exception as e:

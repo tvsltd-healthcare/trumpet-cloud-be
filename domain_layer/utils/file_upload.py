@@ -1,6 +1,5 @@
 import os
 import time
-import anyio
 from pathlib import Path
 
 # Configuration constants
@@ -41,7 +40,9 @@ def upload_file_to_disk(file) -> dict:
 
         return {
             "file_name": unique_filename,
-            "file_path": str(file_path)
+            "file_path": (f"{OUTPUT_DIR}/{unique_filename}"),
+            "file_size": file.size,
+            "file_mime_type": file.headers.get('content-type')
         }
 
     except ValueError as e:
