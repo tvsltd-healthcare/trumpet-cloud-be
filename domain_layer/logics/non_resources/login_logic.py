@@ -28,7 +28,7 @@ def execute(request: IRequest):
 
     token = _generate_token(user["id"])
     if not token:
-        return response.error(message="Login failed.", status_code=500)
+        return response.error(message="Login failed.", status_code=404)
 
     role_name = _get_user_role_name(repo_getter, user["id"])
     if not role_name:
