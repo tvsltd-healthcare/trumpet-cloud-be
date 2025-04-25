@@ -35,7 +35,7 @@ def upload_file_to_disk(file) -> dict:
         file_path = file_dir / unique_filename
 
         # Read and write file contents
-        contents = anyio.from_thread.run(file.read)
+        contents = file.file.read()
         with open(file_path, "wb") as f:
             f.write(contents)
 

@@ -1,11 +1,11 @@
-import anyio
-from domain_layer.auth_manager import AuthManager
+from domain_layer.utils.token_parser import token_parser
 from domain_layer.utils.file_upload import upload_file_to_disk
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
+from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 
-
+@enforce_request_type()
 def execute(request):
     """
     Handles file upload, authentication, and metadata creation for a file resource.
@@ -26,16 +26,13 @@ def execute(request):
     """
     
     try:
-        body = body = anyio.from_thread.run(lambda: request.form())
-
+        
+        body = request.get_form_data()
         file = body.get("file")
         upload_file = upload_file_to_disk(file)
 
         # Remove "Bearer " prefix from token and decode data
-        auth_header = request.headers['authorization']
-        token = auth_header.replace("Bearer ", "").strip()
-        auth_getter_adapter = AuthManager.get()
-        decode_token = auth_getter_adapter.read_data(token)
+        decode_token = token_parser(request.get_headers()['authorization'])
 
         # Manage repositary
         repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()

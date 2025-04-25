@@ -2,6 +2,8 @@ from typing import Dict, List, Union
 
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
+from lib_archi.abstractions.request_interface import IRequest
+from lib_archi.utils.enforce_request_interface import enforce_request_type
 
 class NonResourceController(ILibNonResourceController):
     """
@@ -22,7 +24,8 @@ class NonResourceController(ILibNonResourceController):
         """
         self.non_resource_app_service: ILibNonResourceService = non_resource_app_service
 
-    def perform(self, request) -> Dict[str, Union[str, int, Dict, List]]:
+    @enforce_request_type()
+    def perform(self, request: IRequest) -> Dict[str, Union[str, int, Dict, List]]:
         """
         Processes the request and returns a formatted response.
 

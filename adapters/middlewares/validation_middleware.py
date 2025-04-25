@@ -39,7 +39,10 @@ class ValidationMiddleware(BaseHTTPMiddleware):
         print('request:::', dir(request))
         configs = self._load_config()
 
-        if request.method in {'POST', 'PUT', 'PATCH'}:
+        # todo: when we will get File from request.file - we will get the associated fields from request.form
+        # for now quick fix on not to check when file is uploaded via form data
+        content_type = request.headers.get("content-type", "")
+        if request.method in {'POST', 'PUT', 'PATCH'} and "application/json" in content_type:
             try:
                 body = await request.form()
             except Exception:
@@ -98,6 +101,6 @@ class ValidationMiddleware(BaseHTTPMiddleware):
     @staticmethod
     def _normalize_path(path):
         # Replace any number or content within `{}` with a placeholder
-        path = re.sub(r"/\d+/", "/{id}/", path)
+        path = re.sub(r"\d+", "{id}", path)
         path = re.sub(r"\{.*?\}", "{id}", path)
         return path
