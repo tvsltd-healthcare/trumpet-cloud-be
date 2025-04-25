@@ -1,3 +1,4 @@
+from domain_layer.password_manager import PasswordManager
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
@@ -10,7 +11,7 @@ def execute(request: IRequest, repo, entity=None):
     Creates a new user, assigns them to an organization based on the token's email, and returns the user data with the organization ID.
 
     This method:
-    1. Creates a user using the provided entity and query parameters.
+    1. Change password string to hash and then create a user using the provided entity and query parameters.
     2. Decodes the JWT token from the Authorization header to get the email.
     3. Retrieves the organization by email using the Organizations repository.
     4. Assigns the user to the organization via the OrganizationUsers repository.
@@ -40,6 +41,10 @@ def execute(request: IRequest, repo, entity=None):
     """
 
     try:
+        # Make password hash
+        password_handler = PasswordManager.get()
+        entity.password = password_handler.hash_password(getattr(entity, 'password', None))
+
         create_user = repo.post(entity, request.get_query_params())
         
         # Remove "Bearer " prefix from token and decode data
