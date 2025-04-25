@@ -21,18 +21,18 @@ def execute(request: IRequest):
     user = user_repo.get({"email": body.get("email")}, False)
 
     if not user:
-        return response.error(message="User not found", status_code=404)
+        return response.error(message="Login failed.", status_code=404)
 
     if not _is_valid_password(body.get("password"), user.get("password")):
-        return response.error(message="Invalid password.", status_code=404)
+        return response.error(message="Login failed.", status_code=404)
 
     token = _generate_token(user["id"])
     if not token:
-        return response.error(message="Token generation failed", status_code=500)
+        return response.error(message="Login failed.", status_code=500)
 
     role_name = _get_user_role_name(repo_getter, user["id"])
     if not role_name:
-        return response.error(message="User role not found", status_code=404)
+        return response.error(message="Login failed.", status_code=404)
 
     return response.success(
         data=_build_success_response(token, user, role_name),
