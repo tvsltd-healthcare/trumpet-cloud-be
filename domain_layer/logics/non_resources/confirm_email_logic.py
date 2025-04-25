@@ -30,7 +30,9 @@ def execute(request):
 
         if not user:
             auth_getter_adapter = AuthManager.get()
-            token = auth_getter_adapter.generate_token({"email": email, "user_id": 1})
+            # TODO: If not assgin user_id then when we create user then token is not valid in auth middleware
+            # Adding user_id = 1 temporary
+            token = auth_getter_adapter.generate_token({"email": email, "user_id": 1}) 
             return {
                 "message": "User token verify successfully.",
                 "data": token,
