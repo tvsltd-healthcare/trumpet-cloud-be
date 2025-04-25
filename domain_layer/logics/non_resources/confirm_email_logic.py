@@ -1,4 +1,3 @@
-import anyio
 from fastapi import HTTPException
 from domain_layer.auth_manager import AuthManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
