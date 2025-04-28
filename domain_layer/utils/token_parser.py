@@ -1,4 +1,5 @@
 from domain_layer.auth_manager import AuthManager
+from domain_layer.response_formatter import ResponseFormatter
 
 def token_parser(token: str) -> str:
     """
@@ -21,18 +22,14 @@ def token_parser(token: str) -> str:
         ```
     """
     try:
-        print('=======token', token)
         token = token.replace("Bearer ", "").strip()
-        print('token', token)
         auth_getter_adapter = AuthManager.get()
-        print('auth_getter_adapter', auth_getter_adapter)
         parse_token = auth_getter_adapter.read_data(token)
-        print('parse_token', parse_token)
 
-
-        if not token:
-            raise ValueError("Missing valid authorization header.")
-        return parse_token
+        if token:
+            return parse_token
+        else: 
+            return ResponseFormatter.error('Missing valid authorization header.', 400)
 
     except Exception as e:
-        raise ValueError(f"Token parsing failed: {str(e)}")
+        return ResponseFormatter.error(str(e), 500)

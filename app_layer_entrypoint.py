@@ -263,7 +263,7 @@ def launch_app_layer():
 
     _ = build_app_layer(repository=OrmRepository, server=server)
 
-    # server.use(ValidationMiddleware)
+    server.use(ValidationMiddleware)
     server.use(ResponseMiddleware)
     rate_limit = int(os.getenv("RATE_LIMIT_REQUEST_PER_WINDOW"))
     time_window = int(os.getenv("RATE_LIMIT_TIME_WINDOW_IN_SECOND"))

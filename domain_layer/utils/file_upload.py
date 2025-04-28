@@ -1,10 +1,10 @@
 import os
 import time
 from pathlib import Path
+from domain_layer.response_formatter import ResponseFormatter
 
 # Configuration constants
 OUTPUT_DIR = os.getenv('FILE_UPLOAD_ABS_DIR')
-
 
 def upload_file_to_disk(file) -> dict:
     """
@@ -20,23 +20,22 @@ def upload_file_to_disk(file) -> dict:
         ValueError: If the file is invalid or missing a filename.
         IOError: If file operations fail (e.g., disk full, permissions).
     """
+    response_formatter = ResponseFormatter()
+     # Validate file input
+    if not file or not getattr(file, 'filename', None):
+        return response_formatter.error('Invalid or missing file.',400)
+
+    # Create output directory
+    file_dir = Path(OUTPUT_DIR).absolute()
+    file_dir.mkdir(exist_ok=True)
+
+    # Generate unique filename with timestamp and UUID
+    unique_filename = f"file_{time.time()}_{Path(file.filename).suffix or ".bin"}"
+    file_path = file_dir / unique_filename
+
     try:
-        # Validate file input
-        if not file or not getattr(file, 'filename', None):
-            raise ValueError("Invalid or missing file")
-
-        # Create output directory
-        file_dir = Path(OUTPUT_DIR).absolute()
-        file_dir.mkdir(exist_ok=True)
-
-        # Generate unique filename with timestamp and UUID
-        unique_filename = f"file_{time.time()}_{Path(file.filename).suffix or ".bin"}"
-        file_path = file_dir / unique_filename
-
-        # Read and write file contents
-        contents = file.file.read()
         with open(file_path, "wb") as f:
-            f.write(contents)
+            f.write(file.file.read())
 
         return {
             "file_name": unique_filename,
@@ -45,9 +44,5 @@ def upload_file_to_disk(file) -> dict:
             "file_mime_type": file.headers.get('content-type')
         }
 
-    except ValueError as e:
-        raise ValueError(f"Invalid file input: {e}")
-    except IOError as e:
-        raise IOError(f"File operation failed: {e}")
     except Exception as e:
-        raise Exception(f"Unexpected error during file upload: {e}", exc_info=True)
+        return response_formatter.error(str(e), 500)
