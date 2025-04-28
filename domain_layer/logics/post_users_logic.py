@@ -1,5 +1,6 @@
-from domain_layer.password_manager import PasswordManager
 from domain_layer.utils.parse_token import token_parser
+from domain_layer.password_manager import PasswordManager
+from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
@@ -40,26 +41,27 @@ def execute(request: IRequest, repo, entity=None):
         # Returns: {'id': 54, 'first_name': 'John', ..., 'organization_id': 123}
         ```
     """
+    response_formatter = ResponseFormatter()
+    
+    # Validate entity
+    if entity is None:
+        return response_formatter.error('Entity cannot be None', 400)
+    
+    # Remove "Bearer " prefix from token and decode data
+    decode_token = token_parser(request.get_headers()['authorization'])
+    email = decode_token.get("email")
+    if not email:
+        return response_formatter.error('Email missing.',400)
+    
+    # Make password hash
+    password_handler = PasswordManager.get()
+    entity.password = password_handler.hash_password(getattr(entity, 'password', None))
+    entity.email = email
 
     try:
-        # Validate entity
-        if entity is None:
-            raise ValueError("Entity cannot be None")
-        
-        # Remove "Bearer " prefix from token and decode data
-        decode_token = token_parser(request.get_headers()['authorization'])
-        email = decode_token.get("email")
-        if not email:
-            raise ValueError("Email not found in token")
-        
-        # Make password hash
-        password_handler = PasswordManager.get()
-        entity.password = password_handler.hash_password(getattr(entity, 'password', None))
-        entity.email = email
-
         create_user = repo.post(entity, request.get_path_params())
         if not create_user:
-            raise RuntimeError("User creation failed: Invalid or empty response from users")
+            return response_formatter.error('User creation failed: Invalid or empty response from users.',500)
         
         # Manage repositary
         repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
@@ -68,7 +70,7 @@ def execute(request: IRequest, repo, entity=None):
 
         get_organization_by_email = organization_repo.get({ "email": email })
         if not get_organization_by_email:
-            raise RuntimeError("Organization retrieval failed: Invalid or empty response from organizations")
+            return response_formatter.error('Organization retrieval failed: Invalid or empty response from organizations', 500)
         
         # Assgin user to organization based on token
         organization_users = {
@@ -76,19 +78,12 @@ def execute(request: IRequest, repo, entity=None):
             "organization_id": get_organization_by_email.get("id")
         }
         user_assign_to_organization = organization_users_repo.transact("POST", data =organization_users)
-        if not user_assign_to_organization:
-            raise RuntimeError("Failed to assign user to organization: Invalid response from organization users")
+        
+        if user_assign_to_organization:
+            return response_formatter.success( create_user, 'User created successfully.', 200)
+        else:
+            return response_formatter.error('Failed to assign user to organization: Invalid response from organization user', 500)
 
-        return create_user
-
-    except ValueError as ve:
-        raise ValueError(f"Validation error: {str(ve)}")
-    except KeyError as ke:
-        raise KeyError(f"Missing required key: {str(ke)}")
-    except AttributeError as ae:
-        raise AttributeError(f"Invalid attribute access: {str(ae)}")
-    except RuntimeError as re:
-        raise RuntimeError(f"Operation failed: {str(re)}")
     except Exception as e:
-        raise ValueError(f"Token parsing failed: {str(e)}")
+        return response_formatter.error(str(e), 500)
     
