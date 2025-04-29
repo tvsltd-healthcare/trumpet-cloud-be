@@ -61,7 +61,7 @@ Users = {
             'error_code': '54',
         },
         'max': {
-            'value': 40,
+            'value': 255,
             'error_code': '55',
         },
     },
