@@ -71,7 +71,7 @@ Users = {
             'error_code': '56',
         },
         'regex': {
-            'value': '^(approved|disapproved|blocked|pending_registration)$',
+            'value': '^(approved|disapproved|blocked|pending)$',
             'error_code': '57',
         },
         'required': {
