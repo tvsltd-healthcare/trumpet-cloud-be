@@ -1,4 +1,4 @@
-EMAIL_TEMPLATE = """
+VARIFY_ORG_EMAIL_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +10,7 @@ EMAIL_TEMPLATE = """
 <body>
     <h1>Email Verification</h1>
     <p>Click below to verify:</p>
-    <a href="http://www.example.com/verify-email?token={token}" class="verify-button">Verify Email</a>
+    <a href="{host}/verify-email?token={token}" class="verify-button">Verify Email</a>
 </body>
 </html>
 """
