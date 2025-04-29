@@ -3924,7 +3924,7 @@
         },
         {
           "verb": "post",
-          "url": "/api/upload"
+          "url": "/api/file-upload"
         }
       ]
     }
