@@ -71,7 +71,7 @@ Organizations = {
             'error_code': '24',
         },
         'regex': {
-            'value': '^(approved|disapproved|blocked|pending_approval)$',
+            'value': '^(approved|disapproved|blocked|pending)$',
             'error_code': '25',
         },
         'required': {
