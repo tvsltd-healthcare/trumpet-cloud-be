@@ -33,4 +33,3 @@ def token_parser(token: str) -> str:
 
     except Exception as e:
         return ResponseFormatter.error(str(e), 500)
-      

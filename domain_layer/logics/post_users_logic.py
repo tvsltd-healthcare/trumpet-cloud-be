@@ -68,14 +68,14 @@ def execute(request: IRequest, repo, entity=None):
         organization_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Organizations")
         organization_users_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("OrganizationUsers")
 
-        get_organization_by_email = organization_repo.get({ "email": email })
-        if not get_organization_by_email:
+        organization = organization_repo.get({ "email": email })
+        if not organization:
             return response_formatter.error('Organization retrieval failed: Invalid or empty response from organizations', 500)
         
         # Assgin user to organization based on token
         organization_users = {
             "user_id": create_user.get("id"),
-            "organization_id": get_organization_by_email.get("id")
+            "organization_id": organization.get("id")
         }
         user_assign_to_organization = organization_users_repo.transact("POST", data =organization_users)
         
