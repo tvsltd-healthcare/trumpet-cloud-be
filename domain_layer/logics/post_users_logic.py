@@ -42,17 +42,17 @@ def execute(request: IRequest, repo, entity=None):
         ```
     """
     response_formatter = ResponseFormatter()
-    
+
     # Validate entity
     if entity is None:
         return response_formatter.error('Entity cannot be None', 400)
-    
+
     # Remove "Bearer " prefix from token and decode data
     decode_token = token_parser(request.get_headers()['authorization'])
     email = decode_token.get("email")
     if not email:
         return response_formatter.error('Email missing.',400)
-    
+
     # Make password hash
     password_handler = PasswordManager.get()
     entity.password = password_handler.hash_password(getattr(entity, 'password', None))
@@ -62,7 +62,8 @@ def execute(request: IRequest, repo, entity=None):
         create_user = repo.post(entity, request.get_path_params())
         if not create_user:
             return response_formatter.error('User creation failed: Invalid or empty response from users.',500)
-        
+        create_user.pop("password", None)
+
         # Manage repositary
         repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
         organization_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Organizations")
@@ -71,14 +72,14 @@ def execute(request: IRequest, repo, entity=None):
         organization = organization_repo.get({ "email": email })
         if not organization:
             return response_formatter.error('Organization retrieval failed: Invalid or empty response from organizations', 500)
-        
+
         # Assgin user to organization based on token
         organization_users = {
             "user_id": create_user.get("id"),
             "organization_id": organization.get("id")
         }
         user_assign_to_organization = organization_users_repo.transact("POST", data =organization_users)
-        
+
         if user_assign_to_organization:
             return response_formatter.success( create_user, 'User created successfully.', 200)
         else:
@@ -86,4 +87,4 @@ def execute(request: IRequest, repo, entity=None):
 
     except Exception as e:
         return response_formatter.error(str(e), 500)
-    
+
