@@ -1,10 +1,12 @@
+from domain_layer.abstractions.response_formatter_interface import IResponseFormatter
+from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.abstractions.request_interface import IRequest
 
-
+@enforce_request_type()
 def execute(request: IRequest, repo, entity=None):
-    response_formatter = ResponseFormatter()
+    response_formatter: IResponseFormatter = ResponseFormatter()
 
     # Validate entity
     if entity is None:
@@ -19,7 +21,7 @@ def execute(request: IRequest, repo, entity=None):
     try:
         create_organizations = repo.post(entity, request.get_path_params())
         if create_organizations:
-            return response_formatter.success( create_organizations, 'Organizations created successfully.', 200)
+            return response_formatter.success( create_organizations, 'Organizations created successfully.', 200 )
         else:
             return response_formatter.error('Organizations created failed', 500)
 
