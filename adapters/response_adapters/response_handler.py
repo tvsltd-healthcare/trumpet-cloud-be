@@ -25,12 +25,21 @@ class ResponseHandler(IResponseHandler):
         :param errors: A list of validation errors (default: None).
         :return: A structured JSON response.
         """
+
+        _status_code = None if data is None else data.get("status_code", status_code)
+        _message = None if data is None else data.get("message", message)
+        _data = None if data is None else data.get("data", data)
+
         response = {
-            "message": message,
-            "status_code": status_code
+            "message": _message if _message else message,
+            "status_code": _status_code if _status_code else status_code,
         }
         if isinstance(data, (dict, list)) and data:
-            response["data"] = data
+            response["data"] = _data if _data else data
+
+        if _status_code is not None and _status_code >= 400:
+          raise Exception(f"{_message} with status code {_status_code}")
+
 
         if errors is not None:
             response["errors"] = errors

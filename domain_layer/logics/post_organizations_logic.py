@@ -1,8 +1,8 @@
-from domain_layer.abstractions.response_formatter_interface import IResponseFormatter
-from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.abstractions.response_formatter_interface import IResponseFormatter
+from domain_layer.utils.enforce_request_interface import enforce_request_type
 
 @enforce_request_type()
 def execute(request: IRequest, repo, entity=None):
@@ -18,6 +18,7 @@ def execute(request: IRequest, repo, entity=None):
     if not email:
         return response_formatter.error('Email missing.', 400)
     entity.email = email
+    
     try:
         create_organizations = repo.post(entity, request.get_path_params())
         if create_organizations:
