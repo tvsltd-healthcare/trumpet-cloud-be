@@ -22,6 +22,9 @@ def execute(request):
 
     decode_token = auth_getter_adapter.read_data(body.get("token"))
     email = decode_token.get("email")
+    role = decode_token.get("role")
+    organization_type = decode_token.get("organization_type")
+
     if not email:
         return response_formatter.error('Email missing.',400)
 
@@ -34,9 +37,17 @@ def execute(request):
             auth_getter_adapter = AuthManager.get()
             # TODO: If not assgin user_id then when we create user then token is not valid in auth middleware
             # Adding user_id = 1 temporary
-            token = auth_getter_adapter.generate_token({"email": email, "user_id": 1}) 
+            token = auth_getter_adapter.generate_token({"email": email, "user_id": 1, "role": role, "organization_type": organization_type})
+
+            data = {
+                "token": token.get('token'),
+                "role": role,
+                "organization_type": organization_type,
+                "expires_in": token.get('expires')
+            }
+
             if token:
-                return response_formatter.success( token, 'User token verify successfully.', 200)
+                return response_formatter.success( data, 'User token verify successfully.', 200)
             else:
                 return response_formatter.error('Failed to generate new token.',400)
         else:

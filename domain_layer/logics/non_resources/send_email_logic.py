@@ -43,6 +43,9 @@ def execute(request: IRequest):
     email = body.get("email")
     query = { "email": email }
 
+    organization_type = body.get("organization_type")#data_owner|researcher
+    role = "data_owner_admin" if organization_type == "data_owner" else "researcher_admin"
+
     response_formatter = ResponseFormatter()
     # discovery repo
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
@@ -53,7 +56,9 @@ def execute(request: IRequest):
 
         if not user:
             auth_getter_adapter = AuthManager.get()
-            token = auth_getter_adapter.generate_token({"email": email})
+            token = auth_getter_adapter.generate_token({
+                "email": email, "role": role, "organization_type": organization_type})
+
             token_value = token["token"] if isinstance(token, dict) else token
 
             email_service = EmailServiceManager.get()
