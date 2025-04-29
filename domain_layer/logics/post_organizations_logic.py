@@ -16,12 +16,12 @@ def execute(request: IRequest, repo, entity=None):
     decode_token = token_parser(request.get_headers()['authorization'])
     email = decode_token.get("email")
     if not email:
-        return response_formatter.error('Email missing.',400)
+        return response_formatter.error('Email missing.', 400)
     entity.email = email
     try:
         create_organizations = repo.post(entity, request.get_path_params())
         if create_organizations:
-            return response_formatter.success( create_organizations, 'Organizations created successfully.', 200 )
+            return response_formatter.success( create_organizations, 'Organizations created successfully.', 201 )
         else:
             return response_formatter.error('Organizations created failed', 500)
 
