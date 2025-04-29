@@ -6,6 +6,30 @@ from domain_layer.utils.enforce_request_interface import enforce_request_type
 
 @enforce_request_type()
 def execute(request: IRequest, repo, entity=None):
+    """
+    Handles the creation of organizations by validating the request and entity, 
+    extracting user information from the authorization token, and invoking the repository's post method.
+
+    Args:
+        request (IRequest): An object implementing the request interface, 
+                            expected to contain headers and path parameters.
+        repo: The repository instance responsible for handling persistence logic.
+        entity (optional): The entity to be persisted. Must have an `email` attribute.
+
+    Returns:
+        dict: A formatted response dictionary, either success or error, using the ResponseFormatter.
+              - Success: Contains the created organization data and HTTP 201 status.
+              - Error: Contains an error message and appropriate HTTP status (e.g., 400 or 500).
+
+    Raises:
+        Exception: Any unexpected exceptions raised during repository operation will be caught 
+                   and returned as a 500 error response.
+
+    Notes:
+        - Requires a valid "Authorization" header with a Bearer token.
+        - Token must decode to include an "email" field.
+        - The entity will be enriched with the email from the token before saving.
+    """
     response_formatter: IResponseFormatter = ResponseFormatter()
 
     # Validate entity
@@ -18,7 +42,7 @@ def execute(request: IRequest, repo, entity=None):
     if not email:
         return response_formatter.error('Email missing.', 400)
     entity.email = email
-    
+
     try:
         create_organizations = repo.post(entity, request.get_path_params())
         if create_organizations:
