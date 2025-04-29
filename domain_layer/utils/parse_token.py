@@ -1,4 +1,5 @@
 from domain_layer.auth_manager import AuthManager
+from domain_layer.response_formatter import ResponseFormatter
 
 def token_parser(token: str) -> str:
     """
@@ -7,17 +8,12 @@ def token_parser(token: str) -> str:
     1. Strips the "Bearer " prefix from the token string.
     2. Uses the `AuthManager` to decode and validate the token.
     3. Returns the decoded token data.
-
     Args:
         token (str): The JWT token string prefixed with "Bearer ".
-
     Returns:
-        dict: Decoded data extracted from the token (e.g., user email, roles, etc.).
-
+        str: Decoded data extracted from the token (e.g., user email, roles, etc.).
     Raises:
-        ValueError: If the token is missing, empty, or invalid.
-        RuntimeError: If token decoding or validation fails.
-
+        ValueError: If the token is missing, invalid, or decoding fails.
     Example:
         ```python
         token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -30,16 +26,11 @@ def token_parser(token: str) -> str:
         auth_getter_adapter = AuthManager.get()
         parse_token = auth_getter_adapter.read_data(token)
 
-        if not parse_token:
-            raise ValueError("Missing valid authorization header.")
-        return parse_token
-    
-    except ValueError as ve:
-        raise ValueError(f"Validation error: {str(ve)}")
-    except RuntimeError as re:
-        raise RuntimeError(f"Token processing failed: {str(re)}")
-    except AttributeError as ae:
-        raise AttributeError(f"Invalid attribute access: {str(ae)}")
+        if token:
+            return parse_token
+        else: 
+            return ResponseFormatter.error('Missing valid authorization header.', 400)
+
     except Exception as e:
-        raise ValueError(f"Token parsing failed: {str(e)}")
-    
+        return ResponseFormatter.error(str(e), 500)
+      
