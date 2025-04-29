@@ -20,6 +20,7 @@ requests = "^2.32.3"
 openfga-sdk = "^0.9.1"
 wrap-auth = {git = "https://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@github.com/tvsltd/wrap-auth.git", rev="develop"}
 bcrypt = "^4.3.0"
+anyio = "^4.9.0"
 
 
 [build-system]

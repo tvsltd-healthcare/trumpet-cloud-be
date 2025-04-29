@@ -3921,6 +3921,10 @@
         {
           "verb": "post",
           "url": "/api/confirm-email"
+        },
+        {
+          "verb": "post",
+          "url": "/api/file-upload"
         }
       ]
     }
