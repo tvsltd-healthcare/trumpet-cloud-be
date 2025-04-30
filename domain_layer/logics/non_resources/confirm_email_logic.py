@@ -41,6 +41,7 @@ def execute(request):
 
             data = {
                 "token": token.get('token'),
+                'email': email,
                 "role": role,
                 "organization_type": organization_type,
                 "expires_in": token.get('expires')
