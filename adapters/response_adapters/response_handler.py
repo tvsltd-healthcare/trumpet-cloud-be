@@ -26,9 +26,15 @@ class ResponseHandler(IResponseHandler):
         :return: A structured JSON response.
         """
 
-        _status_code = None if data is None else data.get("status_code", status_code)
-        _message = None if data is None else data.get("message", message)
-        _data = None if data is None else data.get("data", data)
+        if isinstance(data, dict):
+            inner_data = data.get("data", data)
+            _data = inner_data if isinstance(inner_data, dict) else data
+            _status_code = data.get("status_code", status_code)
+            _message = data.get("message", message)
+        else:
+            _data = data
+            _status_code = status_code
+            _message = message
 
         response = {
             "message": _message if _message else message,
