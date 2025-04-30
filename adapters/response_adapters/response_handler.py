@@ -28,7 +28,7 @@ class ResponseHandler(IResponseHandler):
 
         if isinstance(data, dict):
             inner_data = data.get("data", data)
-            _data = inner_data if isinstance(inner_data, dict) else data
+            _data = inner_data if isinstance(inner_data, (dict, list)) else data
             _status_code = data.get("status_code", status_code)
             _message = data.get("message", message)
         else:

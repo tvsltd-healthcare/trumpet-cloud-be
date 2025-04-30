@@ -1,19 +1,99 @@
 import json
+import re
 
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.utils.enforce_request_interface import enforce_request_type
+from domain_layer.utils.parse_token import token_parser
+from domain_layer.repo_discovery_manager import RepoDiscoveryManager
+from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
+from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.response_formatter import ResponseFormatter
+
 
 @enforce_request_type()
-def execute(request: IRequest, repo, entity = None):
-    ids = request.get_path_params()
-    
-    query = request.get_query_params()
-    query = query.get('filter', {}) if isinstance(query, dict) else {}
+def execute(request: IRequest, repo, entity=None):
+    """
+    Fetches a filtered collection of records limited to users within the same organization 
+    as the currently authenticated user.
+
+    This logic performs the following steps:
+      1. Authenticates and extracts the current user from the Authorization header.
+      2. Retrieves the user's organization from the OrganizationUsers repository.
+      3. Fetches all user IDs belonging to the same organization.
+      4. Parses query and path parameters from the request.
+      5. Enforces that only records belonging to the same organization’s users are fetched.
+
+    Args:
+        request (IRequest): The request object providing access to headers, query, and path params.
+        repo: The repository object responsible for fetching the collection.
+        entity (Any, optional): Not used in this context but preserved for interface compatibility.
+
+    Returns:
+        Any: Formatted success or error response, depending on validation and repository results.
+
+    Successful Response Format:
+        {
+            "message": str,         # Success message
+            "status_code": int,     # HTTP status code (usually 200)
+            "data": List[Dict]      # List of user records
+        }
+
+    Error Response Format:
+        {
+            "message": <str>,
+            "status_code": <int>
+        }
+    """
+    response_formatter = ResponseFormatter()
+
+    # Step 1: Extract and decode token to get current user ID
+    auth_header = request.get_headers().get('authorization')
+    decoded_token = token_parser(auth_header)
+    current_user_id = decoded_token.get('user_id')
+
+    if not current_user_id:
+        return response_formatter.error("Authenticated user ID not found in token.", 401)
+
+
+    # Step 2: Retrieve user's organization from OrganizationUsers repo
+    repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    organization_users_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("OrganizationUsers")
+
+    organization_user = organization_users_repo.get({"user_id": current_user_id})
+    if not organization_user:
+        return response_formatter.error("User is not assigned to any organization.", 403)
+
+    current_users_organization_id = organization_user.get('organization_id')
+    if not current_users_organization_id:
+        return response_formatter.error("User has no organization ID assigned.", 403)
+
+
+    # Step 3: Get all users in the same organization
+    same_org_user_records = organization_users_repo.get({"organization_id": current_users_organization_id}, is_collection=True)
+    same_org_user_ids = [item['user_id'] for item in same_org_user_records]
+
+
+    # Step 4: Parse query and path parameters
+    path_params = request.get_path_params()
+    query_params = request.get_query_params()
+    query_data = query_params.get('filter', {}) if isinstance(query_params, dict) else {}
+
+    query_data = re.sub(r"'([^']*)'", r'"\1"', query_data) if query_data and isinstance(query_data, str) else query_data
 
     try:
-        query = json.loads(query)
+        query_data = json.loads(query_data)
     except (json.JSONDecodeError, TypeError):
-        query = {}
-    
-    query = {**ids, **query}
-    return repo.get_collection(query)
+        query_data = {}
+
+    # Step 5: Combine and enforce same-org user filtering
+    final_query = {**path_params, **query_data}
+    final_query['id'] = same_org_user_ids
+
+
+    collected_records = repo.get_collection(final_query)
+
+    return response_formatter.success(
+        collected_records,
+        message="Users retrieved successfully.",
+        status_code=200
+    )
