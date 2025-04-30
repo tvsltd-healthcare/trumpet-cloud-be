@@ -28,7 +28,7 @@ class NonResourceControllerAdapter(INonResourceController):
             service_response = self.non_resource_controller.perform(request)
 
             return self.response_handler.generate_response(
-                message=service_response.get('message', ''), data=service_response.get('data', ''),
+                message=service_response.get('message', ''), data=service_response.get('data', {}),
                 status_code=service_response.get('status_code', '')
             )
         except Exception as e:
