@@ -39,12 +39,17 @@ def execute(request: IRequest, repo, entity=None):
     # Remove "Bearer " prefix from token and decode data
     decode_token = token_parser(request.get_headers()['authorization'])
     email = decode_token.get("email")
-    if not email:
-        return response_formatter.error('Email missing.', 400)
+    type = decode_token.get("organization_type")
+    
+    if not email or not type:
+        return response_formatter.error('Email or Organization Type Missing.', 400)
+    
     entity.email = email
+    entity.type = type
 
     try:
         create_organizations = repo.post(entity, request.get_path_params())
+        
         if create_organizations:
             return response_formatter.success( create_organizations, 'Organizations created successfully.', 201 )
         else:
