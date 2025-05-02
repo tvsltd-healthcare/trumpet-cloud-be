@@ -10,16 +10,29 @@ class SmtpEmailService(IEmailService):
     def __init__(self, config: Dict):
         self.config = config
         self.template_map = {
-            'varify_org': VARIFY_ORG_EMAIL_TEMPLATE,
-            'varify_researcher': VARIFY_RESEARCHER_EMAIL_TEMPLATE,
+            'varify_org': {
+                'template': VARIFY_ORG_EMAIL_TEMPLATE,
+                'subject': 'Varify your organization on Trumpet Cloud'
+            },
+
+            'varify_researcher': {
+                'template': VARIFY_RESEARCHER_EMAIL_TEMPLATE,
+                'subject': 'Varify your researcher on Trumpet Cloud'
+            }
         }
 
-    def send_email(self, to_email: str, body: str, sub: str, type: str ) -> None:
-        template = self.template_map.get(type)
-        
+    def send_email(self, to_email: str, body: str, type: str ) -> None:
+        template, subject = self.template_map.get(type).values()
+        print("template:")
+        print(template)
+        print("subject:")
+        print(subject)
+
+        # sub = self.template_map.get(type).get('subject')
+
         # Create email message
         msg = MIMEText(template.format(token=body, host=os.getenv("TRUMPET_CLOUD_WEBSITE_HOST")), "html")
-        msg["Subject"] = sub
+        msg["Subject"] = subject
         msg["From"] = self.config["sender_email"]
         msg["To"] = to_email
 
