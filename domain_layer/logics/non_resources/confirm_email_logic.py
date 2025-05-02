@@ -1,3 +1,5 @@
+import time
+
 from domain_layer.auth_manager import AuthManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
@@ -44,7 +46,7 @@ def execute(request):
                 'email': email,
                 "role": role,
                 "organization_type": organization_type,
-                "expires_in": token.get('expires')
+                "expires_in": int(time.time()) + int(token["expires"])
             }
 
             if token:
