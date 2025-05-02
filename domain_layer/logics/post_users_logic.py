@@ -99,7 +99,7 @@ def execute(request: IRequest, repo, entity=None):
         role_user_repo.transact("POST", data=role_user)
 
         if user_assign_to_organization:
-            return response_formatter.success(create_user, 'User created successfully.', 200)
+            return response_formatter.success(create_user, 'User created successfully.', 201)
         else:
             return response_formatter.error(
                 'Failed to assign user to organization: Invalid response from organization user', 500)
