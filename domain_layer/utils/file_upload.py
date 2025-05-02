@@ -6,6 +6,7 @@ from domain_layer.response_formatter import ResponseFormatter
 # Configuration constants
 OUTPUT_DIR = os.getenv('FILE_UPLOAD_ABS_DIR')
 
+
 def upload_file_to_disk(file) -> dict:
     """
     Save an uploaded file to the output directory with a unique filename.
@@ -21,16 +22,16 @@ def upload_file_to_disk(file) -> dict:
         IOError: If file operations fail (e.g., disk full, permissions).
     """
     response_formatter = ResponseFormatter()
-     # Validate file input
+    # Validate file input
     if not file or not getattr(file, 'filename', None):
-        return response_formatter.error('Invalid or missing file.',400)
+        return response_formatter.error('Invalid or missing file.', 400)
 
     # Create output directory
     file_dir = Path(OUTPUT_DIR).absolute()
     file_dir.mkdir(exist_ok=True)
 
     # Generate unique filename with timestamp and UUID
-    unique_filename = f"file_{time.time()}_{Path(file.filename).suffix or ".bin"}"
+    unique_filename = f"file_{time.time()}_{Path(file.filename).suffix or '.bin'}"
     file_path = file_dir / unique_filename
 
     try:
