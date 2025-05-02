@@ -43,13 +43,13 @@ def execute(request):
             auth_getter_adapter = AuthManager.get()
             # TODO: If not assgin user_id then when we create user then token is not valid in auth middleware
             # Adding user_id = 1 temporary
-            token = auth_getter_adapter.generate_token({"email": email, "user_id": 1, "role": role, "organization_type": organization_type})
+            token = auth_getter_adapter.generate_token({"email": email, "user_id": 1, "role": role, "organization_id": organization_id})
 
             data = {
                 "token": token.get('token'),
                 'email': email,
                 "role": role,
-                "organization_type": organization_type,
+                "organization_id": organization_id,
                 "expires_in": int(time.time()) + int(token["expires"])
             }
 
