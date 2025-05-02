@@ -1,3 +1,4 @@
+import json
 from lib_archi.abstractions.request_interface import IRequest
 from .base_repository import BaseRepository
 from typing import Any, TypeVar, Generic, Optional, List, Dict
@@ -68,11 +69,22 @@ class BaseApplicationService(Generic[Entity]):
             <something>
         """
         logic = self.inject_logic("get_collection")
+        
         if logic:
             return logic(request, self.repository)
         else:
             ids = request.get_path_params()
-            return self.repository.get_collection(ids)
+
+            query = request.get_query_params()
+            query = query.get('filter', {}) if isinstance(query, dict) else {}
+    
+            try:
+                query = json.loads(query)
+            except (json.JSONDecodeError, TypeError):
+                query = {}
+            
+            query = {**ids, **query}
+            return self.repository.get_collection(query)
 
     def post(self, entity: Entity, request: IRequest) -> Optional[Entity]:
         """Creates a new entity in the repository.
