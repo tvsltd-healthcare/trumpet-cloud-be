@@ -1,10 +1,10 @@
-from domain_layer.utils.parse_token import token_parser
-from domain_layer.password_manager import PasswordManager
-from domain_layer.response_formatter import ResponseFormatter
-from domain_layer.abstractions.request_interface import IRequest
-from domain_layer.repo_discovery_manager import RepoDiscoveryManager
-from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
+from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.password_manager import PasswordManager
+from domain_layer.repo_discovery_manager import RepoDiscoveryManager
+from domain_layer.response_formatter import ResponseFormatter
+from domain_layer.utils.parse_token import token_parser
 
 
 def execute(request: IRequest, repo, entity=None):
@@ -50,8 +50,10 @@ def execute(request: IRequest, repo, entity=None):
     # Remove "Bearer " prefix from token and decode data
     decode_token = token_parser(request.get_headers()['authorization'])
     email = decode_token.get("email")
+    role_name = decode_token.get("role")
+
     if not email:
-        return response_formatter.error('Email missing.',400)
+        return response_formatter.error('Email missing.', 400)
 
     # Make password hash
     password_handler = PasswordManager.get()
@@ -61,30 +63,46 @@ def execute(request: IRequest, repo, entity=None):
     try:
         create_user = repo.post(entity, request.get_path_params())
         if not create_user:
-            return response_formatter.error('User creation failed: Invalid or empty response from users.',500)
+            return response_formatter.error('User creation failed: Invalid or empty response from users.', 500)
         create_user.pop("password", None)
 
         # Manage repositary
         repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+
         organization_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Organizations")
         organization_users_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("OrganizationUsers")
 
-        organization = organization_repo.get({ "email": email })
+        organization = organization_repo.get({"email": email})
+
         if not organization:
-            return response_formatter.error('Organization retrieval failed: Invalid or empty response from organizations', 500)
+            return response_formatter.error(
+                'Organization retrieval failed: Invalid or empty response from organizations', 500)
 
         # Assgin user to organization based on token
         organization_users = {
             "user_id": create_user.get("id"),
             "organization_id": organization.get("id")
         }
-        user_assign_to_organization = organization_users_repo.transact("POST", data =organization_users)
+        user_assign_to_organization = organization_users_repo.transact("POST", data=organization_users)
+
+        role_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Roles")
+        role_user_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("UserRoles")
+
+        role = role_repo.get({"name": role_name})
+        if not role:
+            return response_formatter.error('Role retrieval failed: Invalid or empty response from roles', 500)
+
+        role_user = {
+            "user_id": create_user.get("id"),
+            "role_id": role.get("id")
+        }
+        role_user_repo.transact("POST", data=role_user)
 
         if user_assign_to_organization:
-            return response_formatter.success( create_user, 'User created successfully.', 200)
+            return response_formatter.success(create_user, 'User created successfully.', 200)
         else:
-            return response_formatter.error('Failed to assign user to organization: Invalid response from organization user', 500)
+            return response_formatter.error(
+                'Failed to assign user to organization: Invalid response from organization user', 500)
 
     except Exception as e:
         return response_formatter.error(str(e), 500)
-
