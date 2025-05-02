@@ -85,7 +85,7 @@ Organizations = {
             'error_code': '27',
         },
         'regex': {
-            'value': '^(data_owner|researcher)$',
+            'value': '^(governance|data_owner|researcher)$',
             'error_code': '28',
         },
         'required': {

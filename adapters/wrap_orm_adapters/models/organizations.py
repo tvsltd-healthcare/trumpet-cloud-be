@@ -12,7 +12,7 @@ class Organizations(Base):
     address = Column(String(50), nullable=False,)
     phone = Column(String(20), nullable=False, unique=True,)
     status = Column(Enum('approved', 'disapproved', 'blocked', 'pending', name='organizations_status_enum'), nullable=True, default='pending')
-    type = Column(Enum('data_owner', 'researcher', name='organizations_type_enum'), nullable=True,)
+    type = Column(Enum('governance', 'data_owner', 'researcher', name='organizations_type_enum'), nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)

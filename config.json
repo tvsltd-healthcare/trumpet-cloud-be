@@ -496,7 +496,7 @@
               },
               {
                 "tag": "regex",
-                "rule": "^(data_owner|researcher)$",
+                "rule": "^(governance|data_owner|researcher)$",
                 "error_code": "28",
                 "default_message": ""
               },
