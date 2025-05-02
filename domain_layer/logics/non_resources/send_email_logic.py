@@ -62,7 +62,7 @@ def execute(request: IRequest):
             token_value = token["token"] if isinstance(token, dict) else token
 
             email_service = EmailServiceManager.get()
-            email_service.send_email(email, token_value)
+            email_service.send_email(email, token_value, 'Test Email Subject')
             return response_formatter.success( {}, 'Successfully email send.', 200)
         else:
             return response_formatter.error('User already exits', 500)
