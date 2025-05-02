@@ -3924,11 +3924,15 @@
         },
         {
           "verb": "post",
-          "url": "/api/confirm-email"
+          "url": "/api/confirm-organization-email"
         },
         {
           "verb": "post",
           "url": "/api/confirm-researcher-email"
+        },
+        {
+          "verb": "post",
+          "url": "/api/add-new-researcher"
         },
         {
           "verb": "post",
