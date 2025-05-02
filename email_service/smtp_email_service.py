@@ -9,11 +9,11 @@ class SmtpEmailService(IEmailService):
     def __init__(self, config: Dict):
         self.config = config
 
-    def send_email(self, to_email: str, body: str ) -> None:
-        
+    def send_email(self, to_email: str, body: str, sub: str ) -> None:
+
         # Create email message
         msg = MIMEText(VARIFY_ORG_EMAIL_TEMPLATE.format(token=body, host=os.getenv("TRUMPET_CLOUD_WEBSITE_HOST")), "html")
-        msg["Subject"] = self.config["subject"]
+        msg["Subject"] = sub
         msg["From"] = self.config["sender_email"]
         msg["To"] = to_email
 
