@@ -65,13 +65,13 @@ class OrmRepository(BaseRepository[Entity]):
         return result[0] if isinstance(result, list) and len(result) > 0 else None
 
 
-    def get_collection(self, ids: Dict) -> List[Entity]:
+    def get_collection(self, query: Dict) -> List[Entity]:
         """Retrieve all entities in the repository.
 
         Returns:
             List[Entity]: A list of all entities in the repository.
         """
-        filter_string = " AND ".join(f"{key}={value}" for key, value in ids.items())
+        filter_string = " AND ".join(f"{key}={value}" for key, value in query.items())
 
         query_dict = {
             "model": self.orm_model_key,
