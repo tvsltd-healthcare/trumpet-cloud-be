@@ -3,16 +3,22 @@ import smtplib
 from email.mime.text import MIMEText
 from typing import Dict
 from email_service.templates.varify_org_email_template import VARIFY_ORG_EMAIL_TEMPLATE
+from email_service.templates.varify_researcher_email_template import VARIFY_RESEARCHER_EMAIL_TEMPLATE
 from domain_layer.abstractions.email_sending_interface import IEmailService
 
 class SmtpEmailService(IEmailService):
     def __init__(self, config: Dict):
         self.config = config
+        self.template_map = {
+            'varify_org': VARIFY_ORG_EMAIL_TEMPLATE,
+            'varify_researcher': VARIFY_RESEARCHER_EMAIL_TEMPLATE,
+        }
 
-    def send_email(self, to_email: str, body: str, sub: str ) -> None:
-
+    def send_email(self, to_email: str, body: str, sub: str, type: str ) -> None:
+        template = self.template_map.get(type)
+        
         # Create email message
-        msg = MIMEText(VARIFY_ORG_EMAIL_TEMPLATE.format(token=body, host=os.getenv("TRUMPET_CLOUD_WEBSITE_HOST")), "html")
+        msg = MIMEText(template.format(token=body, host=os.getenv("TRUMPET_CLOUD_WEBSITE_HOST")), "html")
         msg["Subject"] = sub
         msg["From"] = self.config["sender_email"]
         msg["To"] = to_email
