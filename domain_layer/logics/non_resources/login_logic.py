@@ -34,11 +34,12 @@ def execute(request: IRequest):
     if not role_name:
         return response.error(message="Login failed.", status_code=404)
 
-    return response.success(
-        data=_build_success_response(token, user, role_name),
-        message="User successfully logged in.",
-        status_code=200
-    )
+    organization = _get_user_organization_name(repo_getter, user["id"])
+    if not organization:
+        return response.error(message="Login failed.", status_code=404)
+
+    return response.success(data=_build_success_response(token, user, role_name, organization),
+        message="User successfully logged in.", status_code=200)
 
 
 def _is_valid_password(raw_password: str, hashed_password: str) -> bool:
@@ -65,7 +66,25 @@ def _get_user_role_name(repo_getter: IAppRepoDiscoveryGetter, user_id: str) -> s
     return role["name"]
 
 
-def _build_success_response(token: dict, user: dict, role_name: str) -> dict:
+def _get_user_organization_name(repo_getter: IAppRepoDiscoveryGetter, user_id: str) -> dict | None:
+    organization_user_repo = repo_getter.get_repo_invoker("OrganizationUsers")
+    organization_user = organization_user_repo.get({"user_id": user_id}, False)
+    if not organization_user:
+        return None
+
+    organization_repo = repo_getter.get_repo_invoker("Organizations")
+    organization = organization_repo.get({"id": organization_user["organization_id"]}, False)
+    if not organization:
+        return None
+
+    return {
+        "id": organization.get("id", None),
+        "name": organization.get("name", None),
+        "type": organization.get("type", None),
+    }
+
+
+def _build_success_response(token: dict, user: dict, role_name: str, organization: str) -> dict:
     return {
         "access_token": token["token"],
         "expires_in": int(time.time()) + int(token["expires"]),
@@ -74,6 +93,7 @@ def _build_success_response(token: dict, user: dict, role_name: str) -> dict:
             "last_name": user["last_name"],
             "email": user["email"],
             "phone_number": user["phone"],
-            "role": role_name
+            "role": role_name,
+            "organization": organization
         }
     }
