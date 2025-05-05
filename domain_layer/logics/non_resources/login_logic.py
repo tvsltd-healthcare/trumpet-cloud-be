@@ -81,6 +81,7 @@ def _get_user_organization_name(repo_getter: IAppRepoDiscoveryGetter, user_id: s
         "id": organization.get("id", None),
         "name": organization.get("name", None),
         "type": organization.get("type", None),
+        "status": organization.get("status", None),
     }
 
 
@@ -93,7 +94,8 @@ def _build_success_response(token: dict, user: dict, role_name: str, organizatio
             "last_name": user["last_name"],
             "email": user["email"],
             "phone_number": user["phone"],
+            "status": user["status"],
             "role": role_name,
-            "organization": organization
+            "organization": organization,
         }
     }
