@@ -53,6 +53,13 @@ class ResponseMiddleware(BaseHTTPMiddleware):
         # Process the request
         response = await call_next(request)
 
+        print("response", response)
+        print("type(response)", type(response))
+        print("isinstance(response, StreamingResponse)", isinstance(response, StreamingResponse))
+
+        if isinstance(response, StreamingResponse):
+            return response
+
         # Handle JSON responses
         if isinstance(response, Response):
             try:
@@ -65,9 +72,12 @@ class ResponseMiddleware(BaseHTTPMiddleware):
                 # Try to decode and parse JSON content
                 try:
                     data = json.loads(content.decode())
-                except UnicodeDecodeError:
+                except UnicodeDecodeError as e:
                     # If content can't be decoded as UTF-8, return original response
                     return response
+                except Exception as e:
+                    print("Exception", e)
+
 
                 # Standardize the response format
                 standardized_response = {
