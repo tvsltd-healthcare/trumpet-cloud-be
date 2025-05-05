@@ -15,6 +15,8 @@ class StudyAgreements(Base):
     study_privacy_budget = Column(Integer, nullable=True,)
     expiration_date = Column(TIMESTAMP, nullable=True,)
     study_id = Column(Integer, ForeignKey('studies.id'), nullable=True,)
+    status = Column(Enum('pending', 'approved', 'disapproved', name='study_agreements_status_enum'),
+                             nullable=True, default='pending')
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
