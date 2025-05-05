@@ -21,3 +21,4 @@ class Organizations(Base):
     created_by_user = relationship('Users', foreign_keys=[created_by])
     updated_by_user = relationship('Users', foreign_keys=[updated_by])
     organization_users = relationship('OrganizationUsers', back_populates='organization', foreign_keys='OrganizationUsers.organization_id', lazy='dynamic')
+    organization_study_agreements = relationship('OrganizationStudyAgreements', back_populates='organization', foreign_keys='OrganizationStudyAgreements.organization_id', lazy='dynamic')

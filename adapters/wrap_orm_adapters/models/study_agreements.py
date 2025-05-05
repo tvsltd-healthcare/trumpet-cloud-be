@@ -27,4 +27,6 @@ class StudyAgreements(Base):
     study_agreement_datasets = relationship('StudyAgreementDatasets', back_populates='study_agreement', foreign_keys='StudyAgreementDatasets.study_agreement_id', lazy='dynamic')
     study_agreement_queries = relationship('StudyAgreementQueries', back_populates='study_agreement', foreign_keys='StudyAgreementQueries.study_agreement_id', lazy='dynamic')
     study_agreement_results = relationship('StudyAgreementResults', back_populates='study_agreement', foreign_keys='StudyAgreementResults.study_agreement_id', lazy='dynamic')
+    organization_study_agreements = relationship('OrganizationStudyAgreements', back_populates='study_agreement', foreign_keys='OrganizationStudyAgreements.study_agreement_id', lazy='dynamic')
     study = relationship('Studies', back_populates='study_agreements', foreign_keys=[study_id])
+    
