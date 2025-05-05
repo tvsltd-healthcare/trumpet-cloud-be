@@ -1,6 +1,8 @@
 from typing import Optional, Dict
+
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.request_interface import IRequest
+
 
 class NonResourceAppService(ILibNonResourceService):
     """
@@ -35,6 +37,8 @@ class NonResourceAppService(ILibNonResourceService):
             - Uses the modified path to look up the logic in `logic_map`.
         """
         path: str = request.get_url().split("api/")[-1]
+        # TO-DO: Logic not found if query params given.
+        # path = path.split("?")[0]
 
         if path:
             path = path.replace("/", "_")
