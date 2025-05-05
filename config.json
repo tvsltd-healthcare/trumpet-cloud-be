@@ -3857,7 +3857,11 @@
         },
         {
           "verb": "post",
-          "url": "/api/send-email"
+          "url": "/api/send-organization-invitation"
+        },
+        {
+          "verb": "post",
+          "url": "/api/send-researcher-invitation"
         },
         {
           "verb": "post",
@@ -3920,7 +3924,15 @@
         },
         {
           "verb": "post",
-          "url": "/api/confirm-email"
+          "url": "/api/confirm-organization-email"
+        },
+        {
+          "verb": "post",
+          "url": "/api/confirm-researcher-email"
+        },
+        {
+          "verb": "post",
+          "url": "/api/add-new-researcher"
         },
         {
           "verb": "post",
