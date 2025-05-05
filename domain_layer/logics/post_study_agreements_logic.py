@@ -72,7 +72,7 @@ def execute(request: IRequest, repo, entity=None):
 
 
 # -------------------
-# 🔒 Private Helpers
+# 🔒Private Helpers
 # -------------------
 
 def _assign_participant_organizations(repo: IAppRepoInvoker, organization_ids: list, study_agreement_id: int):
@@ -101,4 +101,3 @@ def _get_current_user_org_id(request: IRequest, repo_discovery_service: IAppRepo
     organization_user = organization_users_repo.get({"user_id": current_user_id})
 
     return organization_user.get('organization_id') if organization_user else None
-g
