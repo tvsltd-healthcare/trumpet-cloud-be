@@ -24,7 +24,7 @@ VARIFY_RESEARCHER_EMAIL_TEMPLATE = """
         <p>Dear User,</p>
         <p>Thank you for registering with the TRUMPET Project. To complete the registration of your organization, please verify your email address by clicking the button below:</p>
         <p style="text-align:center;">
-            <a href="{host}/verify-researcher?token={token}" class="verify-button">Verify Email</a>
+            <a href="{host}/verify-email/researcher?token={token}" class="verify-button">Verify Email</a>
         </p>
         <p>If you did not request this email, you can safely ignore it.</p>
         <p>Best regards,<br/>TRUMPET Project Team</p>
