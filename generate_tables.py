@@ -24,6 +24,7 @@ from adapters.wrap_orm_adapters.models.study_agreement_results import StudyAgree
 from adapters.wrap_orm_adapters.models.study_agreements import StudyAgreements
 from adapters.wrap_orm_adapters.models.study_users import StudyUsers
 from adapters.wrap_orm_adapters.models.user_roles import UserRoles
+from adapters.wrap_orm_adapters.models.organization_study_agreements import OrganizationStudyAgreements
 
 username = os.getenv("DB_USERNAME")
 password = os.getenv("DB_PASSWORD")
