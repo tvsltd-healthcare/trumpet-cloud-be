@@ -1,5 +1,6 @@
 from starlette.responses import FileResponse
-
+from pathlib import Path
+import os
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.request_interface import IRequest
@@ -7,10 +8,11 @@ from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 
+OUTPUT_DIR = os.getenv('FILE_UPLOAD_ABS_DIR')
 
 @enforce_request_type()
 def execute(request: IRequest):
-    body = request.get_query_params()
+    body = request.get_json()
     file_id = body.get('file_id')
     response_formatter = ResponseFormatter()
 
@@ -22,8 +24,7 @@ def execute(request: IRequest):
         if not file:
             response_formatter.error('File missing.', 400)
 
-        # TO-DO: HardCoded directory path needs to change.
-        file_path = "/Users/tvs/projects/tvs-enterprise/trumpet_be_cloud_platform/" + file.get('path')
+        file_path = Path(OUTPUT_DIR).absolute() / file.get('filename')
 
         return FileResponse(file_path)  # type: ignore
 
