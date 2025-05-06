@@ -72,7 +72,7 @@ def execute(request: IRequest, repo, entity=None):
 
 
 # -------------------
-# 🔒Private Helpers
+# Private Helpers
 # -------------------
 
 def _assign_participant_organizations(repo: IAppRepoInvoker, organization_ids: list, study_agreement_id: int):
