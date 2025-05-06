@@ -4246,6 +4246,10 @@
         },
         {
           "verb": "post",
+          "url": "/api/file-download"
+        },
+        {
+          "verb": "post",
           "url": "/api/study-agreement-approval"
         },
         {

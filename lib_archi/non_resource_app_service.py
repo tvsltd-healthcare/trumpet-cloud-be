@@ -1,6 +1,8 @@
 from typing import Optional, Dict
+
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.request_interface import IRequest
+
 
 class NonResourceAppService(ILibNonResourceService):
     """
