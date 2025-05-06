@@ -74,12 +74,11 @@ class BaseController(Generic[Entity]):
             entity = self._add_uniq_id(entity)
             created_entity = self.app_service.post(entity, request)
 
-            # todo: remove this if logic and move to domain_layer logic folder
-            # after merging this branch feat/post_study_aggrement_logic
-            if path_matches(request.get_path()):
-                ids: dict = request.get_path_params()
-                agreement_id = created_entity['id']
-                injector.inject_business_logic(entity=entity, entity_id=ids, agreement_id=agreement_id)
+            # todo: for now turning off the start train trigger. will add it to different endpoint
+            # if path_matches(request.get_path()):
+            #     ids: dict = request.get_path_params()
+            #     agreement_id = created_entity['id']
+            #     injector.inject_business_logic(entity=entity, entity_id=ids, agreement_id=agreement_id)
 
             return self.response_handler.generate_response("Entity created successfully", data=created_entity, status_code=201)
         except Exception as e:

@@ -65,6 +65,16 @@ Organizations = {
             'error_code': '23',
         },
     },
+    'host': {
+        'type': {
+            'value': 'string',
+            'error_code': '21',
+        },
+        'max': {
+            'value': 100,
+            'error_code': '23',
+        },
+    },
     'status': {
         'type': {
             'value': 'string',
