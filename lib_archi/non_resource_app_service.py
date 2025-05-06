@@ -36,9 +36,7 @@ class NonResourceAppService(ILibNonResourceService):
             - Extracts the path after "api/" and replaces "/" with "_".
             - Uses the modified path to look up the logic in `logic_map`.
         """
-        path: str = request.get_url().split("api/")[-1]
-        # TO-DO: Logic not found if query params given.
-        # path = path.split("?")[0]
+        path: str = request.get_path().split("api/")[-1]
 
         if path:
             path = path.replace("/", "_")
