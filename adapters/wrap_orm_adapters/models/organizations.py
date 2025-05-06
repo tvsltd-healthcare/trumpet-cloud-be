@@ -11,7 +11,7 @@ class Organizations(Base):
     email = Column(String(40), nullable=True, unique=True,)
     address = Column(String(50), nullable=False,)
     phone = Column(String(20), nullable=False, unique=True,)
-    host = Column(String(100), nullable=False, unique=True, )
+    host = Column(String(100), nullable=True, unique=True, )
     status = Column(Enum('approved', 'disapproved', 'blocked', 'pending', name='organizations_status_enum'), nullable=True, default='pending')
     type = Column(Enum('governance', 'data_owner', 'researcher', name='organizations_type_enum'), nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())

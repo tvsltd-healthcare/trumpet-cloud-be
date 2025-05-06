@@ -4247,6 +4247,14 @@
         {
           "verb": "post",
           "url": "/api/study-agreement-approval"
+        },
+        {
+          "verb": "get",
+          "url": "/api/get-study-agreements"
+        },
+        {
+          "verb": "post",
+          "url": "/api/start-training"
         }
       ]
     }

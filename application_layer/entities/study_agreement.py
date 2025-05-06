@@ -24,6 +24,10 @@ StudyAgreements = {
             'value': True,
             'error_code': '999',
         },
+        'regex': {
+            'value': '^\s*\d+\s*(,\s*\d+\s*)*$',
+            'error_code': '111001',
+        }
     },
     'pet': {
         'type': {

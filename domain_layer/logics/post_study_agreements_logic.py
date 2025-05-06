@@ -53,12 +53,12 @@ def execute(request: IRequest, repo, entity=None):
         if not current_users_organization_id:
             return response_formatter.error("User has no organization ID assigned.", 403)
 
-        # Step 4: Link researcher's organization (approved)
+        # Step 4: Link researcher's organization (pending)
         _assign_organization_to_agreement(
             repo=organization_study_agreement_repo,
             organization_id=current_users_organization_id,
             study_agreement_id=study_agreement_id,
-            status="approved"
+            organization_type="researcher"
         )
 
         return response_formatter.success(
@@ -78,15 +78,15 @@ def execute(request: IRequest, repo, entity=None):
 def _assign_participant_organizations(repo: IAppRepoInvoker, organization_ids: list, study_agreement_id: int):
     """Assigns all participant organizations with 'pending' status to the agreement."""
     for org_id in organization_ids:
-        _assign_organization_to_agreement(repo, org_id, study_agreement_id, status="pending")
+        _assign_organization_to_agreement(repo, org_id, study_agreement_id, organization_type="data_owner")
 
 
-def _assign_organization_to_agreement(repo: IAppRepoInvoker, organization_id: int, study_agreement_id: int, status: str):
+def _assign_organization_to_agreement(repo: IAppRepoInvoker, organization_id: int, study_agreement_id: int, organization_type: str):
     """Helper to link an organization to a study agreement with given status."""
     data = {
         'organization_id': organization_id,
         'study_agreement_id': study_agreement_id,
-        'status': status
+        'organization_type': organization_type
     }
     repo.transact("POST", data=data)
 

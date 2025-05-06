@@ -9,6 +9,9 @@ class OrganizationStudyAgreements(Base):
     id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True, )
     organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=True, )
     study_agreement_id = Column(Integer, ForeignKey('study_agreements.id'), nullable=True, )
+    organization_type = Column(Enum('researcher', 'data_owner', name='organization_study_agreements_organization_type_enum'),
+                             nullable=True, default='data_owner')
+
     status = Column(Enum('pending', 'approved', 'disapproved', name='study_agreements_status_enum'),
                              nullable=True, default='pending')
 

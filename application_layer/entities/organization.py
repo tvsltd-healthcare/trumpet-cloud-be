@@ -70,10 +70,6 @@ Organizations = {
             'value': 'string',
             'error_code': '21',
         },
-        'required': {
-            'value': True,
-            'error_code': '22',
-        },
         'max': {
             'value': 100,
             'error_code': '23',

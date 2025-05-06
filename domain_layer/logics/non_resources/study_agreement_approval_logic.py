@@ -67,12 +67,18 @@ def execute(request: IRequest):
         )
 
         # Step 5: Check if all org agreements are approved
-        all_org_agreements = org_agreement_repo.get(
-            {'study_agreement_id': study_agreement_id},
+        all_do_org_agreements = org_agreement_repo.get(
+            {'study_agreement_id': study_agreement_id, 'organization_type': 'data_owner'},
             is_collection=True
         )
 
-        if _are_all_org_agreements_approved(all_org_agreements):
+        if _are_all_org_agreements_approved(all_do_org_agreements):
+            org_agreement_repo.transact(
+                "PATCH",
+                data={'status': 'approved'},
+                query={'study_agreement_id': study_agreement_id, 'organization_type': 'researcher'}
+            )
+            
             study_agreement_repo.transact(
                 "PATCH",
                 data={'status': 'approved'},
