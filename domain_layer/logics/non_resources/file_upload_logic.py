@@ -7,15 +7,14 @@ from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 
 
-def create_files_body(form_data, upload_file, decode_token):
+def create_files_body(form_data, upload_file, organization_user):
     return {
         "filename": upload_file.get("file_name"),
         "type": form_data.get("type"),
-        "buffer": form_data.get("buffer"),
         "path": f"{upload_file.get('file_path')}",
         "size": upload_file.get("file_size"),
         "mime_type": upload_file.get("file_mime_type"),
-        "owner": f"{form_data.get('resource_name')}:{decode_token.get('user_id')}"
+        "organization_id": organization_user.get("organization_id"),
     }
 
 
@@ -39,10 +38,21 @@ def execute(request):
               status code, and file metadata if successful.
     """
     response_formatter = ResponseFormatter()
+    repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+
     # Remove "Bearer " prefix from token and decode data
     decode_token = token_parser(request.get_headers()['authorization'])
-    if not decode_token.get("user_id"):
+    print(f"{decode_token=}")
+
+    user_id = decode_token.get("user_id")
+
+    if not user_id:
         return response_formatter.error('Invalid token: user_id missing.', 400)
+
+    organization_user_repo = repo_discovery_getter.get_repo_invoker("OrganizationUsers")
+    organization_user = organization_user_repo.get({"user_id": user_id}, False)
+    if not organization_user:
+        return response_formatter.error('Invalid token: user_id not found.', 400)
 
     form_data = request.get_form_data()
 
@@ -51,14 +61,10 @@ def execute(request):
         return response_formatter.error('No file provided', 400)
 
     upload_file = upload_file_to_disk(file)
-    file_body = create_files_body(form_data, upload_file, decode_token)
-
-    # Manage repositary
-    repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    file_body = create_files_body(form_data, upload_file, organization_user)
     files_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Files")
 
     try:
-
         create_file = files_repo.transact("POST", data=file_body)
         if create_file:
             return response_formatter.success(create_file, 'File created successfully.', 200)

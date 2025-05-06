@@ -85,18 +85,10 @@ Files = {
             'error_code': '17',
         },
     },
-    'owner': {
+    'organization_id': {
         'type': {
-            'value': 'string',
-            'error_code': '18',
-        },
-        'max': {
-            'value': 255,
-            'error_code': '19',
-        },
-        'required': {
-            'value': True,
-            'error_code': '20',
+            'value': 'number',
+            'error_code': '2000',
         },
     },
     'created_at': {
