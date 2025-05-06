@@ -53,10 +53,6 @@ class ResponseMiddleware(BaseHTTPMiddleware):
         # Process the request
         response = await call_next(request)
 
-        print("response", response)
-        print("type(response)", type(response))
-        print("isinstance(response, StreamingResponse)", isinstance(response, StreamingResponse))
-
         if isinstance(response, StreamingResponse):
             return response
 

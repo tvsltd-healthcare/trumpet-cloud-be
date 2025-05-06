@@ -42,7 +42,6 @@ def execute(request):
 
     # Remove "Bearer " prefix from token and decode data
     decode_token = token_parser(request.get_headers()['authorization'])
-    print(f"{decode_token=}")
 
     user_id = decode_token.get("user_id")
 

@@ -48,13 +48,10 @@ def execute(request: IRequest, repo, entity=None):
     # Step 4: Fetch records and return response
     collected_records = repo.get(query)
 
-    print(f"{collected_records}")
-
     try:
         repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
 
         files_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Files")
-        print(f"{files_repo}")
 
         files = [{
             'id': file.get('id'),
@@ -64,7 +61,6 @@ def execute(request: IRequest, repo, entity=None):
         collected_records['files'] = files
 
     except Exception as e:
-        print(f"Error: {e}")
         return response_formatter.error("Internal Server Error: Unable to retrieve files.")
 
     return response_formatter.success(
