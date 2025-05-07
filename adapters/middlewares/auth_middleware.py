@@ -38,6 +38,9 @@ class AuthMiddleware:
         if check_token:
             # If valid, read data from the token and attach to request state
             read_token_data = self.auth_handler.read_data(token)
-            request.state.user_id = read_token_data["user_id"]
+            request.state.user_id = read_token_data.get("user_id")
+            request.state.user_email = read_token_data.get("email")
+            if request.state.user_id is None and request.state.user_email is None:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
         else:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
