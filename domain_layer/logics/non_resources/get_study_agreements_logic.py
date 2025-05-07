@@ -1,7 +1,8 @@
 import json
-from domain_layer.abstractions.request_interface import IRequest
+
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
+from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.parse_token import token_parser
@@ -28,7 +29,7 @@ def execute(request: IRequest):
     repo_discovery_service: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
 
     try:
-        # Step 1: Get current user's organization ID
+        # Step 1: Get the current user's organization ID
         org_id = _get_current_user_org_id(request, repo_discovery_service)
         if not org_id:
             return response_formatter.error("User is not assigned to any organization.", 403)
@@ -45,13 +46,12 @@ def execute(request: IRequest):
         if not org_agreements:
             return response_formatter.error("No organization study agreements found.", 404)
 
-        # Step 4: Extract study_agreement_ids
         study_agreement_ids = [
             item.get("study_agreement_id")
             for item in org_agreements
             if item.get("study_agreement_id") is not None
         ]
-        
+
         if study_agreement_ids:
             # Step 5: Fetch study agreements if IDs exist
             study_agreement_repo = repo_discovery_service.get_repo_invoker("StudyAgreements")
@@ -61,6 +61,9 @@ def execute(request: IRequest):
             )
         else:
             study_agreements = []
+
+        study_agreements = [_add_org_approval_to_study_agreement(study_agreement, org_agreements)
+                            for study_agreement in study_agreements]
 
         return response_formatter.success(
             study_agreements,
@@ -94,17 +97,29 @@ def _parse_query_filter(request: IRequest) -> dict:
     raw_filter = query_params.get('filter', {}) if isinstance(query_params, dict) else {}
 
     try:
-        return json.loads(raw_filter) if isinstance(raw_filter, str) else raw_filter
+        _filter = json.loads(raw_filter) if isinstance(raw_filter, str) else raw_filter
+
+        _filter['status'] = _filter.get('org_approval_status')
+        _filter.pop('org_approval_status', None)
+
+        return _filter
     except (json.JSONDecodeError, TypeError):
         return {}
 
 
 def _get_org_study_agreements(
-    repo_discovery_service: IAppRepoDiscoveryGetter,
-    organization_id: int,
-    filters: dict
+        repo_discovery_service: IAppRepoDiscoveryGetter,
+        organization_id: int,
+        filters: dict
 ) -> list[dict]:
     """Fetches organization-study-agreement records for a given organization, applying optional filters."""
     org_agreement_repo = repo_discovery_service.get_repo_invoker("OrganizationStudyAgreements")
     query = {"organization_id": organization_id, **filters}
     return org_agreement_repo.get(query, is_collection=True)
+
+
+def _add_org_approval_to_study_agreement(study_agreement, org_agreements):
+    for org_agreement in org_agreements:
+        if study_agreement.get("id") == org_agreement.get("study_agreement_id"):
+            study_agreement["org_approval_status"] = org_agreement.get("status")
+    return study_agreement;
