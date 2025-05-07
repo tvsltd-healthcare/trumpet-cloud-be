@@ -13,6 +13,7 @@ class Studies(Base):
     status = Column(Enum('active', 'paused', 'completed', name='studies_status_enum'), nullable=True, default='active')
     result = Column(Text, nullable=True,)
     purpose = Column(Text, nullable=True,)
+    organization_id = Column(Integer, nullable=True)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
