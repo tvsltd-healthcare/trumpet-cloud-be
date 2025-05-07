@@ -73,6 +73,20 @@ StudyAgreements = {
             'error_code': '123',
         },
     },
+    'status': {
+        'type': {
+            'value': 'string',
+            'error_code': '5006',
+        },
+        'regex': {
+            'value': '^(approved|disapproved|pending)$',
+            'error_code': '5007',
+        },
+        'required': {
+            'value': True,
+            'error_code': '5008',
+        },
+    },
     'created_at': {
         'type': {
             'value': 'timestamp',

@@ -24,6 +24,8 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./docker/postgresql/cloud/data:/var/lib/postgresql/data/
+    ports:
+      - '5432:5432'
 
   openfga-postgres:
     image: postgres:14
@@ -41,6 +43,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    ports:
+      - '5433:5432'
 
   openfga-migrate:
     depends_on:
@@ -64,3 +68,4 @@ services:
       - OPENFGA_DATASTORE_URI=postgres://${OPENFGA_POSTGRES_ADMIN_USER}:${OPENFGA_POSTGRES_ADMIN_USER_PASSWORD}@openfga-postgres:5432/${OPENFGA_POSTGRES_DB}?sslmode=disable
       - OPENFGA_LOG_FORMAT=json
     command: run
+
