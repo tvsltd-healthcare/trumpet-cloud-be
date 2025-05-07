@@ -1,7 +1,9 @@
+from typing import Dict, Any
+
 from domain_layer.auth_manager import AuthManager
 from domain_layer.response_formatter import ResponseFormatter
 
-def token_parser(token: str) -> str:
+def token_parser(token: str) -> Dict[str, Any]:
     """
     Parses and validates a Bearer JWT token, returning the decoded data.
     This function:
