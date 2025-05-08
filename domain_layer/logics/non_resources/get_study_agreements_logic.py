@@ -98,8 +98,9 @@ def _parse_query_filter(request: IRequest) -> dict:
 
     try:
         _filter = json.loads(raw_filter) if isinstance(raw_filter, str) else raw_filter
+        if _filter.get('org_approval_status') is not None:
+            _filter['status'] = _filter.get('org_approval_status')
 
-        _filter['status'] = _filter.get('org_approval_status')
         _filter.pop('org_approval_status', None)
 
         return _filter
