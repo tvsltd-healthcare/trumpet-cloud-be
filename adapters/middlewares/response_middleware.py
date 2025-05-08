@@ -53,7 +53,7 @@ class ResponseMiddleware(BaseHTTPMiddleware):
         # Process the request
         response = await call_next(request)
 
-        if response.headers['content-type'] != 'application/json':
+        if response.headers.get('content-type') != 'application/json':
             return response
 
         # Handle JSON responses
