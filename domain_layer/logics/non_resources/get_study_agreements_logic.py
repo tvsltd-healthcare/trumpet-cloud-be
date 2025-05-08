@@ -122,4 +122,4 @@ def _add_org_approval_to_study_agreement(study_agreement, org_agreements):
     for org_agreement in org_agreements:
         if study_agreement.get("id") == org_agreement.get("study_agreement_id"):
             study_agreement["org_approval_status"] = org_agreement.get("status")
-    return study_agreement;
+    return study_agreement
