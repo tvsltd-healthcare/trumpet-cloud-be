@@ -53,8 +53,8 @@ class ResponseMiddleware(BaseHTTPMiddleware):
         # Process the request
         response = await call_next(request)
 
-        if isinstance(response, StreamingResponse):
-            return response
+        # if isinstance(response, StreamingResponse):
+        #     return response
 
         # Handle JSON responses
         if isinstance(response, Response):
@@ -73,7 +73,6 @@ class ResponseMiddleware(BaseHTTPMiddleware):
                     return response
                 except Exception as e:
                     print("Exception", e)
-
 
                 # Standardize the response format
                 standardized_response = {
@@ -94,5 +93,7 @@ class ResponseMiddleware(BaseHTTPMiddleware):
             except json.JSONDecodeError:
                 # If the response isn't JSON, return it as is
                 return response
-
-        return response
+        elif isinstance(response, StreamingResponse):
+            return response
+        else:
+            return response
