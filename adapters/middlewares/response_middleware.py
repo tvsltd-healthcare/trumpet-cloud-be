@@ -53,8 +53,8 @@ class ResponseMiddleware(BaseHTTPMiddleware):
         # Process the request
         response = await call_next(request)
 
-        # if isinstance(response, StreamingResponse):
-        #     return response
+        if response.headers['content-type'] != 'application/json':
+            return response
 
         # Handle JSON responses
         if isinstance(response, Response):
@@ -93,7 +93,5 @@ class ResponseMiddleware(BaseHTTPMiddleware):
             except json.JSONDecodeError:
                 # If the response isn't JSON, return it as is
                 return response
-        elif isinstance(response, StreamingResponse):
-            return response
         else:
             return response
