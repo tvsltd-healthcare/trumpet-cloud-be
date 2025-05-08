@@ -59,6 +59,12 @@ Studies = {
             'error_code': '91',
         },
     },
+    'organization_id': {
+        'type': {
+            'value': 'number',
+            'error_code': '2001',
+        },
+    },
     'created_at': {
         'type': {
             'value': 'timestamp',

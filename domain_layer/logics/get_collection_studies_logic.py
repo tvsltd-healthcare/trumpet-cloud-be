@@ -1,9 +1,13 @@
 import json
 import re
 
+from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.response_formatter import ResponseFormatter
+from domain_layer.utils.parse_token import token_parser
 
 
 @enforce_request_type()
@@ -35,7 +39,17 @@ def execute(request: IRequest, repo, entity=None):
             ]
         }
     """
+    decode_token = token_parser(request.get_headers()['authorization'])
     response_formatter = ResponseFormatter()
+
+    repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    organization_users_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("OrganizationUsers")
+
+    # Extract organization_id
+    organization_user = organization_users_repo.get({"user_id": decode_token.get('user_id')}, False)
+    organization_id = organization_user.get('organization_id')
+    if not organization_id:
+        return response_formatter.error('Organization not found', 400)
 
     # Step 1: Extract path and query params
     ids = request.get_path_params()
@@ -51,7 +65,7 @@ def execute(request: IRequest, repo, entity=None):
         query = {}
 
     # Step 3: Combine path and query filters
-    query = {**ids, **query}
+    query = {**ids, **query, "organization_id": organization_id}
 
     # Step 4: Fetch records and return response
     collected_records = repo.get_collection(query)
