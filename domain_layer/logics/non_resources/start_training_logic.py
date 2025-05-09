@@ -43,56 +43,51 @@ def execute(request: IRequest):
         if not study_agreement_id:
             return response_formatter.error("Study agreement not found.", 403)
 
-        # Step 2: Parse filter from query
+        # Step 2: Check if agreement has at least one data owner
         org_agreement_repo = repo_discovery.get_repo_invoker("OrganizationStudyAgreements")
-        org_agreements = org_agreement_repo.get(
+        do_org_agreements = org_agreement_repo.get(
             {"study_agreement_id": study_agreement_id, 'organization_type': 'data_owner'},
             is_collection=True
         )
 
-        if not org_agreements:
+        if not do_org_agreements:
             return response_formatter.error("No data owner organization found study agreements found.", 404)
         
-        org_ids = [
-            a.get("organization_id") for a in org_agreements if a.get("organization_id")
+        # Step 3: Retrive and sort data owner hosts saved in Organizations table as host list
+        do_org_ids = [
+            a.get("organization_id") for a in do_org_agreements if a.get("organization_id")
         ]
 
-        if not org_ids:
-            return response_formatter.error("No associated organizations found.", 404)
-
         org_repo = repo_discovery.get_repo_invoker("Organizations")
-        orgs = org_repo.get({"id": org_ids, "type": 'data_owner'}, is_collection=True)
 
-        if not orgs or any(s.get("status") != "approved" for s in orgs):
-            return response_formatter.error("All organizations must be in approved status.", 403)
+        data_owner_orgs = org_repo.get({"id": do_org_ids, "type": "data_owner"}, is_collection=True)
 
-        # Step 3: Ensure all data owner orgs have host defined
-        data_owner_orgs = org_repo.get({"id": org_ids, "type": "data_owner"}, is_collection=True)
-
-        if any(org.get("host") in (None, "") for org in data_owner_orgs):
-            return response_formatter.error("All participating data owner organizations must have a host.", 400)
-        
         sorted_do_orgs = sorted(data_owner_orgs, key=lambda x: x.get("id", 0))
         host_list = [org.get("host") for org in sorted_do_orgs]
 
-        # Step 4: Start trining
+        # Step 4: Check if study agreement exists in db and is in approved state
         study_agreement_repo = repo_discovery.get_repo_invoker("StudyAgreements")
         study_agreement = study_agreement_repo.get({"id": study_agreement_id})
+        
         if not study_agreement:
             return response_formatter.error("Study Agreement not found.", 403)
+        
+        study_agreement_status = study_agreement.get('status', None)
 
+        if study_agreement_status != 'approved':
+            return response_formatter.error("Study Agreement is not approved.", 403)
+
+        # step 5: Start Training
         injector = BaseLogicInjector()
         ids = { 'study_id': study_agreement.get('study_id') }
         agreement_id = study_agreement.get('id')
         injector.inject_business_logic(entity=study_agreement, entity_id=ids, agreement_id=agreement_id, host_list=host_list)
-        
         
         return response_formatter.success(
             message="Traning Started Successfully.",
             data=study_agreement,
             status_code=200
         )
-
     except Exception as e:
         return response_formatter.error(f"Internal server error: {str(e)}", 500)
 
