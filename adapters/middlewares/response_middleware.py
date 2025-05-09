@@ -53,7 +53,7 @@ class ResponseMiddleware(BaseHTTPMiddleware):
         # Process the request
         response = await call_next(request)
 
-        if isinstance(response, StreamingResponse):
+        if response.headers.get('content-type') != 'application/json':
             return response
 
         # Handle JSON responses
@@ -74,7 +74,6 @@ class ResponseMiddleware(BaseHTTPMiddleware):
                 except Exception as e:
                     print("Exception", e)
 
-
                 # Standardize the response format
                 standardized_response = {
                     "message": data.get("message", "Request processed successfully"),
@@ -94,5 +93,5 @@ class ResponseMiddleware(BaseHTTPMiddleware):
             except json.JSONDecodeError:
                 # If the response isn't JSON, return it as is
                 return response
-
-        return response
+        else:
+            return response

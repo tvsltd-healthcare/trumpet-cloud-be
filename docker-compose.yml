@@ -5,12 +5,20 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     container_name: cloud-backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.cloud-backend.rule=Host(`${TRUMPET_CLOUD_WEBSITE_HOST}`)
+      - traefik.http.routers.cloud-backend.entrypoints=websecure
+      - traefik.http.routers.cloud-backend.tls=true
+      - traefik.http.routers.cloud-backend.tls.certresolver=le
     env_file:
       - ./.env
     depends_on:
       - cloud-postgres
     ports:
-      - '9010:8000'
+      - '80'
+    networks:
+      - trumpet-proxy
 
   cloud-postgres:
     image: postgres:15-alpine
@@ -24,6 +32,8 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./docker/postgresql/cloud/data:/var/lib/postgresql/data/
+    networks:
+      - trumpet-proxy
 
   openfga-postgres:
     image: postgres:14
@@ -41,6 +51,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - trumpet-proxy
 
   openfga-migrate:
     depends_on:
@@ -52,6 +64,8 @@ services:
     environment:
       - OPENFGA_DATASTORE_ENGINE=postgres
       - OPENFGA_DATASTORE_URI=postgres://${OPENFGA_POSTGRES_ADMIN_USER}:${OPENFGA_POSTGRES_ADMIN_USER_PASSWORD}@openfga-postgres:5432/${OPENFGA_POSTGRES_DB}?sslmode=disable
+    networks:
+      - trumpet-proxy
 
   openfga:
     depends_on:
@@ -64,3 +78,12 @@ services:
       - OPENFGA_DATASTORE_URI=postgres://${OPENFGA_POSTGRES_ADMIN_USER}:${OPENFGA_POSTGRES_ADMIN_USER_PASSWORD}@openfga-postgres:5432/${OPENFGA_POSTGRES_DB}?sslmode=disable
       - OPENFGA_LOG_FORMAT=json
     command: run
+    networks:
+      - trumpet-proxy
+
+networks:
+  trumpet-proxy:
+    external: true
+
+volumes:
+  letsencrypt:

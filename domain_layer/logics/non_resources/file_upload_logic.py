@@ -1,10 +1,10 @@
-from domain_layer.utils.token_parser import token_parser
-from domain_layer.utils.file_upload import upload_file_to_disk
-from domain_layer.response_formatter import ResponseFormatter
-from domain_layer.repo_discovery_manager import RepoDiscoveryManager
-from domain_layer.utils.enforce_request_interface import enforce_request_type
-from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
+from domain_layer.repo_discovery_manager import RepoDiscoveryManager
+from domain_layer.response_formatter import ResponseFormatter
+from domain_layer.utils.enforce_request_interface import enforce_request_type
+from domain_layer.utils.file_upload import upload_file_to_disk
+from domain_layer.utils.token_parser import token_parser
 
 
 def create_files_body(form_data, upload_file, organization_user):
@@ -15,7 +15,25 @@ def create_files_body(form_data, upload_file, organization_user):
         "size": upload_file.get("file_size"),
         "mime_type": upload_file.get("file_mime_type"),
         "organization_id": organization_user.get("organization_id"),
+        "created_by": organization_user.get("user_id"),
     }
+
+
+def get_user_id(decode_token: dict, repo_discovery_getter):
+    user_id = decode_token.get("user_id")
+    if user_id is not None:
+        return user_id
+
+    email = decode_token.get("email")
+    if email is None:
+        return None
+
+    user_repo = repo_discovery_getter.get_repo_invoker("Users")
+    user = user_repo.get({"email": email}, False)
+    if user is None:
+        return None
+
+    return user.get("id")
 
 
 @enforce_request_type()
@@ -43,7 +61,7 @@ def execute(request):
     # Remove "Bearer " prefix from token and decode data
     decode_token = token_parser(request.get_headers()['authorization'])
 
-    user_id = decode_token.get("user_id")
+    user_id = get_user_id(decode_token, repo_discovery_getter)
 
     if not user_id:
         return response_formatter.error('Invalid token: user_id missing.', 400)
