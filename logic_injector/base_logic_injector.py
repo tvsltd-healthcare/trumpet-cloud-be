@@ -122,8 +122,6 @@ class FLSetupInjector:
 
         response = requests.post(url=do_url + self.do_setup_uri, json=_request_body)
 
-        print('do response --------', response)
-
         if (response.status_code != 200 or response.status_code != 201):
             return False
         return True, response.json()
