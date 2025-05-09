@@ -28,7 +28,25 @@ def execute(request: IRequest):
     repo_discovery: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
 
     try:
-        # Step 1: Resolve current user's organization
+        # Step 1: Check if study agreement exists in db and is in approved state
+        body = request.get_json()
+        study_agreement_id = body.get('study_agreement_id')
+        
+        if not study_agreement_id:
+            return response_formatter.error("Study agreement not found.", 403)
+        
+        study_agreement_repo = repo_discovery.get_repo_invoker("StudyAgreements")
+        study_agreement = study_agreement_repo.get({"id": study_agreement_id})
+        
+        if not study_agreement:
+            return response_formatter.error("Study Agreement not found.", 403)
+        
+        study_agreement_status = study_agreement.get('status', None)
+
+        if study_agreement_status != 'approved':
+            return response_formatter.error("Study Agreement is not approved.", 403)
+        
+        # Step 2: Resolve current user's organization
         org_id = _get_current_user_org_id(request, repo_discovery)
         if not org_id:
             return response_formatter.error("User is not assigned to any organization.", 403)
@@ -37,13 +55,8 @@ def execute(request: IRequest):
         organization = org_repo.get({"id": org_id})
         if not organization or organization.get("type") != "researcher":
             return response_formatter.error("Not Permitted.", 403)
-        
-        body = request.get_json()
-        study_agreement_id = body.get('study_agreement_id')
-        if not study_agreement_id:
-            return response_formatter.error("Study agreement not found.", 403)
 
-        # Step 2: Check if agreement has at least one data owner
+        # Step 3: Check if agreement has at least one data owner
         org_agreement_repo = repo_discovery.get_repo_invoker("OrganizationStudyAgreements")
         do_org_agreements = org_agreement_repo.get(
             {"study_agreement_id": study_agreement_id, 'organization_type': 'data_owner'},
@@ -53,7 +66,7 @@ def execute(request: IRequest):
         if not do_org_agreements:
             return response_formatter.error("No data owner organization found study agreements found.", 404)
         
-        # Step 3: Retrive and sort data owner hosts saved in Organizations table as host list
+        # Step 4: Retrive and sort data owner hosts saved in Organizations table as host list
         do_org_ids = [
             a.get("organization_id") for a in do_org_agreements if a.get("organization_id")
         ]
@@ -65,18 +78,6 @@ def execute(request: IRequest):
         sorted_do_orgs = sorted(data_owner_orgs, key=lambda x: x.get("id", 0))
         host_list = [org.get("host") for org in sorted_do_orgs]
 
-        # Step 4: Check if study agreement exists in db and is in approved state
-        study_agreement_repo = repo_discovery.get_repo_invoker("StudyAgreements")
-        study_agreement = study_agreement_repo.get({"id": study_agreement_id})
-        
-        if not study_agreement:
-            return response_formatter.error("Study Agreement not found.", 403)
-        
-        study_agreement_status = study_agreement.get('status', None)
-
-        if study_agreement_status != 'approved':
-            return response_formatter.error("Study Agreement is not approved.", 403)
-
         # step 5: Start Training
         injector = BaseLogicInjector()
         ids = { 'study_id': study_agreement.get('study_id') }
@@ -86,7 +87,7 @@ def execute(request: IRequest):
         return response_formatter.success(
             message="Traning Started Successfully.",
             data=study_agreement,
-            status_code=200
+            status_code=202
         )
     except Exception as e:
         return response_formatter.error(f"Internal server error: {str(e)}", 500)
