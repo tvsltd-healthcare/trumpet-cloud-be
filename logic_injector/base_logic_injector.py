@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# AVAILABLE_DOS = os.getenv("DO_ENDPOINTS").split(",")
 FL_COMMUNICATION_PORT = os.getenv("FL_COMMUNICATION_PORT", 8081)
 
 PET_CONFIG_MAP = {
@@ -42,10 +41,6 @@ class BaseLogicInjector:
         # ToDo: generalize this for all the custom logics
         # Decode the dict from the entity
         entity= dict(entity)
-        # participants = entity.get('participants', '').split(",")
-        # fl_communication_port = 8081
-        # participants = list(map(lambda host: f"{host}:{FL_COMMUNICATION_PORT}", host_list)) if host_list else []
-
         participants = list(
             map(
                 lambda host: f"{host.removeprefix('http://')}:{FL_COMMUNICATION_PORT}",
@@ -56,7 +51,6 @@ class BaseLogicInjector:
         # First call the Setup method in Trumpet Cloud's FL Core Agg
         fl_injector_obj = FLSetupInjector()
 
-        print('participants==========', participants)
         agg_response = fl_injector_obj.call_setup_on_agg_fl_core(fl_agg_core_url=os.getenv('TC_FL_CORE_BASE_URL'),
                                                   agreement_id=agreement_id,
                                                   name=str(entity_id.get('study_id', "")),
@@ -67,8 +61,6 @@ class BaseLogicInjector:
                                                   webhook_url=os.getenv('LISTENER_WEBHOOK_URL'),
                                                   participants=participants)
         
-        print('host_list-------', host_list)
-        print('participants-------', participants)
         for do_endpoint in host_list:
             do_response = fl_injector_obj.call_setup_on_participants_do_fl_core(
                 do_url=do_endpoint,

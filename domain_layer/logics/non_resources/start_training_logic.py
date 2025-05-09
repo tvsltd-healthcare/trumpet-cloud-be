@@ -44,7 +44,6 @@ def execute(request: IRequest):
             return response_formatter.error("Study agreement not found.", 403)
 
         # Step 2: Parse filter from query
-        # query_filter = _parse_query_filter(request)
         org_agreement_repo = repo_discovery.get_repo_invoker("OrganizationStudyAgreements")
         org_agreements = org_agreement_repo.get(
             {"study_agreement_id": study_agreement_id, 'organization_type': 'data_owner'},
@@ -68,7 +67,6 @@ def execute(request: IRequest):
             return response_formatter.error("All organizations must be in approved status.", 403)
 
         # Step 3: Ensure all data owner orgs have host defined
-        # org_ids = _get_participant_org_ids(orgs)
         data_owner_orgs = org_repo.get({"id": org_ids, "type": "data_owner"}, is_collection=True)
 
         if any(org.get("host") in (None, "") for org in data_owner_orgs):
@@ -76,17 +74,12 @@ def execute(request: IRequest):
         
         sorted_do_orgs = sorted(data_owner_orgs, key=lambda x: x.get("id", 0))
         host_list = [org.get("host") for org in sorted_do_orgs]
-        # host_string = ",".join(map(str, host_list)) if host_list else ""
-        # host_string = ",".join(f"{host}:8080" for host in host_list) if host_list else ""
-
-                               
 
         # Step 4: Start trining
         study_agreement_repo = repo_discovery.get_repo_invoker("StudyAgreements")
         study_agreement = study_agreement_repo.get({"id": study_agreement_id})
         if not study_agreement:
             return response_formatter.error("Study Agreement not found.", 403)
-        # study_agreement['participants'] = host_string
 
         injector = BaseLogicInjector()
         ids = { 'study_id': study_agreement.get('study_id') }
@@ -105,7 +98,7 @@ def execute(request: IRequest):
 
 
 # -------------------
-# 🔒 Private Helpers
+# Private Helpers
 # -------------------
 
 def _get_current_user_org_id(request: IRequest, repo_discovery: IAppRepoDiscoveryGetter) -> int | None:
@@ -118,22 +111,3 @@ def _get_current_user_org_id(request: IRequest, repo_discovery: IAppRepoDiscover
     org_user = org_users_repo.get({"user_id": current_user_id})
 
     return org_user.get("organization_id") if org_user else None
-
-
-def _parse_query_filter(request: IRequest) -> dict:
-    """Parses and returns the 'filter' query parameter as a dictionary."""
-    params = request.get_query_params()
-    raw_filter = params.get("filter", {}) if isinstance(params, dict) else {}
-    try:
-        return json.loads(raw_filter) if isinstance(raw_filter, str) else raw_filter
-    except (json.JSONDecodeError, TypeError):
-        return {}
-
-
-def _get_participant_org_ids(study_agreements: list[dict]) -> list[int]:
-    """Extracts and flattens participant organization IDs from study agreements."""
-    org_ids = []
-    for agreement in study_agreements:
-        raw_participants = agreement.get("participants", "")
-        org_ids.extend(int(x.strip()) for x in raw_participants.split(",") if x.strip().isdigit())
-    return list(set(org_ids))  # return unique IDs
