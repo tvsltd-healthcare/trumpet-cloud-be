@@ -3888,7 +3888,7 @@
           {
             "url": "/api/study_agreements/{study_agreement_id}/results",
             "method": "get_collection",
-            "auth": true
+            "auth": false
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/results/{id}",
@@ -3898,12 +3898,12 @@
           {
             "url": "/api/study_agreements/{study_agreement_id}/results",
             "method": "post",
-            "auth": true
+            "auth": false
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/results/{id}",
             "method": "patch",
-            "auth": true
+            "auth": false
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/results/{id}",
