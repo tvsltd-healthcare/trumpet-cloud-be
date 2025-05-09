@@ -9,7 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-AVAILABLE_DOS = os.getenv("DO_ENDPOINTS").split(",")
+# AVAILABLE_DOS = os.getenv("DO_ENDPOINTS").split(",")
+FL_COMMUNICATION_PORT = os.getenv("FL_COMMUNICATION_PORT", 8081)
 
 PET_CONFIG_MAP = {
         'None': {},
@@ -37,15 +38,25 @@ class BaseLogicInjector:
     def __init__(self):
         pass
 
-    def inject_business_logic(self, entity_id: dict, entity: dict, agreement_id: int):
+    def inject_business_logic(self, entity_id: dict, entity: dict, agreement_id: int, host_list: list[str]):
         # ToDo: generalize this for all the custom logics
         # Decode the dict from the entity
         entity= dict(entity)
-        participants = entity.get('participants', '').split(",")
+        # participants = entity.get('participants', '').split(",")
+        # fl_communication_port = 8081
+        # participants = list(map(lambda host: f"{host}:{FL_COMMUNICATION_PORT}", host_list)) if host_list else []
+
+        participants = list(
+            map(
+                lambda host: f"{host.removeprefix('http://')}:{FL_COMMUNICATION_PORT}",
+                host_list
+            )
+        ) if host_list else []
 
         # First call the Setup method in Trumpet Cloud's FL Core Agg
         fl_injector_obj = FLSetupInjector()
 
+        print('participants==========', participants)
         agg_response = fl_injector_obj.call_setup_on_agg_fl_core(fl_agg_core_url=os.getenv('TC_FL_CORE_BASE_URL'),
                                                   agreement_id=agreement_id,
                                                   name=str(entity_id.get('study_id', "")),
@@ -56,7 +67,9 @@ class BaseLogicInjector:
                                                   webhook_url=os.getenv('LISTENER_WEBHOOK_URL'),
                                                   participants=participants)
         
-        for do_endpoint in AVAILABLE_DOS:
+        print('host_list-------', host_list)
+        print('participants-------', participants)
+        for do_endpoint in host_list:
             do_response = fl_injector_obj.call_setup_on_participants_do_fl_core(
                 do_url=do_endpoint,
                 agreement_id=agreement_id,
@@ -116,6 +129,8 @@ class FLSetupInjector:
         }
 
         response = requests.post(url=do_url + self.do_setup_uri, json=_request_body)
+
+        print('do response --------', response)
 
         if (response.status_code != 200 or response.status_code != 201):
             return False
