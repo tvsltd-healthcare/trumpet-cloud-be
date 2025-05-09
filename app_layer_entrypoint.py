@@ -268,7 +268,7 @@ def launch_app_layer():
 
     server.use(ValidationMiddleware)
     # Redirect to HTTPS
-    server.use(HTTPSRedirectMiddleware)
+    # server.use(HTTPSRedirectMiddleware)
     server.use(ResponseMiddleware)
     per_page = int(os.getenv("PER_PAGE", 10))
     server.use(pagination_middleware(per_page=per_page))
