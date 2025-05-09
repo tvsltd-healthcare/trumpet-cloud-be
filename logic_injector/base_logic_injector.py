@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-AVAILABLE_DOS = os.getenv("DO_ENDPOINTS").split(",")
+FL_COMMUNICATION_PORT = os.getenv("FL_COMMUNICATION_PORT", 8080)
 
 PET_CONFIG_MAP = {
         'None': {},
@@ -37,11 +37,16 @@ class BaseLogicInjector:
     def __init__(self):
         pass
 
-    def inject_business_logic(self, entity_id: dict, entity: dict, agreement_id: int):
+    def inject_business_logic(self, entity_id: dict, entity: dict, agreement_id: int, host_list: list[str]):
         # ToDo: generalize this for all the custom logics
         # Decode the dict from the entity
         entity= dict(entity)
-        participants = entity.get('participants', '').split(",")
+        participants = list(
+            map(
+                lambda host: f"{host.removeprefix('http://')}:{FL_COMMUNICATION_PORT}",
+                host_list
+            )
+        ) if host_list else []
 
         # First call the Setup method in Trumpet Cloud's FL Core Agg
         fl_injector_obj = FLSetupInjector()
@@ -50,19 +55,19 @@ class BaseLogicInjector:
                                                   agreement_id=agreement_id,
                                                   name=str(entity_id.get('study_id', "")),
                                                   coordinator=os.getenv('COORDINATOR'),
-                                                  model=entity.get('model', "NN_FHIR"),
+                                                  model=entity.get('model', "NN_HNC"),
                                                   pet=entity.get('pet', "None"),
                                                   rounds=entity.get('rounds', "3"),
                                                   webhook_url=os.getenv('LISTENER_WEBHOOK_URL'),
                                                   participants=participants)
         
-        for do_endpoint in AVAILABLE_DOS:
+        for do_endpoint in host_list:
             do_response = fl_injector_obj.call_setup_on_participants_do_fl_core(
                 do_url=do_endpoint,
                 agreement_id=agreement_id,
                 name=str(entity_id.get('study_id', "")),
                 coordinator=os.getenv('COORDINATOR'),
-                model=entity.get('model', "NN_FHIR"),
+                model=entity.get('model', "NN_HNC"),
                 pet=entity.get('pet', "None"),
                 rounds=entity.get('rounds', "3"),
                 webhook_url=os.getenv('LISTENER_WEBHOOK_URL'),
@@ -71,7 +76,8 @@ class BaseLogicInjector:
                 description=entity.get('description', "N/A"),
             )
 
-            do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_endpoint)
+            do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(
+                do_url=do_endpoint, model=entity.get('model', "NN_HNC"), samples = entity.get('samples', 1000))
 
 class FLSetupInjector:
     setup_uri = "/setup"
@@ -120,8 +126,12 @@ class FLSetupInjector:
             return False
         return True, response.json()
 
-    def call_participants_do_fl_core_query(self, do_url: str, query: Optional[str] = None):
-        _request_body = None
+    def call_participants_do_fl_core_query(self, do_url: str, model: str, samples: Optional[int] = 1000, query: Optional[str] = None):
+        _request_body = {
+            "model": model,
+        }
+        if samples:
+            _request_body["sample"] = samples
 
         response = requests.post(url=do_url + self.do_load_data_uri, json=_request_body)
         if response.status_code != 200:
