@@ -21,10 +21,10 @@ def execute(request: IRequest):
     user = user_repo.get({"email": body.get("email")}, False)
 
     if not user:
-        return response.error(message="Login failed.", status_code=404)
+        return response.error(message="Invalid Credentials.", status_code=404)
 
     if not _is_valid_password(body.get("password"), user.get("password")):
-        return response.error(message="Login failed.", status_code=404)
+        return response.error(message="Invalid Credentials.", status_code=404)
 
     token = _generate_token(user["id"])
     if not token:
@@ -90,6 +90,7 @@ def _build_success_response(token: dict, user: dict, role_name: str, organizatio
         "access_token": token["token"],
         "expires_in": int(time.time()) + int(token["expires"]),
         "user": {
+            "id": user["id"],
             "first_name": user["first_name"],
             "last_name": user["last_name"],
             "email": user["email"],
