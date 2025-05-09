@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-FL_COMMUNICATION_PORT = os.getenv("FL_COMMUNICATION_PORT", 8081)
+FL_COMMUNICATION_PORT = os.getenv("FL_COMMUNICATION_PORT", 8080)
 
 PET_CONFIG_MAP = {
         'None': {},
