@@ -99,7 +99,11 @@ class FLSetupInjector:
             "participants":  participants,
         }
 
+        print('call_setup_on_agg_fl_core request =====', _request_body)
+
         response = requests.post(url=fl_agg_core_url + self.setup_uri, json=_request_body)
+
+        print('call_setup_on_agg_fl_core response =======', response)
 
         if response.status_code != 200:
             return False
@@ -120,7 +124,11 @@ class FLSetupInjector:
             "participants":  participants,
         }
 
+        print('call_setup_on_participants_do_fl_core request =====', _request_body)
+
         response = requests.post(url=do_url + self.do_setup_uri, json=_request_body)
+
+        print('call_setup_on_participants_do_fl_core response =====', response)
 
         if (response.status_code != 200 or response.status_code != 201):
             return False
