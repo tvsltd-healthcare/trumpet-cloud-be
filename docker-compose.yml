@@ -7,7 +7,7 @@ services:
     container_name: cloud-backend
     labels:
       - traefik.enable=true
-      - traefik.http.routers.cloud-backend.rule=Host(`${TRUMPET_CLOUD_WEBSITE_HOST}`)
+      - traefik.http.routers.cloud-backend.rule=Host(`${WHOAMI_HOST}`)
       - traefik.http.routers.cloud-backend.entrypoints=websecure
       - traefik.http.routers.cloud-backend.tls=true
       - traefik.http.routers.cloud-backend.tls.certresolver=le
