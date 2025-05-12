@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-FL_COMMUNICATION_PORT = os.getenv("FL_COMMUNICATION_PORT", 8080)
+FL_COMMUNICATION_PORT = os.getenv("FL_COMMUNICATION_PORT", 8081)
 
 PET_CONFIG_MAP = {
         'None': {},
@@ -43,7 +43,7 @@ class BaseLogicInjector:
         entity= dict(entity)
         participants = list(
             map(
-                lambda host: f"{host.removeprefix('http://')}:{FL_COMMUNICATION_PORT}",
+                lambda host: f"{host.removeprefix('http://').split(':')[0]}:{FL_COMMUNICATION_PORT}",
                 host_list
             )
         ) if host_list else []
