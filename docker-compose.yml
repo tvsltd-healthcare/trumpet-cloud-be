@@ -85,5 +85,5 @@ networks:
   trumpet-proxy:
     external: true
 
-volumes:
-  letsencrypt:
+#volumes:
+#  letsencrypt:
