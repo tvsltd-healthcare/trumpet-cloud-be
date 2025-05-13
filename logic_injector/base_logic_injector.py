@@ -41,9 +41,10 @@ class BaseLogicInjector:
         # ToDo: generalize this for all the custom logics
         # Decode the dict from the entity
         entity= dict(entity)
+        print('host_list', host_list)
         participants = list(
             map(
-                lambda host: f"{host.removeprefix('http://').split(':')[0]}:{FL_COMMUNICATION_PORT}",
+                lambda host: f"{host.removeprefix('http://').removeprefix('https://').split(':')[0]}:{FL_COMMUNICATION_PORT}",
                 host_list
             )
         ) if host_list else []
