@@ -1,9 +1,8 @@
 import re
 
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.requests import Request
 from fastapi.responses import JSONResponse
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from typing import Callable
 import json
 from urllib.parse import urlencode
@@ -14,6 +13,13 @@ class PaginationMiddleware(BaseHTTPMiddleware):
         super().__init__(app)
         self.per_page = per_page
 
+    """
+    Middleware for paginating JSON API responses.
+    Args:
+        app: FastAPI application instance
+        per_page: Number of items per page
+            
+    """
     async def dispatch(self, request: Request, call_next: Callable):
         # Get page and per_page from query params
         page = int(request.query_params.get("page", 1))
@@ -72,12 +78,10 @@ class PaginationMiddleware(BaseHTTPMiddleware):
 
                     formatted = {
                         "current_page": page,
-                        "pagination_data": paginated_data,
                         "first_page_url": build_url(1),
                         "from": offset + 1 if paginated_data else None,
                         "last_page": last_page,
                         "last_page_url": build_url(last_page),
-                        "links": links,
                         "next_page_url": build_url(page + 1) if page < last_page else None,
                         "path": path,
                         "per_page": per_page,
@@ -89,7 +93,9 @@ class PaginationMiddleware(BaseHTTPMiddleware):
                     new_response = {
                         "message": parsed.get("message"),
                         "status_code": response.status_code,
-                        "data": formatted
+                        "data": paginated_data,
+                        "meta": formatted,
+                        "links": links
                     }
                     return JSONResponse(content=new_response, status_code=response.status_code)
 
