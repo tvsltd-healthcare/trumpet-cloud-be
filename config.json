@@ -4337,6 +4337,10 @@
         {
           "verb": "post",
           "url": "/api/start-training"
+        },
+        {
+          "verb": "post",
+          "url": "/api/approval"
         }
       ]
     }
