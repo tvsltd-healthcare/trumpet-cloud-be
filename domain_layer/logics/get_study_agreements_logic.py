@@ -67,7 +67,7 @@ def execute(request: IRequest, repo, entity=None):
             if organizations:
                 organizations_list.append(organizations)
 
-        study_agreement["participant_users"] = organizations_list
+        study_agreement["participant_organizations"] = organizations_list
 
     return response_formatter.success(
         data=study_agreement,
