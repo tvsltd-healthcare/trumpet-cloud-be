@@ -55,14 +55,14 @@ def execute(request: IRequest, repo, entity=None):
         return response_formatter.error('Organization users not found', 404)
 
     # get the repo invoker for the specified repo
-    user_info = []
+    user_list = []
     for user in organization_users:
         users_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("Users")
         user_data = users_repo.get({"id": user.get("user_id")}, False)
         if not user_data:
             return response_formatter.error('User not found', 404)
         # append user data to user info list
-        user_list = {
+        user_info = {
             "id": user_data.get("id"),
             "first_name": user_data.get("first_name"),
             "last_name": user_data.get("last_name"),
@@ -70,8 +70,8 @@ def execute(request: IRequest, repo, entity=None):
             "status": user_data.get("status"),
             "phone": user_data.get("phone"),
         }
-        user_info.append(user_list)
-    organization["users"] = user_info
+        user_list.append(user_info)
+    organization["users"] = user_list
     return {
         "message": "Data retrieved successfully.",
         "status_code": 200,
