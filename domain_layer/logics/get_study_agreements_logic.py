@@ -57,6 +57,26 @@ def execute(request: IRequest, repo, entity=None):
 
     study_agreement["org_approval_status"] = org_agreements.get("status")
 
+    # get participants info
+    if study_agreement.get("participants") is not None:
+        split_participants = study_agreement.get("participants").split(",")
+        users_list = []
+        for participant in split_participants:
+            users_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("Users")
+            users = users_repo.get({"id": participant})
+            if users:
+                user_info = {
+                    "id": users.get("id"),
+                    "first_name": users.get("first_name"),
+                    "last_name": users.get("last_name"),
+                    "email": users.get("email"),
+                    "status": users.get("status"),
+                    "phone": users.get("phone"),
+                }
+                users_list.append(user_info)
+
+        study_agreement["participant_users"] = users_list
+
     return response_formatter.success(
         data=study_agreement,
         message="Entity retrieved successfully",
