@@ -7,6 +7,7 @@ from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.response_formatter import ResponseFormatter
+from domain_layer.utils.get_role import get_role_name
 
 
 @enforce_request_type()
@@ -62,6 +63,7 @@ def execute(request: IRequest, repo, entity=None):
         if not user_data:
             return response_formatter.error('User not found', 404)
         # append user data to user info list
+        user_role = get_role_name(repo_getter, user_data.get("id"))
         user_info = {
             "id": user_data.get("id"),
             "first_name": user_data.get("first_name"),
@@ -69,6 +71,7 @@ def execute(request: IRequest, repo, entity=None):
             "email": user_data.get("email"),
             "status": user_data.get("status"),
             "phone": user_data.get("phone"),
+            "role": user_role.get("name") if user_role else None,
         }
         user_list.append(user_info)
     organization["users"] = user_list
