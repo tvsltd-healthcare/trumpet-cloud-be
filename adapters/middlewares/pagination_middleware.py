@@ -79,14 +79,12 @@ class PaginationMiddleware(BaseHTTPMiddleware):
                     formatted = {
                         "current_page": page,
                         "first_page_url": build_url(1),
-                        "from": offset + 1 if paginated_data else None,
                         "last_page": last_page,
                         "last_page_url": build_url(last_page),
                         "next_page_url": build_url(page + 1) if page < last_page else None,
                         "path": path,
                         "per_page": per_page,
                         "prev_page_url": build_url(page - 1) if page > 1 else None,
-                        "to": offset + len(paginated_data) if paginated_data else None,
                         "total": total
                     }
 
