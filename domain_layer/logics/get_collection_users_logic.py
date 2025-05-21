@@ -3,6 +3,7 @@ import re
 
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.utils.enforce_request_interface import enforce_request_type
+from domain_layer.utils.get_role import get_role_name
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
@@ -91,6 +92,16 @@ def execute(request: IRequest, repo, entity=None):
 
 
     collected_records = repo.get_collection(final_query)
+    if not collected_records:
+        return response_formatter.error("No users found in the same organization.", 404)
+
+    # Step 6: return users role in the collection
+    for record in collected_records:
+        get_user_role = get_role_name(repo_discovery_getter, record.get('id'))
+        if get_user_role:
+            record['role'] = get_user_role.get('name')
+        else:
+            record['role'] = None
 
     return response_formatter.success(
         collected_records,
