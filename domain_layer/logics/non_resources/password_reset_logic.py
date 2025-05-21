@@ -44,6 +44,9 @@ def execute(request):
     if not email:
         return response_formatter.error('Email missing.',400)
 
+    if decode_token.get('reset_password') is not True:
+        return response_formatter.error('You are not eligible to reset password.', 403)
+
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
 
