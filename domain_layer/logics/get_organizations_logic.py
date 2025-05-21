@@ -53,10 +53,7 @@ def execute(request: IRequest, repo, entity=None):
 
         files_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Files")
 
-        files = [{
-            'id': file.get('id'),
-            'name': file.get('filename')
-        } for file in files_repo.get({'organization_id': collected_records['id']}, is_collection=True)]
+        files = [file for file in files_repo.get({'organization_id': collected_records['id']}, is_collection=True)]
 
         collected_records['files'] = files
 
