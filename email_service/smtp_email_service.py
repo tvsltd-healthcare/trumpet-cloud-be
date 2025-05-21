@@ -2,6 +2,7 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from typing import Dict
+from email_service.templates.reset_password_email_template import RESET_PASSWORD_EMAIL_TEMPLATE
 from email_service.templates.varify_org_email_template import VARIFY_ORG_EMAIL_TEMPLATE
 from email_service.templates.varify_researcher_email_template import VARIFY_RESEARCHER_EMAIL_TEMPLATE
 from domain_layer.abstractions.email_sending_interface import IEmailService
@@ -18,6 +19,10 @@ class SmtpEmailService(IEmailService):
             'varify_researcher': {
                 'template': VARIFY_RESEARCHER_EMAIL_TEMPLATE,
                 'subject': 'Varify your researcher on Trumpet Cloud'
+            },
+            'reset_password': {
+                'template': RESET_PASSWORD_EMAIL_TEMPLATE,
+                'subject': 'Reset password.'
             }
         }
 
