@@ -51,22 +51,23 @@ def execute(request: IRequest):
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
 
-    try:
-        user = user_repo.get(query, False)
+    user = user_repo.get(query, False)
 
-        if user:
-            auth_getter_adapter = AuthManager.get()
-            token = auth_getter_adapter.generate_token({ "email": email, "reset_password": True})
-            token_value = token["token"] if isinstance(token, dict) else token
+    if user:
+        auth_getter_adapter = AuthManager.get()
+        token = auth_getter_adapter.generate_token({ "email": email, "reset_password": True})
+        token_value = token["token"] if isinstance(token, dict) else token
 
-            email_service = EmailServiceManager.get()
-            #Should be backgroud task
+        email_service = EmailServiceManager.get()
+        #Should be backgroud task
+        try:
             email_service.send_email(email, token_value, type='reset_password')
-            return response_formatter.success( {}, 'Successfully email send.', 200)
-        else:
-            return response_formatter.error('User does not exit', 404)
+        except Exception as e:
+            return response_formatter.error(str(e), 500)
 
-    except Exception as e:
-        return response_formatter.error(str(e), 500)
+        return response_formatter.success( {}, 'Successfully email send.', 200)
+    else:
+        return response_formatter.error('User does not exit', 404)
+
 
 

@@ -1,3 +1,4 @@
+from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.auth_manager import AuthManager
 from domain_layer.password_manager import PasswordManager
 from domain_layer.response_formatter import ResponseFormatter
@@ -6,7 +7,7 @@ from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 
 
-def execute(request):
+def execute(request: IRequest):
 
     """
     Handles the password reset functionality for a user based on a valid authentication token.
@@ -42,29 +43,30 @@ def execute(request):
     email = decode_token.get("email")
 
     if not email:
-        return response_formatter.error('Email missing.',400)
+        return response_formatter.error('User does not exit.', 404)
 
     if decode_token.get('reset_password') is not True:
-        return response_formatter.error('You are not eligible to reset password.', 403)
+        return response_formatter.error('You are not eligible to reset password.', 404)
 
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
 
-    try:
-        user = user_repo.get({"email": email}, False)
-        if user:
-            new_password = body.get("new_password")
-            password_handler = PasswordManager.get()
 
-            password = password_handler.hash_password(new_password)
-            password_reset_body = { "password": password  }
+    user = user_repo.get({"email": email}, False)
+    if user:
+        new_password = body.get("new_password")
+        password_handler = PasswordManager.get()
 
+        password = password_handler.hash_password(new_password)
+        password_reset_body = { "password": password  }
+
+        try:
             password_reset = user_repo.transact("PATCH", data=password_reset_body)
             if(password_reset):
                 return response_formatter.success( {}, 'Password reset successfully.', 200)
             else:
                 return response_formatter.error('Password reset failed', 400)
-        else:
-            return response_formatter.error('User not exits', 400)
-    except Exception as e:
-        return response_formatter.error(str(e), 500)
+        except Exception as e:
+            return response_formatter.error(str(e), 500)
+    else:
+        return response_formatter.error('User does not exit', 404)
