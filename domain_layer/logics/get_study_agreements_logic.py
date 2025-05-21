@@ -57,6 +57,18 @@ def execute(request: IRequest, repo, entity=None):
 
     study_agreement["org_approval_status"] = org_agreements.get("status")
 
+    # get participants info
+    if study_agreement.get("participants") is not None:
+        split_participants = study_agreement.get("participants").split(",")
+        organizations_list = []
+        for participant in split_participants:
+            organization_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("Organizations")
+            organizations = organization_repo.get({"id": participant})
+            if organizations:
+                organizations_list.append(organizations)
+
+        study_agreement["participant_organizations"] = organizations_list
+
     return response_formatter.success(
         data=study_agreement,
         message="Entity retrieved successfully",
