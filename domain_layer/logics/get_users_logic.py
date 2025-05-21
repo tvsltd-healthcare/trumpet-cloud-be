@@ -30,19 +30,15 @@ def execute(request: IRequest, repo, entity=None):
       """
 
     response_formatter = ResponseFormatter()
-
-    login_user_id = request.get_request().scope['state']['user_id']
     get_params = request.get_path_params()
-    if int(get_params.get("id")) != login_user_id:
-        return response_formatter.error("You are not authorized to access this resource.", 403)
 
     repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Users")
-    user = user_repo.get({"id": login_user_id})
+    user = user_repo.get({"id": get_params.get("id")})
     if not user:
         return response_formatter.error("User not found.", 404)
 
-    get_user_role = get_role_name(repo_discovery_getter, login_user_id)
+    get_user_role = get_role_name(repo_discovery_getter, get_params.get("id"))
     if not get_user_role:
         return response_formatter.error("User role not found.", 404)
     user["role"] = get_user_role.get("name")
