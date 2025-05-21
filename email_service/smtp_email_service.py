@@ -25,12 +25,12 @@ class SmtpEmailService(IEmailService):
 
             'approved_registration': {
                 'template': REGISTRATION_APPROVED_EMAIL_TEMPLATE,
-                'subject': 'Resigration Approved.'
+                'subject': 'Your registration has been successfully approved.'
             },
 
             'disapproved_registration': {
                 'template': DISAPPROVED_REGISTRATION_EMAIL_TEMPLATE,
-                'subject': 'Resigration Not Approved.'
+                'subject': 'Your registration has not been approved'
             },
         }
 

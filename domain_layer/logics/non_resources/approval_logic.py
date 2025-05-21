@@ -30,39 +30,32 @@ def execute(request: IRequest):
     user_id = body.get('user_id')
     status = body.get('status')
     if not user_id or not status:
-        return ResponseFormatter().error("Request isn't valid", 400)
+        return ResponseFormatter().error("Unprocessable Entity.", 422)
 
     repo_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("Users")
 
+
+    user = user_repo.get({'id': user_id}, False)
+
+    if not user:
+        return ResponseFormatter().error("User does not exit.", 404)
+
     try:
-        user = user_repo.get({'id': user_id}, False)
-        if not user:
-            return ResponseFormatter().success({}, 'User not found', 400)
-
-        user_status_update = user_repo.transact(
-            "PATCH",
-            data={'status': status},
-            query={'id': user.get('id')}
-        )
-
-        email_service = EmailServiceManager.get()
-        email_body = f"Hello, your token is"
-
-        status = user_status_update.get('status', '').strip().lower()
-        print('status', status)
-
-
-        if status == 'approved':
-            print('=================>>>>', 'Approved')
-            email_service.send_email(user.get('email'), email_body, type='approved_registration')
-        elif status == 'disapproved':
-            print('=================>>>>', 'DisApproved')
-            email_service.send_email(user.get('email'), email_body, type='disapproved_registration')
-        else:
-            return
-
-        return ResponseFormatter().success({}, 'User status updated successfully.', 201)
+        user_status_update = user_repo.transact( "PATCH", data={'status': status}, query={'id': user.get('id')})
     except Exception as e:
-        print(e)
         return ResponseFormatter().error(str(e), 500)
+
+    email_service = EmailServiceManager.get()
+    email_body = f"Hello, your token is"
+
+    status = user_status_update.get('status', '').strip().lower()
+    if status == 'approved':
+        email_service.send_email(user.get('email'), email_body, type='approved_registration')
+    elif status == 'disapproved':
+        email_service.send_email(user.get('email'), email_body, type='disapproved_registration')
+    else:
+        return
+
+    return ResponseFormatter().success({}, 'User status updated successfully.', 200)
+
