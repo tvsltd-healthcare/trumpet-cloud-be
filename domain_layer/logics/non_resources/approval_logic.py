@@ -42,15 +42,25 @@ def execute(request: IRequest):
 
         user_status_update = user_repo.transact(
             "PATCH",
-            data={'status': 'approved'},
+            data={'status': status},
             query={'id': user.get('id')}
         )
 
         email_service = EmailServiceManager.get()
-        if user_status_update and user_status_update.get('status'):
-            # TODO Need to implement tamplate for approved and dis-approved registrations
-            email_body = f"Hello, your token is"
-            email_service.send_email(user.get('email'), email_body, type='varify_org')
+        email_body = f"Hello, your token is"
+
+        status = user_status_update.get('status', '').strip().lower()
+        print('status', status)
+
+
+        if status == 'approved':
+            print('=================>>>>', 'Approved')
+            email_service.send_email(user.get('email'), email_body, type='approved_registration')
+        elif status == 'disapproved':
+            print('=================>>>>', 'DisApproved')
+            email_service.send_email(user.get('email'), email_body, type='disapproved_registration')
+        else:
+            return
 
         return ResponseFormatter().success({}, 'User status updated successfully.', 201)
     except Exception as e:
