@@ -50,3 +50,7 @@ class IRequest(Protocol):
     def get_request(self) -> Any:
         """Return the uploaded files"""
         pass
+
+    def get_method_name(self) -> str:
+        """Return the request method name as a string."""
+        pass
