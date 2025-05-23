@@ -57,5 +57,5 @@ def execute(request: IRequest):
     else:
         return
 
-    return ResponseFormatter().success({}, 'User status updated successfully.', 200)
+    return ResponseFormatter().success({}, 'User status has been updated successfully.', 200)
 
