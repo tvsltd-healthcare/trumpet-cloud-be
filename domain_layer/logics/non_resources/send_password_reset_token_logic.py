@@ -65,7 +65,7 @@ def execute(request: IRequest):
         except Exception as e:
             return response_formatter.error(str(e), 500)
 
-        return response_formatter.success( {}, 'Successfully email send.', 200)
+        return response_formatter.success( {}, 'Email has been sent successfully.', 200)
     else:
         return response_formatter.error('User does not exit', 404)
 
