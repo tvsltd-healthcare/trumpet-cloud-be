@@ -19,6 +19,7 @@ from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscov
 from adapters.middlewares.auth_middleware import AuthMiddleware
 from adapters.middlewares.authorization_middleware import AuthorizationMiddleware
 from adapters.middlewares.cors import CorsConfig
+from adapters.middlewares.pagination_middleware import pagination_middleware
 from adapters.middlewares.rate_limit_middleware import rate_limit_middleware_factory
 from adapters.middlewares.response_middleware import ResponseMiddleware
 from adapters.middlewares.validation_middleware import ValidationMiddleware
@@ -266,6 +267,8 @@ def launch_app_layer():
 
     server.use(ValidationMiddleware)
     server.use(ResponseMiddleware)
+    per_page = int(os.getenv("PER_PAGE", 10))
+    server.use(pagination_middleware(per_page=per_page))
     rate_limit = int(os.getenv("RATE_LIMIT_REQUEST_PER_WINDOW"))
     time_window = int(os.getenv("RATE_LIMIT_TIME_WINDOW_IN_SECOND"))
     algorithm = os.getenv("RATE_LIMIT_ALGORITHM")

@@ -14,8 +14,9 @@ Entity = TypeVar('Entity')
 injector = BaseLogicInjector()
 BUSINESS_LOGIC_PATHS = r"^/api/studies/\d+/agreements$"
 
+
 def path_matches(path: str) -> bool:
-        """
+    """
         Checks if the given path matches the pattern /api/studies/{id}/agreements.
 
         Args:
@@ -24,10 +25,11 @@ def path_matches(path: str) -> bool:
         Returns:
             bool: True if the path matches the pattern, False otherwise.
         """
-        # Todo:: Enhance it for any path matching where we need to inject the business logic
+    # Todo:: Enhance it for any path matching where we need to inject the business logic
 
-        pattern = BUSINESS_LOGIC_PATHS
-        return bool(re.match(pattern, path))
+    pattern = BUSINESS_LOGIC_PATHS
+    return bool(re.match(pattern, path))
+
 
 class BaseController(Generic[Entity]):
     """A generic base controller for handling CRUD operations on entities.
@@ -70,7 +72,7 @@ class BaseController(Generic[Entity]):
             Optional[Entity]: The created entity, or None if creation fails.
         """
         try:
-            entity = self._refine_store_date(entity)
+            entity = self._refine_store_date(entity, request)
             entity = self._add_uniq_id(entity)
             created_entity = self.app_service.post(entity, request)
 
@@ -80,7 +82,8 @@ class BaseController(Generic[Entity]):
             #     agreement_id = created_entity['id']
             #     injector.inject_business_logic(entity=entity, entity_id=ids, agreement_id=agreement_id)
 
-            return self.response_handler.generate_response("Entity created successfully", data=created_entity, status_code=201)
+            return self.response_handler.generate_response("Entity created successfully", data=created_entity,
+                                                           status_code=201)
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
 
@@ -100,10 +103,10 @@ class BaseController(Generic[Entity]):
         """
         try:
             get_entity = self.app_service.get(request)
-            
+
             if get_entity is None or not bool(get_entity):
                 return self.response_handler.generate_response("item not found", 404)
-            
+
             return self.response_handler.generate_response("Entity retrieved successfully", data=get_entity)
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
@@ -144,8 +147,8 @@ class BaseController(Generic[Entity]):
                 Optional[Entity]: The updated entity, or None if the update fails.
             """
         try:
-            entity = self._refine_store_date(entity)
-            
+            entity = self._refine_store_date(entity, request)
+
             updated_entity = self.app_service.patch(entity, request)
             return self.response_handler.generate_response("Entity updated successfully", data=updated_entity)
         except Exception as e:
@@ -169,10 +172,10 @@ class BaseController(Generic[Entity]):
         try:
             if self._all_attrs_not_provided(entity):
                 raise ValueError("PUT request requires all attributes to be provided.")
-            
+
             ids = request.get_path_params()
 
-            entity = self._refine_store_date(entity)
+            entity = self._refine_store_date(entity, request)
             updated_entity = self.app_service.put(entity, request)
             return self.response_handler.generate_response("Entity fully updated", data=updated_entity)
         except Exception as e:
@@ -203,27 +206,34 @@ class BaseController(Generic[Entity]):
             return self.response_handler.generate_response("Entity deleted successfully")
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
-        
-    def _refine_store_date(self, entity: Entity) -> Entity:
-        if not hasattr(entity, 'updated_at') or entity.updated_at is None:
-            entity.updated_at = datetime.now()
 
-        if not hasattr(entity, 'created_at') or entity.created_at is None:
-            entity.created_at = datetime.now()
+    def _refine_store_date(self, entity: Entity, request: IRequest) -> Entity:
+        user_id = request.get_request().scope['state']['user_id'] if request.get_request().scope['state']['user_id'] is not None else None
+        if request.get_method_name() == 'POST':
+            if not hasattr(entity, 'created_at') or entity.created_at is None:
+                entity.created_at = datetime.now()
+            if not hasattr(entity, 'created_by') or entity.created_by is None:
+                entity.created_by = user_id
+
+        if request.get_method_name() == 'PUT' or request.get_method_name() == 'PATCH':
+            if not hasattr(entity, 'updated_at') or entity.updated_at is None:
+                entity.updated_at = datetime.now()
+            if not hasattr(entity, 'updated_by') or entity.updated_by is None:
+                entity.updated_by = user_id
 
         return entity
-    
+
     def _add_uniq_id(self, entity: Entity) -> Entity:
         entity.id = str(uuid.uuid4())
         return entity
-    
+
     def _all_attrs_not_provided(self, entity: Entity) -> bool:
-         # Convert the entity to a dictionary if it has a __dict__ attribute.
+        # Convert the entity to a dictionary if it has a __dict__ attribute.
         entity_dict = entity.__dict__ if hasattr(entity, "__dict__") else entity
 
         # Iterate over all keys and values except `id`
         for key, value in entity_dict.items():
             if key != 'id' and (value is None or value == '' or value == '0'):
                 return True
-        
+
         return False

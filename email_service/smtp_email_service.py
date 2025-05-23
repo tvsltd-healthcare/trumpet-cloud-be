@@ -3,6 +3,7 @@ import smtplib
 from email.mime.text import MIMEText
 from typing import Dict
 from domain_layer.abstractions.email_sending_interface import IEmailService
+from email_service.templates.reset_password_email_template import RESET_PASSWORD_EMAIL_TEMPLATE
 from email_service.templates.varify_org_email_template import VARIFY_ORG_EMAIL_TEMPLATE
 from email_service.templates.varify_researcher_email_template import VARIFY_RESEARCHER_EMAIL_TEMPLATE
 from email_service.templates.registration_approved_email_templlate import REGISTRATION_APPROVED_EMAIL_TEMPLATE
@@ -22,7 +23,6 @@ class SmtpEmailService(IEmailService):
                 'template': VARIFY_RESEARCHER_EMAIL_TEMPLATE,
                 'subject': 'Varify your researcher on Trumpet Cloud'
             },
-
             'approved_registration': {
                 'template': REGISTRATION_APPROVED_EMAIL_TEMPLATE,
                 'subject': 'Your registration has been successfully approved.'
@@ -32,6 +32,10 @@ class SmtpEmailService(IEmailService):
                 'template': DISAPPROVED_REGISTRATION_EMAIL_TEMPLATE,
                 'subject': 'Your registration has not been approved'
             },
+            'reset_password': {
+                'template': RESET_PASSWORD_EMAIL_TEMPLATE,
+                'subject': 'Reset password.'
+            }
         }
 
     def send_email(self, to_email: str, body: str, type: str ) -> None:
