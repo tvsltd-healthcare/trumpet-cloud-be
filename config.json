@@ -4340,6 +4340,10 @@
         },
         {
           "verb": "post",
+          "url": "/api/approval"
+        },
+        {
+          "verb": "post",
           "url": "/api/send-password-reset-token"
         },
         {
