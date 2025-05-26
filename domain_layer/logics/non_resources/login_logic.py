@@ -20,6 +20,9 @@ def execute(request: IRequest):
     user_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("Users")
     user = user_repo.get({"email": body.get("email")}, False)
 
+    if user["status"] == "deleted":
+        return response.error(message="Invalid Credentials.", status_code=404)
+
     if not user:
         return response.error(message="Invalid Credentials.", status_code=404)
 

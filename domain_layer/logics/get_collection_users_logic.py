@@ -96,15 +96,18 @@ def execute(request: IRequest, repo, entity=None):
         return response_formatter.error("No users found in the same organization.", 404)
 
     # Step 6: return users role in the collection
+    updated_collection = []
     for record in collected_records:
-        get_user_role = get_role_name(repo_discovery_getter, record.get('id'))
-        if get_user_role:
-            record['role'] = get_user_role.get('name')
-        else:
-            record['role'] = None
+        if record.get('status') != "deleted":
+            get_user_role = get_role_name(repo_discovery_getter, record.get('id'))
+            if get_user_role:
+                record['role'] = get_user_role.get('name')
+            else:
+                record['role'] = None
+            updated_collection.append(record)
 
     return response_formatter.success(
-        collected_records,
+        updated_collection,
         message="Users retrieved successfully.",
         status_code=200
     )
