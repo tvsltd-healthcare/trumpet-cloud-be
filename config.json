@@ -4337,6 +4337,18 @@
         {
           "verb": "post",
           "url": "/api/start-training"
+        },
+        {
+          "verb": "post",
+          "url": "/api/approval"
+        },
+        {
+          "verb": "post",
+          "url": "/api/send-password-reset-token"
+        },
+        {
+          "verb": "post",
+          "url": "/api/password-reset"
         }
       ]
     }
