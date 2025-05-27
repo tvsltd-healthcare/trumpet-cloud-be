@@ -61,7 +61,7 @@ def execute(request: IRequest):
         password_reset_body = { "password": password  }
 
         try:
-            password_reset = user_repo.transact("PATCH", data=password_reset_body)
+            password_reset = user_repo.transact("PATCH", data=password_reset_body, query={'id': user.get('id')})
             if(password_reset):
                 return response_formatter.success( {}, 'Password has been reset successfully.', 200)
             else:
