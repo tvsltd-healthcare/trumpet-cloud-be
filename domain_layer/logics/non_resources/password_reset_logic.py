@@ -5,6 +5,7 @@ from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.utils.password_validator import is_strong_password
 
 
 def execute(request: IRequest):
@@ -54,10 +55,13 @@ def execute(request: IRequest):
 
     user = user_repo.get({"email": email}, False)
     if user:
-        new_password = body.get("new_password")
-        password_handler = PasswordManager.get()
+        raw_password = body.get("new_password")
+        new_password = is_strong_password(raw_password)
+        if new_password is not True:
+            return response_formatter.error(new_password, 400)
 
-        password = password_handler.hash_password(new_password)
+        password_handler = PasswordManager.get()
+        password = password_handler.hash_password(raw_password)
         password_reset_body = { "password": password  }
 
         try:
