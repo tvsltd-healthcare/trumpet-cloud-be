@@ -39,7 +39,7 @@ def execute(request: IRequest, repo, entity=None):
     # Extract organization_id
     study_agreement_results = study_agreement_results_repo.get({"study_agreement_id": ids.get('study_agreement_id'), "id": ids.get("id")}, False)
     if not study_agreement_results:
-        return response_formatter.error('Study Agreement Result not found', 400)
+        return response_formatter.error('Study Agreement Result not found', 404)
 
     user_ids = []
     if study_agreement_results.get("created_by") is not None:
@@ -48,7 +48,7 @@ def execute(request: IRequest, repo, entity=None):
     if study_agreement_results.get("updated_by") is not None:
         user_ids.append(study_agreement_results.get("updated_by"))
 
-    if user_ids is not None and len(user_ids) > 0:
+    if user_ids and len(user_ids) > 0:
         user_info = get_users(repo_discovery_getter, user_ids)
         if user_info:
             for user in user_info:
