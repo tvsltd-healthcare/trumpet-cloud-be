@@ -28,6 +28,8 @@ services:
       - ./docker/postgresql/cloud/data:/var/lib/postgresql/data/
     networks:
       - trumpet-proxy
+    ports:
+      - "5432"
 
   openfga-postgres:
     image: postgres:14
@@ -78,3 +80,10 @@ services:
 networks:
   trumpet-proxy:
     external: true
+<<<<<<< HEAD
+=======
+
+#volumes:
+#  letsencrypt:
+#
+>>>>>>> 3f6f912 (local commit)
