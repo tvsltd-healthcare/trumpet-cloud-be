@@ -79,3 +79,15 @@ class JWTAdapter(IAuthenticationHandler):
 
         """
         return self.jwt.read_data(token)
+
+    def check_token_expiry(self, token: str) -> bool:
+        """
+        Function to check if JWT token is expired
+        Args:
+            token: JWT token
+
+        Returns:
+            True if token is expired, False otherwise
+
+        """
+        return self.jwt.check_token_expiry(token)
