@@ -19,7 +19,7 @@ def execute(request: IRequest):
     repo_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("Users")
     user = user_repo.get({"email": body.get("email")}, False)
-
+    # todo: sign-up user with the same deleted email. need to add in future
     if user["status"] == "deleted":
         return response.error(message="Invalid Credentials.", status_code=404)
 

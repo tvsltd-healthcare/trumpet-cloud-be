@@ -44,7 +44,6 @@ def execute(request: IRequest, repo, entity=None):
         }
         user_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Users")
         update_status = user_repo.transact("PATCH", data=user, query={"id": get_params.get("id")})
-        print(update_status)
         return response_formatter.success("", "Researcher deleted successfully", 200)
     else:
         return response_formatter.error("Not researcher", 404)
