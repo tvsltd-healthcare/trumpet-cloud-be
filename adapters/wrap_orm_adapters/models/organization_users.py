@@ -6,7 +6,7 @@ from .base import Base
 class OrganizationUsers(Base):
     __tablename__ = 'organization_users'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=True,)
     organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())

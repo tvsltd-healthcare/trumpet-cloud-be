@@ -7,7 +7,7 @@ from sqlalchemy.types import Text
 class Datasets(Base):
     __tablename__ = 'datasets'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     name = Column(String(25), nullable=True,)
     meta_data = Column(Text, nullable=True,)
     statistics = Column(Text, nullable=False,)

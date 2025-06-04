@@ -6,7 +6,7 @@ from .base import Base
 class StudyAgreements(Base):
     __tablename__ = 'study_agreements'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     purpose = Column(String(30), nullable=True,)
     participants = Column(String(255), nullable=True,)
     samples = Column(Integer, nullable=True,)
