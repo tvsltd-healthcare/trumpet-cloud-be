@@ -1,19 +1,3 @@
-# from .datasets import Datasets
-# from .files import Files
-# from .organization_users import OrganizationUsers
-# from .organizations import Organizations
-# from .roles import Roles
-# from .studies import Studies
-# from .study_agreement_datasets import StudyAgreementDatasets
-# from .study_agreement_queries import StudyAgreementQueries
-# from .study_agreement_results import StudyAgreementResults
-# from .study_agreements import StudyAgreements
-# from .study_users import StudyUsers
-# from .user_roles import UserRoles
-# from .users import Users
-
-# __all__ = ['Datasets', 'Files', 'OrganizationUsers', 'Organizations', 'Roles', 'Studies', 'StudyAgreementDatasets', 'StudyAgreementQueries', 'StudyAgreementResults', 'StudyAgreements', 'StudyUsers', 'UserRoles', 'Users']
-
 #temp
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
@@ -52,11 +36,6 @@ def get_schema_mapper() -> Dict[str, Any]:
         if filename.endswith('.py') and filename != '__init__.py':
             module_name = filename[:-3]
             module = importlib.import_module(f'.{module_name}', package=__name__)
-
-            # print('creating table------')
-            # print('creating table------')
-            # print('creating table------')
-            # Base.metadata.create_all(engine) # temp
 
             # Iterate through the attributes of the module
             for name, obj in vars(module).items():

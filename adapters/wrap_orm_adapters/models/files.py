@@ -7,7 +7,7 @@ from .base import Base
 class Files(Base):
     __tablename__ = 'files'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True, )
+    id = Column(Integer, primary_key=True, autoincrement=True, )
     type = Column(Enum('custom', 'legal', 'personal', 'other', name='files_type_enum'), nullable=True, default='custom')
     buffer = Column(String(255), nullable=True, )
     path = Column(String(255), nullable=True, )

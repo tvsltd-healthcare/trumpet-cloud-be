@@ -6,7 +6,7 @@ from .base import Base
 class StudyUsers(Base):
     __tablename__ = 'study_users'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     study_id = Column(Integer, ForeignKey('studies.id'), nullable=True,)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())

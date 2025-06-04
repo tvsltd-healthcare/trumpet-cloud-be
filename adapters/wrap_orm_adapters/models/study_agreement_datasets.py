@@ -7,7 +7,7 @@ from sqlalchemy.types import Text
 class StudyAgreementDatasets(Base):
     __tablename__ = 'study_agreement_datasets'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     description = Column(Text, nullable=True,)
     study_agreement_id = Column(Integer, ForeignKey('study_agreements.id'), nullable=True,)
     dataset_id = Column(Integer, ForeignKey('datasets.id'), nullable=True,)

@@ -13,7 +13,10 @@ if [ "$DB_NAME" = "cloud-postgres" ]; then
     echo "Trumpet Cloud postgres server started!"
 fi
 
-python generate_tables.py
+echo "Running migration..."
+alembic upgrade head
+echo "Running migration... Done"
+
 sleep 0.1
 python main.py
 

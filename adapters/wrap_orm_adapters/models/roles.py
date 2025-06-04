@@ -6,7 +6,7 @@ from .base import Base
 class Roles(Base):
     __tablename__ = 'roles'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     name = Column(String(30), nullable=True, unique=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())

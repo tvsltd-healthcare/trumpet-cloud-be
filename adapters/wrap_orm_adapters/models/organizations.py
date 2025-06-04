@@ -6,7 +6,7 @@ from .base import Base
 class Organizations(Base):
     __tablename__ = 'organizations'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     name = Column(String(30), nullable=True, unique=True,)
     email = Column(String(40), nullable=True, unique=True,)
     address = Column(String(50), nullable=False,)
