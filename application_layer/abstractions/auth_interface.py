@@ -67,4 +67,15 @@ class IAuthenticationHandler(ABC):
         """
         pass
 
+    @abstractmethod
+    def check_token_expiry(self, token: str) -> bool:
+        """
+        Interface for Check token expiry
+        Args:
+            token: Authentication token
+        Returns:
+            bool: True if the token is expired, False otherwise.
+        """
+        pass
+
 
