@@ -1,14 +1,13 @@
 import re
 import uuid
 from datetime import datetime
-
 from typing import TypeVar, Generic, Optional, Dict
 
+from application_layer.abstractions.response_interface import IResponseHandler
 from lib_archi.abstractions.request_interface import IRequest
 from lib_archi.utils.enforce_request_interface import enforce_request_type
-from .base_application_service import BaseApplicationService
-from application_layer.abstractions.response_interface import IResponseHandler
 from logic_injector.base_logic_injector import BaseLogicInjector
+from .base_application_service import BaseApplicationService
 
 Entity = TypeVar('Entity')
 injector = BaseLogicInjector()
@@ -75,12 +74,6 @@ class BaseController(Generic[Entity]):
             entity = self._refine_store_date(entity, request)
             entity = self._add_uniq_id(entity)
             created_entity = self.app_service.post(entity, request)
-
-            # todo: for now turning off the start train trigger. will add it to different endpoint
-            # if path_matches(request.get_path()):
-            #     ids: dict = request.get_path_params()
-            #     agreement_id = created_entity['id']
-            #     injector.inject_business_logic(entity=entity, entity_id=ids, agreement_id=agreement_id)
 
             return self.response_handler.generate_response("Entity created successfully", data=created_entity,
                                                            status_code=201)
@@ -210,7 +203,8 @@ class BaseController(Generic[Entity]):
         #     return self.response_handler.generate_response(f"{str(e)}", 400)
 
     def _refine_store_date(self, entity: Entity, request: IRequest) -> Entity:
-        user_id = request.get_request().scope['state']['user_id'] if request.get_request().scope['state']['user_id'] is not None else None
+        user_id = request.get_request().scope.get('state').get('user_id')
+
         if request.get_method_name() == 'POST':
             if not hasattr(entity, 'created_at') or entity.created_at is None:
                 entity.created_at = datetime.now()

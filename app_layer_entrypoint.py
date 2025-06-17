@@ -4,6 +4,7 @@ import re
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 
@@ -266,6 +267,8 @@ def launch_app_layer():
     _ = build_app_layer(repository=OrmRepository, server=server)
 
     server.use(ValidationMiddleware)
+    # Redirect to HTTPS
+    # server.use(HTTPSRedirectMiddleware)
     server.use(ResponseMiddleware)
     per_page = int(os.getenv("PER_PAGE", 10))
     server.use(pagination_middleware(per_page=per_page))
