@@ -239,6 +239,8 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             router_obj.post(url=url, endpoint=non_resource_controller_adapter.perform)
         elif str.lower(route_verb) == "get":
             router_obj.get(url=url, endpoint=non_resource_controller_adapter.perform)
+        elif str.lower(route_verb) == "websocket":
+            router_obj.websocket(url=url, endpoint=non_resource_controller_adapter.perform)
 
     server.use(router_obj)
 

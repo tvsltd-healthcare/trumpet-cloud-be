@@ -2819,8 +2819,8 @@ pytest-cov = "^5.0.0"
 [package.source]
 type = "git"
 url = "https://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@github.com/tvsltd/wrap_restify.git"
-reference = "feat/implement-request-object"
-resolved_reference = "2c9bcbe460488edc1ff4bc22ffb05c531d728801"
+reference = "feat/websocket"
+resolved_reference = "e99092738b755d050965814e8db1fb46dc1f7d24"
 
 [[package]]
 name = "wrap-validate"

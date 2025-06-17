@@ -4349,6 +4349,10 @@
         {
           "verb": "post",
           "url": "/api/password-reset"
+        },
+        {
+          "verb": "websocket",
+          "url": "/ws/test"
         }
       ]
     }
