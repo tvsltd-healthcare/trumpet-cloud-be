@@ -4352,7 +4352,11 @@
         },
         {
           "verb": "websocket",
-          "url": "/ws/test"
+          "url": "/api/ws/test"
+        },
+        {
+          "verb": "get",
+          "url": "/api/test-ws"
         }
       ]
     }
