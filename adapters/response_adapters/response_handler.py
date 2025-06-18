@@ -41,7 +41,9 @@ class ResponseHandler(IResponseHandler):
             "status_code": _status_code if _status_code else status_code,
         }
         if isinstance(data, (dict, list)) and data:
-            response["data"] = data if _data is None else _data
+            data_obj = data.get("data", data)
+            response["data"] = data_obj
+            # response["data"] = data if _data is None else _data
 
         # if _status_code is not None and _status_code >= 400:
         #     raise Exception(f"{_message} with status code {_status_code}")

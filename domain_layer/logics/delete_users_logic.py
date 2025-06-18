@@ -28,7 +28,7 @@ def execute(request: IRequest, repo, entity=None):
           Dict: A formatted response containing the retrieved data or an error message.
       """
     response_formatter = ResponseFormatter()
-    user_id = request.get_request().scope['state']['user_id']
+    user_id = request.get_request().scope.get('state').get('user_id')
     if not user_id:
         return response_formatter.error("User not found", 404)
 
