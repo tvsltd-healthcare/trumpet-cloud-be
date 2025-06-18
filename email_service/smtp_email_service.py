@@ -16,12 +16,12 @@ class SmtpEmailService(IEmailService):
         self.template_map = {
             'varify_org': {
                 'template': VARIFY_ORG_EMAIL_TEMPLATE,
-                'subject': 'Varify your organization on Trumpet Cloud'
+                'subject': 'Verify your organization on Trumpet Cloud'
             },
 
             'varify_researcher': {
                 'template': VARIFY_RESEARCHER_EMAIL_TEMPLATE,
-                'subject': 'Varify your researcher on Trumpet Cloud'
+                'subject': 'Verify your researcher on Trumpet Cloud'
             },
             'approved_registration': {
                 'template': REGISTRATION_APPROVED_EMAIL_TEMPLATE,
