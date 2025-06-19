@@ -12,7 +12,7 @@ class StudyAgreementDatasets(Base):
     study_agreement_id = Column(Integer, ForeignKey('study_agreements.id'), nullable=True,)
     dataset_id = Column(Integer, ForeignKey('datasets.id'), nullable=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
+    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 

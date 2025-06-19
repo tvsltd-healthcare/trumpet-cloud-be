@@ -9,7 +9,7 @@ class Roles(Base):
     id = Column(Integer, primary_key=True, autoincrement=True,)
     name = Column(String(30), nullable=True, unique=True,)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
+    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 

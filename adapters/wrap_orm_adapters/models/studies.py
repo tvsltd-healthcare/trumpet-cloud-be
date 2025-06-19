@@ -15,7 +15,7 @@ class Studies(Base):
     purpose = Column(Text, nullable=True,)
     organization_id = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
+    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 

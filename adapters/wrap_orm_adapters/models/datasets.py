@@ -14,7 +14,7 @@ class Datasets(Base):
     path = Column(Text, nullable=False,)
     privacy_level = Column(Enum('public', 'confidential', 'highly_confidential', name='datasets_privacy_level_enum'), nullable=True, default='confidential')
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
+    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 
