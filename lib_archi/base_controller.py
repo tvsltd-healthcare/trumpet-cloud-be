@@ -189,7 +189,7 @@ class BaseController(Generic[Entity]):
         # ids = request.get_path_params()
         try:
             deleted_entity = self.app_service.delete(request)
-            return self.response_handler.generate_response("Entity deleted successfully")
+            return self.response_handler.generate_response("Entity deleted successfully", data=deleted_entity)
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
         # try:
