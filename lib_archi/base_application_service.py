@@ -143,7 +143,7 @@ class BaseApplicationService(Generic[Entity]):
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.
         """
-        logic = self.inject_logic("patch")
+        logic = self.inject_logic("delete")
         if logic:
             return logic(request, self.repository)
         else:
