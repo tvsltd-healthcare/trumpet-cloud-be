@@ -1,6 +1,5 @@
 import os
 import smtplib
-import asyncio
 from typing import Dict
 from email.mime.text import MIMEText
 from azure.communication.email import EmailClient
@@ -42,32 +41,35 @@ class SmtpEmailService(IEmailService):
 
         try:
             if(self.config.get('node_env') == 'production'):
-                asyncio.create_task(self.send_email_via_azure(to_email, body, type))
+                self.send_email_via_azure(to_email, body, type)
             elif(self.config.get('node_env') == 'development'):
                 self.send_email_via_smtp(to_email, body, type)
         except Exception as e:
             print("Email send failed:", e)
 
 
-    async def send_email_via_azure(self, to_email: str, body: str, type: str):
-
+    def send_email_via_azure(self, to_email: str, body: str, type: str):
+        """
+        Sends an email using Azure Communication Services.
+        This method is now synchronous from the caller's perspective.
+        """
         template, subject = self.template_map.get(type).values()
         message = {
             "senderAddress": self.config.get('sender_email'),
             "content": {
                 "subject": subject,
-                "html": template
+                "html": template.format(token=body, host=os.getenv("TRUMPET_CLOUD_WEBSITE_HOST"))
             },
             "recipients": {
                 "to": [{"address": "mdtajalislam1189@gmail.com" }]
             }
         }
-        email_client = EmailClient.from_connection_string(self.config.get('azure_connection_string'))
 
+        email_client = EmailClient.from_connection_string(self.config.get('azure_connection_string'))
         try:
             email_client.begin_send(message)
         except Exception as e:
-            raise Exception(f"Failed to send email: {str(e)}")
+            raise Exception(f"Failed to initiate email send via Azure: {str(e)}")
 
 
     def send_email_via_smtp(self, to_email: str, body: str, type: str ) -> None:
