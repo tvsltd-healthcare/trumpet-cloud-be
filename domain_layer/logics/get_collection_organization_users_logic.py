@@ -62,18 +62,20 @@ def execute(request: IRequest, repo, entity=None):
         user_data = users_repo.get({"id": user.get("user_id")}, False)
         if not user_data:
             return response_formatter.error('User not found', 404)
-        # append user data to user info list
-        user_role = get_role_name(repo_getter, user_data.get("id"))
-        user_info = {
-            "id": user_data.get("id"),
-            "first_name": user_data.get("first_name"),
-            "last_name": user_data.get("last_name"),
-            "email": user_data.get("email"),
-            "status": user_data.get("status"),
-            "phone": user_data.get("phone"),
-            "role": user_role.get("name") if user_role else None,
-        }
-        user_list.append(user_info)
+
+        if user_data.get("status") != "deleted":
+            # append user data to user info list
+            user_role = get_role_name(repo_getter, user_data.get("id"))
+            user_info = {
+                "id": user_data.get("id"),
+                "first_name": user_data.get("first_name"),
+                "last_name": user_data.get("last_name"),
+                "email": user_data.get("email"),
+                "status": user_data.get("status"),
+                "phone": user_data.get("phone"),
+                "role": user_role.get("name") if user_role else None,
+            }
+            user_list.append(user_info)
     organization["users"] = user_list
     return {
         "message": "Data retrieved successfully.",
