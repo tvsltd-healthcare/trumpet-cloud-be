@@ -1,4 +1,5 @@
 from enum import Enum
+import os
 from typing import Dict
 from adapters.email_service_adapters.azure_email_service_adapters import AzureEmailServiceAdapter
 from email_service.azure_email_service import AzureEmailService
@@ -10,6 +11,7 @@ class EmailServiceType(Enum):
     """Supported email service types."""
     SMTP = "SMTP"
     AZURE = "AZURE"
+    ACTIVE_EMAIL_SERVICE_NAME = os.getenv("EMAIL_SERVICE_TYPE")
 
 class EmailServiceHandlerFactory:
     """

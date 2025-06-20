@@ -76,7 +76,7 @@ authorization_handler = FgaAuthorizationFactory.create(FGA_authorization_mechani
 authorization_middleware = AuthorizationMiddleware(authorizer=authorization_handler)
 
 # SMTP email service configuration
-email_service_configuration = {"name": EmailServiceType.AZURE,
+email_service_configuration = {"name": EmailServiceType.ACTIVE_EMAIL_SERVICE_NAME,
     "config": {"host": os.getenv("EMAIL_HOST"), "port": int(os.getenv("EMAIL_PORT")),
         "username": os.getenv("EMAIL_USERNAME"), "password": os.getenv("EMAIL_PASSWORD"),
         "subject": os.getenv("EMAIL_SUBJECT"), "sender_email": os.getenv("SENDER_EMAIL"),
