@@ -1,8 +1,8 @@
-"""first migration generate tables
+"""First migration
 
-Revision ID: fd6e268e9411
+Revision ID: b8c40fd3727c
 Revises: 
-Create Date: 2025-06-19 15:12:25.759664
+Create Date: 2025-06-20 17:42:18.021562
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = 'fd6e268e9411'
+revision: str = 'b8c40fd3727c'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -34,14 +34,14 @@ def upgrade() -> None:
     sa.Enum('custom', 'legal', 'personal', 'other', name='files_type_enum').create(op.get_bind())
     op.create_table('users',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('first_name', sa.String(length=15), nullable=True),
-    sa.Column('last_name', sa.String(length=15), nullable=True),
+    sa.Column('first_name', sa.String(length=30), nullable=True),
+    sa.Column('last_name', sa.String(length=30), nullable=True),
     sa.Column('email', sa.String(length=40), nullable=True),
     sa.Column('password', sa.String(length=255), nullable=True),
     sa.Column('status', postgresql.ENUM('approved', 'disapproved', 'blocked', 'pending', 'deleted', name='users_status_enum', create_type=False), nullable=True),
     sa.Column('phone', sa.String(length=20), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -58,7 +58,7 @@ def upgrade() -> None:
     sa.Column('path', sa.Text(), nullable=False),
     sa.Column('privacy_level', postgresql.ENUM('public', 'confidential', 'highly_confidential', name='datasets_privacy_level_enum', create_type=False), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -75,7 +75,7 @@ def upgrade() -> None:
     sa.Column('size', sa.Integer(), nullable=True),
     sa.Column('organization_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -92,7 +92,7 @@ def upgrade() -> None:
     sa.Column('status', postgresql.ENUM('approved', 'disapproved', 'blocked', 'pending', name='organizations_status_enum', create_type=False), nullable=True),
     sa.Column('type', postgresql.ENUM('governance', 'data_owner', 'researcher', name='organizations_type_enum', create_type=False), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -107,7 +107,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=30), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -124,7 +124,7 @@ def upgrade() -> None:
     sa.Column('purpose', sa.Text(), nullable=True),
     sa.Column('organization_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -136,7 +136,7 @@ def upgrade() -> None:
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('organization_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -158,7 +158,7 @@ def upgrade() -> None:
     sa.Column('study_id', sa.Integer(), nullable=True),
     sa.Column('status', postgresql.ENUM('pending', 'approved', 'disapproved', name='study_agreements_status_enum', create_type=False), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -171,7 +171,7 @@ def upgrade() -> None:
     sa.Column('study_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -185,7 +185,7 @@ def upgrade() -> None:
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('role_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -201,7 +201,7 @@ def upgrade() -> None:
     sa.Column('organization_type', postgresql.ENUM('researcher', 'data_owner', name='organization_study_agreements_organization_type_enum', create_type=False), nullable=True),
     sa.Column('status', postgresql.ENUM('pending', 'approved', 'disapproved', name='study_agreements_status_enum', create_type=False), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -216,7 +216,7 @@ def upgrade() -> None:
     sa.Column('study_agreement_id', sa.Integer(), nullable=True),
     sa.Column('dataset_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -230,7 +230,7 @@ def upgrade() -> None:
     sa.Column('study_agreement_id', sa.Integer(), nullable=True),
     sa.Column('query', sa.Text(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
@@ -246,7 +246,7 @@ def upgrade() -> None:
     sa.Column('version', sa.String(length=20), nullable=True),
     sa.Column('status', postgresql.ENUM('pending', 'completed', name='study_agreement_results_status_enum', create_type=False), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.Column('created_by', sa.Integer(), nullable=True),
     sa.Column('updated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
