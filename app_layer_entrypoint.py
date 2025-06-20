@@ -76,11 +76,11 @@ authorization_handler = FgaAuthorizationFactory.create(FGA_authorization_mechani
 authorization_middleware = AuthorizationMiddleware(authorizer=authorization_handler)
 
 # SMTP email service configuration
-email_service_configuration = {"name": EmailServiceType.SMTP,
+email_service_configuration = {"name": EmailServiceType.AZURE,
     "config": {"host": os.getenv("EMAIL_HOST"), "port": int(os.getenv("EMAIL_PORT")),
         "username": os.getenv("EMAIL_USERNAME"), "password": os.getenv("EMAIL_PASSWORD"),
         "subject": os.getenv("EMAIL_SUBJECT"), "sender_email": os.getenv("SENDER_EMAIL"),
-        "node_env": os.getenv("NODE_ENV"), "azure_connection_string": os.getenv("AZURE_CONNECTION_STRING")}}
+        "envirment": os.getenv("ENVIREMENT"), "azure_connection_string": os.getenv("AZURE_CONNECTION_STRING")}}
 
 # Initialize the AuthMiddleware with the configuration
 repo_discovery: RepoDiscovery = RepoDiscovery()
