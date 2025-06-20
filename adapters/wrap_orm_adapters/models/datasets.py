@@ -7,14 +7,14 @@ from sqlalchemy.types import Text
 class Datasets(Base):
     __tablename__ = 'datasets'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     name = Column(String(25), nullable=True,)
     meta_data = Column(Text, nullable=True,)
     statistics = Column(Text, nullable=False,)
     path = Column(Text, nullable=False,)
     privacy_level = Column(Enum('public', 'confidential', 'highly_confidential', name='datasets_privacy_level_enum'), nullable=True, default='confidential')
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
+    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 
