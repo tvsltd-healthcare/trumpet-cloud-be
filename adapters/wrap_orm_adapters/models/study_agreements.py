@@ -6,7 +6,7 @@ from .base import Base
 class StudyAgreements(Base):
     __tablename__ = 'study_agreements'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     purpose = Column(String(30), nullable=True,)
     participants = Column(String(255), nullable=True,)
     samples = Column(Integer, nullable=True,)
@@ -19,7 +19,7 @@ class StudyAgreements(Base):
     status = Column(Enum('pending', 'approved', 'disapproved', name='study_agreements_status_enum'),
                              nullable=True, default='pending')
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
+    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 

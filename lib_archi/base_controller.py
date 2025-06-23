@@ -166,8 +166,6 @@ class BaseController(Generic[Entity]):
             if self._all_attrs_not_provided(entity):
                 raise ValueError("PUT request requires all attributes to be provided.")
 
-            ids = request.get_path_params()
-
             entity = self._refine_store_date(entity, request)
             updated_entity = self.app_service.put(entity, request)
             return self.response_handler.generate_response("Entity fully updated", data=updated_entity)
@@ -188,17 +186,21 @@ class BaseController(Generic[Entity]):
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.
         """
-        ids = request.get_path_params()
-
+        # ids = request.get_path_params()
         try:
-            for key, value in ids.items():
-                if not value:
-                    raise ValueError(f"The value for '{key}' is null or empty.")
-
-            deleted_entity = self.app_service.delete(ids)
-            return self.response_handler.generate_response("Entity deleted successfully")
+            deleted_entity = self.app_service.delete(request)
+            return self.response_handler.generate_response("Entity deleted successfully", data=deleted_entity)
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
+        # try:
+        #     for key, value in ids.items():
+        #         if not value:
+        #             raise ValueError(f"The value for '{key}' is null or empty.")
+        #
+        #     deleted_entity = self.app_service.delete(ids)
+        #     return self.response_handler.generate_response("Entity deleted successfully")
+        # except Exception as e:
+        #     return self.response_handler.generate_response(f"{str(e)}", 400)
 
     def _refine_store_date(self, entity: Entity, request: IRequest) -> Entity:
         user_id = request.get_request().scope.get('state').get('user_id')
