@@ -4352,7 +4352,7 @@
         },
         {
           "verb": "websocket",
-          "url": "/api/ws/test"
+          "url": "/api/ws/notification/connect"
         },
         {
           "verb": "get",
