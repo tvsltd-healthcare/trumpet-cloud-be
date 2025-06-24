@@ -4353,10 +4353,6 @@
         {
           "verb": "websocket",
           "url": "/api/ws/register/channel/user"
-        },
-        {
-          "verb": "get",
-          "url": "/api/test-ws"
         }
       ]
     }

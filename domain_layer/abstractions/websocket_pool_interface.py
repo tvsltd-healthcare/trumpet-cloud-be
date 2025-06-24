@@ -4,6 +4,9 @@ from domain_layer.abstractions.websocket_wrapper_interface import IWebSocketWrap
 
 
 class IWebsocketPool(Protocol):
+    def register(self, resource_id: str, websocket: IWebSocketWrapper) -> None:
+        ...
+
     def disconnect(self, resource_id: str, websocket: IWebSocketWrapper) -> None:
         ...
 
