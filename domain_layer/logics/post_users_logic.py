@@ -43,6 +43,10 @@ def execute(request: IRequest, repo, entity=None):
     """
     response_formatter = ResponseFormatter()
 
+    RESEARCHER_ADMIN = "researcher_admin"
+    DATA_OWNER_ADMIN = "data_owner_admin"
+    APPROVED_STATUS = "approved"
+
     # Validate entity
     if entity is None:
         return response_formatter.error('Entity cannot be None', 400)
@@ -59,6 +63,9 @@ def execute(request: IRequest, repo, entity=None):
     password_handler = PasswordManager.get()
     entity.password = password_handler.hash_password(getattr(entity, 'password', None))
     entity.email = email
+    
+    if role_name in {RESEARCHER_ADMIN, DATA_OWNER_ADMIN}:
+        entity.status = APPROVED_STATUS
 
     try:
         create_user = repo.post(entity, request.get_path_params())
