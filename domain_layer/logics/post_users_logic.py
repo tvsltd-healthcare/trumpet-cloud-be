@@ -6,6 +6,9 @@ from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.parse_token import token_parser
 
+RESEARCHER_ADMIN = "researcher_admin"
+DATA_OWNER_ADMIN = "data_owner_admin"
+APPROVED_STATUS = "approved"
 
 def execute(request: IRequest, repo, entity=None):
     """
@@ -42,10 +45,6 @@ def execute(request: IRequest, repo, entity=None):
         ```
     """
     response_formatter = ResponseFormatter()
-
-    RESEARCHER_ADMIN = "researcher_admin"
-    DATA_OWNER_ADMIN = "data_owner_admin"
-    APPROVED_STATUS = "approved"
 
     # Validate entity
     if entity is None:
