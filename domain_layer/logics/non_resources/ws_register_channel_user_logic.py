@@ -11,7 +11,7 @@ def execute(websocket):
     
     if current_user_id:
         websocket_pool = WebsocketPoolManager.get()
-        websocket_pool.register(current_user_id, websocket)
+        websocket_pool.register(f'users/{current_user_id}', websocket)
     else:
         print('Websocket cannot be registered!')
         websocket.close()
