@@ -6,6 +6,9 @@ from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.parse_token import token_parser
 
+RESEARCHER_ADMIN = "researcher_admin"
+DATA_OWNER_ADMIN = "data_owner_admin"
+APPROVED_STATUS = "approved"
 
 def execute(request: IRequest, repo, entity=None):
     """
@@ -59,6 +62,9 @@ def execute(request: IRequest, repo, entity=None):
     password_handler = PasswordManager.get()
     entity.password = password_handler.hash_password(getattr(entity, 'password', None))
     entity.email = email
+    
+    if role_name in {RESEARCHER_ADMIN, DATA_OWNER_ADMIN}:
+        entity.status = APPROVED_STATUS
 
     try:
         create_user = repo.post(entity, request.get_path_params())

@@ -4659,6 +4659,10 @@
           "url": "/api/password-reset"
         },
         {
+          "verb": "websocket",
+          "url": "/api/ws/register/channel/user"
+        },
+        {
           "verb": "get",
           "url": "/api/notification/count"
         }
