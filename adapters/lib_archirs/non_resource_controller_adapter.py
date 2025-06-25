@@ -38,3 +38,9 @@ class NonResourceControllerAdapter(INonResourceController):
             )
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
+        
+    def websocket_setup(self, websocket):
+        self.non_resource_controller.websocket_setup(websocket)
+        
+    def websocket_msg_receiver(self, websocket, msg: str):
+        self.non_resource_controller.websocket_msg_receiver(websocket, msg)
