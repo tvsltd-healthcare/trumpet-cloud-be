@@ -51,7 +51,7 @@ def execute(request: IRequest, repo, entity=None):
         create_study = repo.post(entity, request.get_path_params())
 
         if create_study:
-            return response_formatter.success( create_study, 'Study created successfully.', 201 )
+            return response_formatter.success(create_study, 'Study created successfully.', 201)
         else:
             return response_formatter.error('Study created failed', 500)
 

@@ -4230,6 +4230,314 @@
             "as": "user_role"
           }
         ]
+      },
+      {
+        "name": "Notifications",
+        "attributes": [
+          {
+            "column": "id",
+            "type": "INT",
+            "length": "",
+            "auto_increment": true,
+            "unique": true,
+            "allow_null": true,
+            "primary_key": true,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": "",
+            "default_value": "",
+            "on_delete": "CASCADE",
+            "on_update": "CASCADE",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "number",
+                "error_code": "1502",
+                "default_message": ""
+              }
+            ],
+            "in_request": true
+          },
+          {
+            "column": "user_id",
+            "type": "INT",
+            "length": "",
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": true,
+            "primary_key": false,
+            "foreign_key": "id",
+            "fk_reference": "Users",
+            "enum_or_set_values": "",
+            "default_value": "",
+            "on_delete": "CASCADE",
+            "on_update": "CASCADE",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "number",
+                "error_code": "1503",
+                "default_message": ""
+              }
+            ],
+            "in_request": true
+          },
+          {
+            "column": "message",
+            "type": "TEXT",
+            "length": "",
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": true,
+            "primary_key": false,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": "",
+            "default_value": "",
+            "on_delete": "",
+            "on_update": "",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "text",
+                "error_code": "1504",
+                "default_message": ""
+              },
+              {
+                "tag": "required",
+                "rule": true,
+                "error_code": "1505",
+                "default_message": ""
+              }
+            ],
+            "in_request": true
+          },
+          {
+            "column": "is_read",
+            "type": "BOOLEAN",
+            "length": "",
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": false,
+            "primary_key": false,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": "",
+            "default_value": false,
+            "on_delete": "",
+            "on_update": "",
+            "is_redundant": true,
+            "should_sync": true,
+            "validations": [],
+            "in_request": true
+          },
+          {
+            "column": "type",
+            "type": "ENUM",
+            "length": "",
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": true,
+            "primary_key": false,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": [
+              "organization_approved",
+              "user_approved"
+            ],
+            "default_value": "",
+            "on_delete": "",
+            "on_update": "",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "regex",
+                "rule": "^(organization_approved|user_approved)$",
+                "error_code": "1506",
+                "default_message": ""
+              }
+            ],
+            "in_request": true
+          },
+          {
+            "column": "read_at",
+            "type": "TIMESTAMP",
+            "length": "",
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": false,
+            "primary_key": false,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": "",
+            "default_value": "current_timestamp",
+            "on_delete": "",
+            "on_update": "",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "timestamp",
+                "error_code": "1507",
+                "default_message": ""
+              }
+            ],
+            "in_request": true
+          },
+          {
+            "column": "created_at",
+            "type": "TIMESTAMP",
+            "length": "",
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": false,
+            "primary_key": false,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": "",
+            "default_value": "current_timestamp",
+            "on_delete": "",
+            "on_update": "",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "timestamp",
+                "error_code": "1508",
+                "default_message": ""
+              }
+            ],
+            "in_request": true
+          },
+          {
+            "column": "updated_at",
+            "type": "TIMESTAMP",
+            "length": "",
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": false,
+            "primary_key": false,
+            "foreign_key": "",
+            "fk_reference": "",
+            "enum_or_set_values": "",
+            "default_value": "current_timestamp",
+            "on_delete": "",
+            "on_update": "",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "timestamp",
+                "error_code": "1509",
+                "default_message": ""
+              }
+            ],
+            "in_request": true
+          },
+          {
+            "column": "created_by",
+            "type": "INT",
+            "length": "",
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": true,
+            "primary_key": false,
+            "foreign_key": "id",
+            "fk_reference": "Users",
+            "enum_or_set_values": "",
+            "default_value": "",
+            "on_delete": "NO ACTION",
+            "on_update": "CASCADE",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "number",
+                "error_code": "1510",
+                "default_message": ""
+              }
+            ],
+            "in_request": true
+          },
+          {
+            "column": "updated_by",
+            "type": "INT",
+            "length": "",
+            "auto_increment": false,
+            "unique": false,
+            "allow_null": true,
+            "primary_key": false,
+            "foreign_key": "id",
+            "fk_reference": "Users",
+            "enum_or_set_values": "",
+            "default_value": "",
+            "on_delete": "NO ACTION",
+            "on_update": "CASCADE",
+            "is_redundant": false,
+            "should_sync": false,
+            "validations": [
+              {
+                "tag": "type",
+                "rule": "number",
+                "error_code": "1511",
+                "default_message": ""
+              }
+            ],
+            "in_request": true
+          }
+        ],
+        "routes": [
+          {
+            "url": "/api/notifications/{id}",
+            "method": "get",
+            "auth": true
+          },
+          {
+            "url": "/api/notifications",
+            "method": "get_collection",
+            "auth": true
+          },
+          {
+            "url": "/api/notifications/{id}",
+            "method": "put",
+            "auth": true
+          },
+          {
+            "url": "/api/notifications",
+            "method": "post",
+            "auth": true
+          },
+          {
+            "url": "/api/notifications/{id}",
+            "method": "patch",
+            "auth": true
+          },
+          {
+            "url": "/api/notifications/{id}",
+            "method": "delete",
+            "auth": true
+          }
+        ],
+        "associations": [
+          {
+            "method": "belongsTo",
+            "associated_model": "Users",
+            "foreign_key": "user_id",
+            "source_key": "id",
+            "as": "user_notifications"
+          }
+        ]
       }
     ],
     "non_resources": {
@@ -4349,6 +4657,10 @@
         {
           "verb": "post",
           "url": "/api/password-reset"
+        },
+        {
+          "verb": "get",
+          "url": "/api/notification/count"
         }
       ]
     }
