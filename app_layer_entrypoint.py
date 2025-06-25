@@ -76,11 +76,14 @@ authorization_handler = FgaAuthorizationFactory.create(FGA_authorization_mechani
 authorization_middleware = AuthorizationMiddleware(authorizer=authorization_handler)
 
 # SMTP email service configuration
-email_service_configuration = {"name": EmailServiceType.ACTIVE_EMAIL_SERVICE_NAME,
+email_service_configuration = {"name": os.getenv("EMAIL_SERVICE_TYPE"),
     "config": {"host": os.getenv("EMAIL_HOST"), "port": int(os.getenv("EMAIL_PORT")),
         "username": os.getenv("EMAIL_USERNAME"), "password": os.getenv("EMAIL_PASSWORD"),
         "subject": os.getenv("EMAIL_SUBJECT"), "sender_email": os.getenv("SENDER_EMAIL"),
         "envirment": os.getenv("ENVIREMENT"), "azure_connection_string": os.getenv("AZURE_CONNECTION_STRING")}}
+
+email_service = EmailServiceHandlerFactory.get_handler(email_service_configuration)
+EmailServiceManager.set(email_service)
 
 # Initialize the AuthMiddleware with the configuration
 repo_discovery: RepoDiscovery = RepoDiscovery()
@@ -92,9 +95,6 @@ RepoDiscoveryManager.set(repo_discovery_getter_adapter)
 # Manager for Password
 password_handler: IPasswordHandler = PasswordHandler()
 PasswordManager.set(password_handler)
-
-email_service_factory = EmailServiceHandlerFactory.get_handler(email_service_configuration)
-EmailServiceManager.set(email_service_factory)
 
 
 def convert_to_snake_case(name: str) -> str:
