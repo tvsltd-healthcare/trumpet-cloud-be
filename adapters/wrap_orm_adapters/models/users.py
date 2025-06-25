@@ -23,3 +23,4 @@ class Users(Base):
     organization_users = relationship('OrganizationUsers', back_populates='user', foreign_keys='OrganizationUsers.user_id')
     user_role = relationship('UserRoles', back_populates='user', foreign_keys='UserRoles.user_id')
     study_collaborators = relationship('StudyUsers', back_populates='user', foreign_keys='StudyUsers.user_id', lazy='dynamic')
+    notifications = relationship('Notifications', back_populates='user', foreign_keys='Notifications.user_id', lazy='dynamic')
