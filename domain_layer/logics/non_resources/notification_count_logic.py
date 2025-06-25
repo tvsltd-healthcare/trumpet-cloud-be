@@ -8,24 +8,18 @@ from domain_layer.utils.parse_token import token_parser
 
 def execute(request: IRequest):
     """
-    Updates the status of a study agreement for the requesting user's organization.
-    If all associated organization agreements are approved, the overall study agreement
-    is marked as approved.
-
-    Workflow:
-    1. Extracts and validates required request data.
-    2. Verifies that the study agreement and the organization-specific agreement exist.
-    3. Updates the organization's agreement status.
-    4. If all org agreements for the study are approved, marks the overall study agreement as approved.
-
+    Retrieves the count of unread notifications for the current user.
+    This function performs the following steps:
+        1. Parses the Authorization header to extract the current user's ID.
+        2. Retrieves the organization ID associated with the current user.
+        3. Queries the Notifications repository for unread notifications.
+        4. Returns the count of unread notifications in a formatted response.
     Args:
-        request (IRequest): Request object containing JSON body, headers, and context.
-
+        request (IRequest): The request object containing headers and parameters.
     Returns:
-        dict: A formatted response from ResponseFormatter with either:
-            - success: containing updated organization agreement info
-            - error: with appropriate HTTP status and message
+        ResponseFormatter: A formatted response containing the unread notification count or an error message.
     """
+
     response_formatter = ResponseFormatter()
     repo_discovery_service: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     auth_header = request.get_headers().get('authorization')

@@ -1,5 +1,4 @@
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
-from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
@@ -9,11 +8,25 @@ from datetime import datetime
 
 def execute(request: IRequest, repo, entity=None):
     """
-    Logic to get a notification by its ID and enrich it with user information.
-    :param request: IRequest object containing the request data.
-    :param repo: Repository object to interact with the database.
-    :param entity: Optional entity type, not used in this logic.
-    :return: ResponseFormatter object with the enriched notification data.
+    Logic to patch a notification by its ID and mark it as read.
+    This function retrieves a notification by its ID, marks it as read if it is not already,
+    and enriches it with user information for the creator, updater, and target user.
+    It returns the updated notification data along with user details.
+    This function performs the following steps:
+      1. Extracts the notification ID from the request path parameters.
+      2. Retrieves the notification from the repository.
+      3. Checks if the notification is already marked as read.
+      4. If not read, updates the notification to mark it as read and sets the read timestamp.
+      5. Collects user IDs associated with the notification (creator, updater, target user).
+      6. Fetches user details for these IDs and enriches the notification data with this information.
+      7. Returns a success response with the updated notification data.
+    Args:
+        request (IRequest): The request object containing path parameters.
+        repo: The repository interface used to interact with the notification data.
+        entity (Any, optional): Currently unused, present for interface consistency.
+
+    Returns:
+        ResponseFormatter: A formatted response containing the updated notification data.
     """
 
     response_formatter = ResponseFormatter()
