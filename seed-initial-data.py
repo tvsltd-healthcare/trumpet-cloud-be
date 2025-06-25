@@ -18,6 +18,7 @@ from adapters.wrap_orm_adapters.models.study_agreements import StudyAgreements
 from adapters.wrap_orm_adapters.models.study_users import StudyUsers
 from adapters.wrap_orm_adapters.models.user_roles import UserRoles
 from adapters.wrap_orm_adapters.models.organization_study_agreements import OrganizationStudyAgreements
+from adapters.wrap_orm_adapters.models.notifications import Notifications
 
 def insert_data(data, session):
     try:
