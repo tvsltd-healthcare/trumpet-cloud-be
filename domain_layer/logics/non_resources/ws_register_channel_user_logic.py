@@ -1,8 +1,8 @@
-from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.abstractions.websocket_wrapper_interface import IWebSocketWrapper
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.websocket_pool_manager import WebsocketPoolManager
 
-def execute(websocket):
+def execute(websocket: IWebSocketWrapper):
     websocket.send("👋 Processing Websocket Connection!")
 
     auth_header = websocket.get_headers().get("authorization")
