@@ -76,10 +76,14 @@ authorization_handler = FgaAuthorizationFactory.create(FGA_authorization_mechani
 authorization_middleware = AuthorizationMiddleware(authorizer=authorization_handler)
 
 # SMTP email service configuration
-email_service_configuration = {"name": EmailServiceType.SMTP,
+email_service_configuration = {"name": os.getenv("EMAIL_SERVICE_TYPE"),
     "config": {"host": os.getenv("EMAIL_HOST"), "port": int(os.getenv("EMAIL_PORT")),
         "username": os.getenv("EMAIL_USERNAME"), "password": os.getenv("EMAIL_PASSWORD"),
-        "subject": os.getenv("EMAIL_SUBJECT"), "sender_email": os.getenv("SENDER_EMAIL")}}
+        "subject": os.getenv("EMAIL_SUBJECT"), "sender_email": os.getenv("SENDER_EMAIL"),
+        "envirment": os.getenv("ENVIREMENT"), "azure_connection_string": os.getenv("AZURE_CONNECTION_STRING")}}
+
+email_service = EmailServiceHandlerFactory.get_handler(email_service_configuration)
+EmailServiceManager.set(email_service)
 
 # Initialize the AuthMiddleware with the configuration
 repo_discovery: RepoDiscovery = RepoDiscovery()
@@ -91,9 +95,6 @@ RepoDiscoveryManager.set(repo_discovery_getter_adapter)
 # Manager for Password
 password_handler: IPasswordHandler = PasswordHandler()
 PasswordManager.set(password_handler)
-
-email_service_factory = EmailServiceHandlerFactory.get_handler(email_service_configuration)
-EmailServiceManager.set(email_service_factory)
 
 
 def convert_to_snake_case(name: str) -> str:
@@ -165,7 +166,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         repo = repository[entity_stub_obj](orm)
 
         model_key = convert_to_snake_case(model_name)
-        
+
         repo_gateway_service = RepositoryGatewayService[entity_stub_obj](repo, logic_map.get(model_key, {}))
         repo_invoker: IAppRepoInvoker = RepoDirectInvokerAdapter(repo_gateway_service)
         repo_discovery_setter_adapter.set_repo_invoker(model_name, repo_invoker)

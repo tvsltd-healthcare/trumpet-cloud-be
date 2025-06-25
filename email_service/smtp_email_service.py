@@ -1,44 +1,32 @@
 import os
 import smtplib
-from email.mime.text import MIMEText
 from typing import Dict
+from email.mime.text import MIMEText
 from domain_layer.abstractions.email_sending_interface import IEmailService
-from email_service.templates.reset_password_email_template import RESET_PASSWORD_EMAIL_TEMPLATE
-from email_service.templates.varify_org_email_template import VARIFY_ORG_EMAIL_TEMPLATE
-from email_service.templates.varify_researcher_email_template import VARIFY_RESEARCHER_EMAIL_TEMPLATE
-from email_service.templates.registration_approved_email_templlate import REGISTRATION_APPROVED_EMAIL_TEMPLATE
-from email_service.templates.registration_disapproved_email_templlate import DISAPPROVED_REGISTRATION_EMAIL_TEMPLATE
-
+from email_service.templates.email_template_map import EMAIL_TEMPLATE_MAP
 
 class SmtpEmailService(IEmailService):
     def __init__(self, config: Dict):
         self.config = config
-        self.template_map = {
-            'varify_org': {
-                'template': VARIFY_ORG_EMAIL_TEMPLATE,
-                'subject': 'Verify your organization on Trumpet Cloud'
-            },
+        self.template_map = EMAIL_TEMPLATE_MAP
 
-            'varify_researcher': {
-                'template': VARIFY_RESEARCHER_EMAIL_TEMPLATE,
-                'subject': 'Verify your researcher on Trumpet Cloud'
-            },
-            'approved_registration': {
-                'template': REGISTRATION_APPROVED_EMAIL_TEMPLATE,
-                'subject': 'Your registration has been successfully approved.'
-            },
+    def send_email(self, to_email: str, body: str, type: str) -> None:
+        """
+        Sends an email using an SMTP server based on the given email type and recipient.
 
-            'disapproved_registration': {
-                'template': DISAPPROVED_REGISTRATION_EMAIL_TEMPLATE,
-                'subject': 'Your registration has not been approved'
-            },
-            'reset_password': {
-                'template': RESET_PASSWORD_EMAIL_TEMPLATE,
-                'subject': 'Reset password.'
-            }
-        }
+        This method selects an HTML template and subject from a predefined template map,
+        formats the template using the provided token and environment host, and sends the
+        email using the configured SMTP server.
 
-    def send_email(self, to_email: str, body: str, type: str ) -> None:
+        Args:
+            to_email (str): The recipient's email address.
+            body (str): A token or value to inject into the email template (e.g., a reset token).
+            type (str): The type of email to send (e.g., 'reset_password', 'varify_org', etc.),
+                        used to look up the corresponding template and subject.
+
+        Raises:
+            Exception: If sending the email fails due to an SMTP connection or authentication error.
+        """
         template, subject = self.template_map.get(type).values()
 
         # Create email message
