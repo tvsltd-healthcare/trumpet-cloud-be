@@ -3,10 +3,10 @@ from domain_layer.utils.parse_token import token_parser
 from domain_layer.websocket_pool_manager import WebsocketPoolManager
 
 def execute(websocket: IWebSocketWrapper):
-    websocket.send("👋 Processing Websocket Connection!")
+    websocket.send_json({"message": "👋 Processing Websocket Connection!"})
 
-    auth_header = websocket.get_headers().get("authorization")
-    decoded_token = token_parser(auth_header)
+    user_token = websocket.get_query_params().get("token")
+    decoded_token = token_parser(user_token)
     current_user_id = decoded_token.get("user_id")
     
     if current_user_id:

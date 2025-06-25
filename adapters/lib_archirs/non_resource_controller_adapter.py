@@ -42,5 +42,5 @@ class NonResourceControllerAdapter(INonResourceController):
     def websocket_setup(self, websocket):
         self.non_resource_controller.websocket_setup(websocket)
         
-    def websocket_msg_receiver(self, websocket, msg: str):
-        self.non_resource_controller.websocket_msg_receiver(websocket, msg)
+    def websocket_msg_receiver(self, websocket, msg: str, event: str):
+        self.non_resource_controller.websocket_msg_receiver(websocket, msg, event)
