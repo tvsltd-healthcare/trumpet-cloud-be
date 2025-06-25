@@ -8,16 +8,16 @@ from domain_layer.utils.parse_token import token_parser
 
 def execute(request: IRequest):
     """
-    Retrieves the count of unread notifications for the current user.
+    Retrieves the count of unread notifications for the currently authenticated user.
     This function performs the following steps:
-        1. Parses the Authorization header to extract the current user's ID.
-        2. Retrieves the organization ID associated with the current user.
-        3. Queries the Notifications repository for unread notifications.
-        4. Returns the count of unread notifications in a formatted response.
+        1. Parses the authorization token from the request headers.
+        2. Extracts the user ID from the decoded token.
+        3. Uses the Notifications repository to count unread notifications for that user.
+        4. Returns a success response with the count of unread notifications.
     Args:
-        request (IRequest): The request object containing headers and parameters.
+        request (IRequest): The request object containing headers with authorization token.
     Returns:
-        ResponseFormatter: A formatted response containing the unread notification count or an error message.
+        ResponseFormatter: A formatted response containing the count of unread notifications.
     """
 
     response_formatter = ResponseFormatter()
@@ -27,10 +27,6 @@ def execute(request: IRequest):
     current_user_id = decoded_token.get('user_id')
 
     try:
-        # Step 1: Get current user's organization ID
-        org_id = _get_current_user_org_id(request, repo_discovery_service, current_user_id)
-        if not org_id:
-            return response_formatter.error("User is not assigned to any organization.", 403)
 
         notification_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("Notifications")
         notifications_results = notification_repo.get({"is_read": False, "user_id": current_user_id}, True)
@@ -46,13 +42,3 @@ def execute(request: IRequest):
     except Exception as e:
         return response_formatter.error(f"Internal server error: {str(e)}", 500)
 
-
-# -------------------
-# Private Helpers
-# -------------------
-
-def _get_current_user_org_id(request: IRequest, repo_discovery_service: IAppRepoDiscoveryGetter, current_user_id) -> int | None:
-    organization_users_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("OrganizationUsers")
-    organization_user = organization_users_repo.get({"user_id": current_user_id})
-
-    return organization_user.get('organization_id') if organization_user else None
