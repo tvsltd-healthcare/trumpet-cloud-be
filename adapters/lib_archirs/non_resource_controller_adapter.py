@@ -44,4 +44,3 @@ class NonResourceControllerAdapter(INonResourceController):
         
     def websocket_msg_receiver(self, websocket, msg: str):
         self.non_resource_controller.websocket_msg_receiver(websocket, msg)
-        
