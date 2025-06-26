@@ -45,5 +45,5 @@ class NonResourceController(ILibNonResourceController):
     def websocket_setup(self, websocket):
         return self.non_resource_app_service.websocket_setup(websocket)
 
-    def websocket_msg_receiver(self, websocket, msg: str):
-       return self.non_resource_app_service.websocket_msg_receiver(websocket, msg)
+    def websocket_msg_receiver(self, websocket, msg: str, event: str):
+       return self.non_resource_app_service.websocket_msg_receiver(websocket, msg, event)
