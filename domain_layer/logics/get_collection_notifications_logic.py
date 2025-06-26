@@ -30,9 +30,10 @@ def execute(request: IRequest, repo, entity=None):
     notifications_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Notifications")
 
     notifications = notifications_repo.get({"user_id": user_id}, True)
+    all_notifications_sorted = sorted(notifications, key=lambda x: x['created_at'], reverse=True)
 
     return response_formatter.success(
-        notifications,
+        all_notifications_sorted,
         message="Data retrieved successfully.",
         status_code=200
     )
