@@ -1,7 +1,7 @@
 import os
 
 import bcrypt
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from adapters.wrap_orm_adapters.models.users import Users
@@ -27,8 +27,18 @@ def insert_data(data, session):
             session.commit()
             print("Data inserted successfully.")
     except Exception as e:
-        print(e)
+        print(f"Seed data insert error. {e}")
 
+def reset_sequences(table_name: str, column_name: str, session):
+    try:
+        with session() as session:
+            seq_name = f"{table_name}_{column_name}_seq"
+            sql = text(f"SELECT setval('{seq_name}', (SELECT MAX(id) FROM {table_name}))")
+            session.execute(sql)
+            session.commit()
+            print(f"Sequences: {seq_name}  reset successfully.")
+    except Exception as e:
+        print(f"Error resetting sequences: {e}")
 
 def seed_database():
     username = os.getenv("DB_USERNAME")
@@ -99,6 +109,7 @@ def seed_database():
          OrganizationStudyAgreements(study_agreement_id=1, organization_id=4, organization_type="data_owner",
                                      status="approved"), ], session)
 
-
+    for table_name in ["roles", "organizations", "users", "studies", "study_agreements"]:
+        reset_sequences(table_name, "id", session)
 if __name__ == "__main__":
     seed_database()
