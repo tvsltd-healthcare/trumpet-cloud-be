@@ -17,6 +17,7 @@ from adapters.lib_archirs.orm_repository import OrmRepository
 from adapters.lib_repo_discovery.repo_direct_invoker_adapter import RepoDirectInvokerAdapter
 from adapters.lib_repo_discovery.repo_discovery_getter_adapter import RepoDiscoveryGetterAdapter
 from adapters.lib_repo_discovery.repo_discovery_setter_adapter import RepoDiscoverySetterAdapter
+from adapters.middlewares.allowed_host_middleware import AllowedHostMiddleware
 from adapters.middlewares.auth_middleware import AuthMiddleware
 from adapters.middlewares.authorization_middleware import AuthorizationMiddleware
 from adapters.middlewares.cors import CorsConfig
@@ -278,6 +279,7 @@ def launch_app_layer():
 
     _ = build_app_layer(repository=OrmRepository, server=server)
 
+    server.use(AllowedHostMiddleware)
     server.use(ValidationMiddleware)
     # Redirect to HTTPS
     # server.use(HTTPSRedirectMiddleware)
