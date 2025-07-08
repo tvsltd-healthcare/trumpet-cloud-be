@@ -140,6 +140,7 @@ class FLSetupInjector:
     def call_participants_do_fl_core_query(self, do_url: str, model: str, samples: Optional[int] = 1000, query: Optional[str] = None):
         _request_body = {
             "model": model,
+            "dataset_id": "HNC"
         }
         if samples:
             _request_body["sample"] = samples
