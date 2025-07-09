@@ -143,7 +143,7 @@ class FLSetupInjector:
             "dataset_id": "HNC"
         }
         if samples:
-            _request_body["sample"] = samples
+            _request_body["samples"] = samples
 
         response = requests.post(url=do_url + self.do_load_data_uri, json=_request_body)
         if response.status_code != 200:
