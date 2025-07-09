@@ -137,12 +137,13 @@ class FLSetupInjector:
             return False
         return True, response.json()
 
-    def call_participants_do_fl_core_query(self, do_url: str, model: str, samples: Optional[int] = 1000, query: Optional[str] = None):
+    def call_participants_do_fl_core_query(self, do_url: str, model: str, samples: Optional[int] = 80, query: Optional[str] = None):
         _request_body = {
             "model": model,
+            "dataset_id": "HNC"
         }
         if samples:
-            _request_body["sample"] = samples
+            _request_body["samples"] = samples
 
         response = requests.post(url=do_url + self.do_load_data_uri, json=_request_body)
         if response.status_code != 200:
