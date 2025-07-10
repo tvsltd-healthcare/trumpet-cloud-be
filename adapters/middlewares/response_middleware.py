@@ -123,8 +123,8 @@ class ResponseMiddleware(BaseHTTPMiddleware):
             Union[Dict[str, Any], List[Dict[str, Any]]]: Filtered input data.
         """
 
-        # Extract allowed keys based on `in_request` being True
-        allowed_keys = {field['column'] for field in schema if field.get('in_request') is True}
+        # Extract allowed keys based on `in_response` being True or none
+        allowed_keys = {field['column'] for field in schema if field.get('in_response') is True or field.get('in_response') is None}
 
         def filter_dict(data: Dict[str, Any]) -> Dict[str, Any]:
             return {key: value for key, value in data.items() if key in allowed_keys}

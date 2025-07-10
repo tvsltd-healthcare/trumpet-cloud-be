@@ -29,7 +29,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "type",
@@ -72,7 +72,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "buffer",
@@ -110,7 +110,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -136,7 +136,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -162,7 +162,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -188,7 +188,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -214,7 +214,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -278,7 +278,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "name",
@@ -316,7 +316,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "email",
@@ -360,7 +360,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "address",
@@ -398,7 +398,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "phone",
@@ -436,7 +436,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "host",
@@ -474,7 +474,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "status",
@@ -517,7 +517,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "type",
@@ -558,7 +558,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -584,7 +584,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -610,7 +610,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -636,7 +636,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -662,7 +662,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -734,7 +734,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "name",
@@ -772,7 +772,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -798,7 +798,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -824,7 +824,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -850,7 +850,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -876,7 +876,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -948,7 +948,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "first_name",
@@ -986,7 +986,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "last_name",
@@ -1024,7 +1024,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "email",
@@ -1068,7 +1068,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "password",
@@ -1106,7 +1106,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "status",
@@ -1149,7 +1149,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "phone",
@@ -1187,7 +1187,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -1213,7 +1213,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -1239,7 +1239,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -1265,7 +1265,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -1291,7 +1291,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -1377,7 +1377,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "user_id",
@@ -1403,7 +1403,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "role_id",
@@ -1429,7 +1429,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -1455,7 +1455,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -1481,7 +1481,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -1507,7 +1507,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -1533,7 +1533,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -1612,7 +1612,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "user_id",
@@ -1638,7 +1638,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "organization_id",
@@ -1664,7 +1664,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -1690,7 +1690,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -1716,7 +1716,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -1742,7 +1742,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -1768,7 +1768,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -1847,7 +1847,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "name",
@@ -1885,7 +1885,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "description",
@@ -1911,7 +1911,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "status",
@@ -1953,7 +1953,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "result",
@@ -1985,7 +1985,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "purpose",
@@ -2017,7 +2017,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -2043,7 +2043,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -2069,7 +2069,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -2095,7 +2095,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -2121,7 +2121,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -2200,7 +2200,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "name",
@@ -2232,7 +2232,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "meta_data",
@@ -2264,7 +2264,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "statistics",
@@ -2290,7 +2290,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "path",
@@ -2316,7 +2316,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "privacy_level",
@@ -2358,7 +2358,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -2384,7 +2384,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -2410,7 +2410,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -2436,7 +2436,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -2462,7 +2462,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -2534,7 +2534,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "study_id",
@@ -2560,7 +2560,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "user_id",
@@ -2579,7 +2579,7 @@
           "is_redundant": false,
           "should_sync": false,
           "validations": [],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -2605,7 +2605,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -2631,7 +2631,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -2657,7 +2657,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -2683,7 +2683,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -2762,7 +2762,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "purpose",
@@ -2794,7 +2794,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "participants",
@@ -2826,7 +2826,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "samples",
@@ -2852,7 +2852,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "pet",
@@ -2888,7 +2888,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "model",
@@ -2929,7 +2929,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "legal",
@@ -2955,7 +2955,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "study_privacy_budget",
@@ -2981,7 +2981,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "expiration_date",
@@ -3007,7 +3007,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "study_id",
@@ -3033,7 +3033,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "status",
@@ -3075,7 +3075,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -3101,7 +3101,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -3127,7 +3127,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -3153,7 +3153,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -3179,7 +3179,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -3272,7 +3272,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "description",
@@ -3304,7 +3304,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "study_agreement_id",
@@ -3330,7 +3330,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "dataset_id",
@@ -3356,7 +3356,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -3382,7 +3382,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -3408,7 +3408,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -3434,7 +3434,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -3460,7 +3460,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -3539,7 +3539,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "study_agreement_id",
@@ -3565,7 +3565,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "query",
@@ -3591,7 +3591,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -3617,7 +3617,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -3643,7 +3643,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -3669,7 +3669,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -3695,7 +3695,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -3767,7 +3767,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "study_agreement_id",
@@ -3793,7 +3793,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "specification",
@@ -3825,7 +3825,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "file_path",
@@ -3851,7 +3851,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "version",
@@ -3889,7 +3889,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "status",
@@ -3930,7 +3930,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -3956,7 +3956,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -3982,7 +3982,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -4008,7 +4008,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -4034,7 +4034,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -4106,7 +4106,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "organization_id",
@@ -4132,7 +4132,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "study_agreement_id",
@@ -4158,7 +4158,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "status",
@@ -4200,7 +4200,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -4226,7 +4226,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -4252,7 +4252,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -4278,7 +4278,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -4304,7 +4304,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
@@ -4383,7 +4383,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "user_id",
@@ -4409,7 +4409,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "message",
@@ -4441,7 +4441,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "is_read",
@@ -4460,7 +4460,7 @@
           "is_redundant": true,
           "should_sync": true,
           "validations": [],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "type",
@@ -4489,7 +4489,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "read_at",
@@ -4515,7 +4515,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_at",
@@ -4541,7 +4541,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_at",
@@ -4567,7 +4567,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "created_by",
@@ -4593,7 +4593,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         },
         {
           "column": "updated_by",
@@ -4619,7 +4619,7 @@
               "default_message": ""
             }
           ],
-          "in_request": true
+          "in_response": true
         }
       ],
       "routes": [
