@@ -14,7 +14,9 @@ FL_COMMUNICATION_PORT = os.getenv("FL_COMMUNICATION_PORT", 8081)
 PET_CONFIG_MAP = {
         'None': {},
         'CDC_DP': {
-            "eval_points": [0.001, 0.002, 0.003],
+            #TODO: Set two eval points as currently we have two data owners.
+            # Needs to be dynamic for number of data-owners.
+            "eval_points": [0.001, 0.002],
             "eps1": 0.5,
             "eps3": 10,
             "epochs": 1,
@@ -135,12 +137,13 @@ class FLSetupInjector:
             return False
         return True, response.json()
 
-    def call_participants_do_fl_core_query(self, do_url: str, model: str, samples: Optional[int] = 1000, query: Optional[str] = None):
+    def call_participants_do_fl_core_query(self, do_url: str, model: str, samples: Optional[int] = 80, query: Optional[str] = None):
         _request_body = {
             "model": model,
+            "dataset_id": "HNC"
         }
         if samples:
-            _request_body["sample"] = samples
+            _request_body["samples"] = samples
 
         response = requests.post(url=do_url + self.do_load_data_uri, json=_request_body)
         if response.status_code != 200:
