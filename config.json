@@ -4790,6 +4790,10 @@
         {
           "verb": "get",
           "url": "/api/notification/count"
+        },
+        {
+          "verb": "post",
+          "url": "/api/generate-token"
         }
       ]
     }
