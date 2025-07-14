@@ -41,7 +41,7 @@ def execute(request: IRequest):
 
     # generate token for organization
     auth_manager = AuthManager.get()
-    token = auth_manager.generate_token({"organization_id": organization_id, "user_id": current_user_id, "type": "Data owner token"})
+    token = auth_manager.generate_token({"organization_id": organization_id, "user_id": current_user_id, "type": "DATA_OWNER_TOKEN"})
     token_data = {
         "access_token": token["token"],
         "expires_in": int(time.time()) + int(token["expires"])
