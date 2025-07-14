@@ -22,7 +22,7 @@ def execute(request: IRequest):
     Returns:
         ResponseFormatter: A formatted response containing the generated token data.
     """
-
+    body = request.get_json()
     response_formatter = ResponseFormatter()
     repo_discovery_service: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     auth_header = request.get_headers().get('authorization')
@@ -41,7 +41,7 @@ def execute(request: IRequest):
 
     # generate token for organization
     auth_manager = AuthManager.get()
-    token = auth_manager.generate_token({"organization_id": organization_id, "user_id": current_user_id, "type": "DATA_OWNER_TOKEN"})
+    token = auth_manager.generate_token({"organization_id": organization_id, "user_id": current_user_id, "type": "DATA_OWNER_TOKEN", "expiry": body.get('expiry')})
     token_data = {
         "access_token": token["token"],
         "expires_in": int(time.time()) + int(token["expires"])
