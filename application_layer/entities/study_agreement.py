@@ -45,6 +45,16 @@ StudyAgreements = {
             'error_code': '1001',
         },
     },
+    'pet_config': {
+        'type': {
+            'value': 'text',
+            'error_code': '1000',
+        },
+        'required': {
+            'value': True,
+            'error_code': '130',
+        },
+    },
     'model': {
         'type': {
             'value': 'string',
