@@ -2896,7 +2896,7 @@
           "length": "",
           "auto_increment": false,
           "unique": false,
-          "allow_null": true,
+          "allow_null": false,
           "primary_key": false,
           "foreign_key": "",
           "fk_reference": "",
