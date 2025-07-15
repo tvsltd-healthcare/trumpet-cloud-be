@@ -100,7 +100,7 @@ def seed_database():
 
     insert_data(
         [StudyAgreements(id=1, study_id=1, status="approved", purpose="Study agreement one purpose", participants="3,4",
-                         samples="1000", pet="None", model="NN_HNC", legal="Study agreement one legal",
+                         samples="1000", pet="None", pet_config = "{}", model="NN_HNC", legal="Study agreement one legal",
                          study_privacy_budget="10000", created_by=3),
          OrganizationStudyAgreements(study_agreement_id=1, organization_id=2, organization_type="researcher",
                                      status="approved"),
