@@ -52,7 +52,7 @@ class BaseLogicInjector:
 
             do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_endpoint,
                                                                                          model=entity.get('model', "NN_HNC"),
-                                                                                         samples=entity.get('samples', 50))
+                                                                                         samples=entity.get('samples', 80))
 
 
 class FLSetupInjector:
