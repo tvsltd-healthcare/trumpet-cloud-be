@@ -1,21 +1,41 @@
 Datasets = {
     'id': {
         'type': {
-            'value': 'string',
+            'value': 'number',
             'error_code': '96',
         },
     },
-    'name': {
+    'don_uid': {
+        'type': {
+            'value': 'string',
+            'error_code': '960',
+        },
+        'required': {
+            'value': True,
+            'error_code': '961',
+        }
+    },
+    'organization_id': {
+        'type': {
+            'value': 'number',
+            'error_code': '1080',
+        },
+    },
+    'title': {
+        'type': {
+            'value': 'string',
+            'error_code': '962',
+        },
         'required': {
             'value': True,
             'error_code': '97',
         },
         'max': {
-            'value': 25,
+            'value': 100,
             'error_code': '98',
         },
     },
-    'meta_data': {
+    'about': {
         'type': {
             'value': 'text',
             'error_code': '99',
@@ -29,26 +49,6 @@ Datasets = {
         'type': {
             'value': 'text',
             'error_code': '101',
-        },
-    },
-    'path': {
-        'type': {
-            'value': 'text',
-            'error_code': '102',
-        },
-    },
-    'privacy_level': {
-        'type': {
-            'value': 'string',
-            'error_code': '103',
-        },
-        'regex': {
-            'value': '^(public|confidential|highly_confidential)$',
-            'error_code': '104',
-        },
-        'required': {
-            'value': True,
-            'error_code': '105',
         },
     },
     'created_at': {
