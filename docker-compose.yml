@@ -5,18 +5,12 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     container_name: cloud-backend
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.cloud-backend.rule=Host(`${TRUMPET_CLOUD_WEBSITE_HOST}`)
-      - traefik.http.routers.cloud-backend.entrypoints=websecure
-      - traefik.http.routers.cloud-backend.tls=true
-      - traefik.http.routers.cloud-backend.tls.certresolver=le
     env_file:
       - ./.env
     depends_on:
       - cloud-postgres
     ports:
-      - '80'
+      - '8000:${PORT}'
     networks:
       - trumpet-proxy
 
@@ -34,6 +28,8 @@ services:
       - ./docker/postgresql/cloud/data:/var/lib/postgresql/data/
     networks:
       - trumpet-proxy
+    ports:
+      - "5432"
 
   openfga-postgres:
     image: postgres:14
@@ -85,5 +81,6 @@ networks:
   trumpet-proxy:
     external: true
 
-volumes:
-  letsencrypt:
+#volumes:
+#  letsencrypt:
+#

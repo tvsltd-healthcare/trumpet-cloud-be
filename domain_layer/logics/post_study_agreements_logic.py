@@ -1,3 +1,5 @@
+import json
+
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
@@ -35,6 +37,8 @@ def execute(request: IRequest, repo, entity=None):
 
         study_agreement_id = created_agreement.get('id')
         organization_ids = created_agreement.get('participants', '')
+        if not organization_ids:
+            return response_formatter.error("No participant organizations provided.", 400)
         organization_ids = organization_ids.split(",")
 
         organization_study_agreement_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker(
@@ -60,7 +64,7 @@ def execute(request: IRequest, repo, entity=None):
             study_agreement_id=study_agreement_id,
             organization_type="researcher"
         )
-
+        created_agreement['pet_config'] = json.loads(created_agreement['pet_config'])
         return response_formatter.success(
             created_agreement,
             message="Study agreement created and organizations assigned.",

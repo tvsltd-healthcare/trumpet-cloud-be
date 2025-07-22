@@ -7,6 +7,10 @@ from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.utils.password_validator import is_strong_password
 
+RESEARCHER_ADMIN = "researcher_admin"
+DATA_OWNER_ADMIN = "data_owner_admin"
+APPROVED_STATUS = "approved"
+
 
 def execute(request: IRequest, repo, entity=None):
     """
@@ -65,6 +69,9 @@ def execute(request: IRequest, repo, entity=None):
     entity.password = password_handler.hash_password(getattr(entity, 'password', None))
     entity.email = email
 
+    if role_name in {RESEARCHER_ADMIN, DATA_OWNER_ADMIN}:
+        entity.status = APPROVED_STATUS
+
     try:
         create_user = repo.post(entity, request.get_path_params())
         if not create_user:
@@ -84,10 +91,7 @@ def execute(request: IRequest, repo, entity=None):
                 'Organization retrieval failed: Invalid or empty response from organizations', 500)
 
         # Assgin user to organization based on token
-        organization_users = {
-            "user_id": create_user.get("id"),
-            "organization_id": organization.get("id")
-        }
+        organization_users = {"user_id": create_user.get("id"), "organization_id": organization.get("id")}
         user_assign_to_organization = organization_users_repo.transact("POST", data=organization_users)
 
         role_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Roles")
@@ -97,10 +101,7 @@ def execute(request: IRequest, repo, entity=None):
         if not role:
             return response_formatter.error('Role retrieval failed: Invalid or empty response from roles', 500)
 
-        role_user = {
-            "user_id": create_user.get("id"),
-            "role_id": role.get("id")
-        }
+        role_user = {"user_id": create_user.get("id"), "role_id": role.get("id")}
         role_user_repo.transact("POST", data=role_user)
 
         if user_assign_to_organization:

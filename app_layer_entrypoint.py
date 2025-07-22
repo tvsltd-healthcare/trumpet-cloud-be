@@ -4,6 +4,7 @@ import re
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from wrap_restify import Libraries, Server
 from wrap_restify.abstractions.routers import IRouter
 
@@ -26,6 +27,7 @@ from adapters.middlewares.validation_middleware import ValidationMiddleware
 from adapters.password_adapters.bcrypt_adapters import PasswordHandler
 from adapters.response_adapters import ResponseHandler
 from adapters.wrap_orm_adapters.orm_adapter import OrmAdapter
+from adapters.wrap_restify.websocket_pool_adapter import WebsocketPoolAdapter
 from application_layer.abstractions.app_repo_discovery_setter_interface import IAppRepoDiscoverySetter
 from application_layer.abstractions.controller_interface import IController
 from application_layer.abstractions.non_resource_controller_interface import INonResourceController
@@ -34,11 +36,13 @@ from application_layer.entities import get_resource_types
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.password_manager_interface import IPasswordHandler
+from domain_layer.abstractions.websocket_pool_interface import IWebsocketPool
 from domain_layer.auth_manager import AuthManager
 from domain_layer.dependency.email_service_manager import EmailServiceManager
 from domain_layer.logic_loader import load_logics
 from domain_layer.password_manager import PasswordManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
+from domain_layer.websocket_pool_manager import WebsocketPoolManager
 from lib_archi.abstractions.non_resource_app_service_interface import ILibNonResourceService
 from lib_archi.abstractions.non_resource_controller_interface import ILibNonResourceController
 from lib_archi.base_application_service import BaseApplicationService
@@ -75,10 +79,14 @@ authorization_handler = FgaAuthorizationFactory.create(FGA_authorization_mechani
 authorization_middleware = AuthorizationMiddleware(authorizer=authorization_handler)
 
 # SMTP email service configuration
-email_service_configuration = {"name": EmailServiceType.SMTP,
+email_service_configuration = {"name": os.getenv("EMAIL_SERVICE_TYPE"),
     "config": {"host": os.getenv("EMAIL_HOST"), "port": int(os.getenv("EMAIL_PORT")),
         "username": os.getenv("EMAIL_USERNAME"), "password": os.getenv("EMAIL_PASSWORD"),
-        "subject": os.getenv("EMAIL_SUBJECT"), "sender_email": os.getenv("SENDER_EMAIL")}}
+        "subject": os.getenv("EMAIL_SUBJECT"), "sender_email": os.getenv("SENDER_EMAIL"),
+        "envirment": os.getenv("ENVIREMENT"), "azure_connection_string": os.getenv("AZURE_CONNECTION_STRING")}}
+
+email_service = EmailServiceHandlerFactory.get_handler(email_service_configuration)
+EmailServiceManager.set(email_service)
 
 # Initialize the AuthMiddleware with the configuration
 repo_discovery: RepoDiscovery = RepoDiscovery()
@@ -90,9 +98,6 @@ RepoDiscoveryManager.set(repo_discovery_getter_adapter)
 # Manager for Password
 password_handler: IPasswordHandler = PasswordHandler()
 PasswordManager.set(password_handler)
-
-email_service_factory = EmailServiceHandlerFactory.get_handler(email_service_configuration)
-EmailServiceManager.set(email_service_factory)
 
 
 def convert_to_snake_case(name: str) -> str:
@@ -144,6 +149,10 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             model definitions in the configuration.
     """
     # get all the routers of the application
+    websocket_pool: IWebsocketPool = server.websocket_pool()
+    websocket_pool_adapter = WebsocketPoolAdapter(websocket_pool)
+    WebsocketPoolManager.set(websocket_pool_adapter)
+
     with open(CONFIG_FILE_PATH) as config_file:
         configs = json.load(config_file)
 
@@ -164,7 +173,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
         repo = repository[entity_stub_obj](orm)
 
         model_key = convert_to_snake_case(model_name)
-        
+
         repo_gateway_service = RepositoryGatewayService[entity_stub_obj](repo, logic_map.get(model_key, {}))
         repo_invoker: IAppRepoInvoker = RepoDirectInvokerAdapter(repo_gateway_service)
         repo_discovery_setter_adapter.set_repo_invoker(model_name, repo_invoker)
@@ -237,6 +246,10 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
             router_obj.post(url=url, endpoint=non_resource_controller_adapter.perform)
         elif str.lower(route_verb) == "get":
             router_obj.get(url=url, endpoint=non_resource_controller_adapter.perform)
+        elif str.lower(route_verb) == "websocket":
+            router_obj.websocket(url=url, 
+                                 endpoint=non_resource_controller_adapter.websocket_setup, 
+                                 websocket_receiver=non_resource_controller_adapter.websocket_msg_receiver)
 
     server.use(router_obj)
 
@@ -266,6 +279,8 @@ def launch_app_layer():
     _ = build_app_layer(repository=OrmRepository, server=server)
 
     server.use(ValidationMiddleware)
+    # Redirect to HTTPS
+    # server.use(HTTPSRedirectMiddleware)
     server.use(ResponseMiddleware)
     per_page = int(os.getenv("PER_PAGE", 10))
     server.use(pagination_middleware(per_page=per_page))

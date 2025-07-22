@@ -25,6 +25,7 @@ from fastapi import Request, HTTPException
 from starlette import status
 
 from adapters.middlewares.validation_middleware import ValidationMiddleware
+from adapters.utils.utils import load_config, get_model_name
 
 
 class AuthorizationMiddleware:
@@ -42,7 +43,7 @@ class AuthorizationMiddleware:
                 for verifying permissions.
         """
         self.authorizer = authorizer
-        self.configs = ValidationMiddleware._load_config()
+        self.configs = load_config()
 
     def __call__(self, request: Request):
         """Process the incoming request and perform authorization check.
@@ -96,9 +97,7 @@ def _get_resource(request, configs):
             - type: Resource type name
             - id: Resource identifier
     """
-    resource_type = ValidationMiddleware._get_model_name(
-        request=request, configs=configs
-    )
+    resource_type = get_model_name(request.url.path, request.method, configs)
     match = re.search(r"\d+$", str(request.url))
     resource_id = match.group(0)
 

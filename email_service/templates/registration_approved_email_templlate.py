@@ -15,7 +15,7 @@ REGISTRATION_APPROVED_EMAIL_TEMPLATE = """
 </head>
 <body>
     <div class="header">
-        <img src="https://trumpetproject.eu/wp-content/uploads/2023/02/logo-trumpet-white-color.svg" alt="TRUMPET Project Logo" />
+        <img src="https://trumpetcloud.technovativesolutions.co.uk/images/logo-white-lg.png" alt="TRUMPET Project Logo tajal" />
     </div>
     <div class="content">
         <h1>Registration Approved</h1>

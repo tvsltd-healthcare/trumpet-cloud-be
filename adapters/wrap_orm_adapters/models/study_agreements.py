@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Enum, TIMESTAMP, Boolean, func
+from sqlalchemy import Column, String, Integer, ForeignKey, Enum, TIMESTAMP, Boolean, func, Text
 from sqlalchemy.orm import relationship
 from .base import Base
 
@@ -6,11 +6,12 @@ from .base import Base
 class StudyAgreements(Base):
     __tablename__ = 'study_agreements'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     purpose = Column(String(30), nullable=True,)
     participants = Column(String(255), nullable=True,)
     samples = Column(Integer, nullable=True,)
     pet = Column(Enum('None', 'CDC_DP', 'ThHE', name='study_agreements_pet_enum'), nullable=True,)
+    pet_config = Column(Text, nullable=False,)
     model = Column(Enum("NN_HNC", "NN_HNC_NECRO_JAW", "NN_HNC_DYSPHAGIA", "NN_HNC_ORAL_MUCOSITIS", "REG_LOG_HNC", "REG_LOG_HNC_NECRO_JAW", "REG_LOG_HNC_DYSPHAGIA", "REG_LOG_HNC_ORAL_MUCOSITIS", name='study_agreements_model_enum'), nullable=True, default='NN_HNC')
     legal = Column(String(30), nullable=True,)
     study_privacy_budget = Column(Integer, nullable=True,)
@@ -19,7 +20,7 @@ class StudyAgreements(Base):
     status = Column(Enum('pending', 'approved', 'disapproved', name='study_agreements_status_enum'),
                              nullable=True, default='pending')
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
+    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 
@@ -30,4 +31,3 @@ class StudyAgreements(Base):
     study_agreement_results = relationship('StudyAgreementResults', back_populates='study_agreement', foreign_keys='StudyAgreementResults.study_agreement_id', lazy='dynamic')
     organization_study_agreements = relationship('OrganizationStudyAgreements', back_populates='study_agreement', foreign_keys='OrganizationStudyAgreements.study_agreement_id', lazy='dynamic')
     study = relationship('Studies', back_populates='study_agreements', foreign_keys=[study_id])
-    

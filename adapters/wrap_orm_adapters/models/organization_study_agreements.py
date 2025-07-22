@@ -6,7 +6,7 @@ from .base import Base
 
 class OrganizationStudyAgreements(Base):
     __tablename__ = 'organization_study_agreements'
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True, )
+    id = Column(Integer, primary_key=True, autoincrement=True, )
     organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=True, )
     study_agreement_id = Column(Integer, ForeignKey('study_agreements.id'), nullable=True, )
     organization_type = Column(Enum('researcher', 'data_owner', name='organization_study_agreements_organization_type_enum'),
@@ -16,7 +16,7 @@ class OrganizationStudyAgreements(Base):
                              nullable=True, default='pending')
 
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
+    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
 

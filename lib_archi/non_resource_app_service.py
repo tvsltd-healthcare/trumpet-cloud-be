@@ -68,3 +68,19 @@ class NonResourceAppService(ILibNonResourceService):
             return logic(request)
         else:
             raise NotImplementedError("Logic for this endpoint is not implemented")
+
+    def websocket_setup(self, websocket):
+        logic = self._get_logic(websocket)
+
+        if logic:
+            return logic(websocket)
+        else:
+            raise NotImplementedError("Logic for this endpoint is not implemented")
+
+    def websocket_msg_receiver(self, websocket, msg: str, event: str):
+        logic = self.logic_map.get('websocket_msg_receiver', None)
+
+        if logic:
+            return logic(websocket, msg, event)
+        else:
+            raise NotImplementedError("Logic for this endpoint is not implemented")

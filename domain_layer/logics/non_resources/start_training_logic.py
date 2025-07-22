@@ -40,6 +40,8 @@ def execute(request: IRequest):
         
         if not study_agreement:
             return response_formatter.error("Study Agreement not found.", 403)
+
+        study_agreement['pet_config'] = json.loads(study_agreement['pet_config'])
         
         study_agreement_status = study_agreement.get('status', None)
 
@@ -85,7 +87,7 @@ def execute(request: IRequest):
         injector.inject_business_logic(entity=study_agreement, entity_id=ids, agreement_id=agreement_id, host_list=host_list)
         
         return response_formatter.success(
-            message="Traning Started Successfully.",
+            message="Training Started Successfully.",
             data=study_agreement,
             status_code=202
         )

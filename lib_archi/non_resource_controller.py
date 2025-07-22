@@ -41,3 +41,9 @@ class NonResourceController(ILibNonResourceController):
             - If an exception occurs, returns an error response with status code 400.
         """
         return self.non_resource_app_service.perform(request)
+    
+    def websocket_setup(self, websocket):
+        return self.non_resource_app_service.websocket_setup(websocket)
+
+    def websocket_msg_receiver(self, websocket, msg: str, event: str):
+       return self.non_resource_app_service.websocket_msg_receiver(websocket, msg, event)
