@@ -5,6 +5,7 @@ from domain_layer.password_manager import PasswordManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.parse_token import token_parser
+from domain_layer.utils.password_validator import is_strong_password
 
 
 def execute(request: IRequest, repo, entity=None):
@@ -57,6 +58,10 @@ def execute(request: IRequest, repo, entity=None):
 
     # Make password hash
     password_handler = PasswordManager.get()
+    new_password = is_strong_password(getattr(entity, 'password', None))
+    if new_password is not True:
+        return response_formatter.error(new_password, 400)
+
     entity.password = password_handler.hash_password(getattr(entity, 'password', None))
     entity.email = email
 
