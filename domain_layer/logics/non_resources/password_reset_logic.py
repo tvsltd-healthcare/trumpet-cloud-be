@@ -5,10 +5,10 @@ from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.utils.password_validator import is_strong_password
 
 
 def execute(request: IRequest):
-
     """
     Handles the password reset functionality for a user based on a valid authentication token.
 
@@ -51,19 +51,21 @@ def execute(request: IRequest):
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
 
-
     user = user_repo.get({"email": email}, False)
-    if user:
-        new_password = body.get("new_password")
-        password_handler = PasswordManager.get()
 
-        password = password_handler.hash_password(new_password)
-        password_reset_body = { "password": password  }
+    if user:
+        raw_password = body.get("new_password")
+        new_password = is_strong_password(raw_password)
+        if new_password is not True:
+            return response_formatter.error(new_password, 400)
+        password_handler = PasswordManager.get()
+        password = password_handler.hash_password(raw_password)
+        password_reset_body = {"password": password}
 
         try:
             password_reset = user_repo.transact("PATCH", data=password_reset_body, query={'id': user.get('id')})
-            if(password_reset):
-                return response_formatter.success( {}, 'Password has been reset successfully.', 200)
+            if password_reset:
+                return response_formatter.success({}, 'Password has been reset successfully.', 200)
             else:
                 return response_formatter.error('Password reset failed.', 400)
         except Exception as e:
