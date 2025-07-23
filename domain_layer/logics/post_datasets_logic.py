@@ -42,27 +42,21 @@ def execute(request: IRequest, repo, entity=None):
     """
     response_formatter = ResponseFormatter()
 
-    # Validate entity
     if entity is None:
         return response_formatter.error('Entity cannot be None', 400)
 
-    # Remove "Bearer " prefix from token and decode data
-
     try:
-        print(f"{entity}")
-        # api_token = request.get_headers()['authorization']
-
         auth_header = request.get_headers().get('authorization')
         decoded_token = token_parser(auth_header)
-        print(f"{decoded_token}")
+        organization_id = decoded_token.get('organization_id', None)
 
-        organization_id = decoded_token.get('organization_id')
+        if not organization_id:
+            return response_formatter.error('Token must provide organization id', 400)
+        
         entity.organization_id = organization_id
         saved_entity = repo.post(entity, ids={})
 
-        print(f"{saved_entity=}")
-
-        return response_formatter.success(entity, 'Dataset created successfully.', 201)
+        return response_formatter.success(saved_entity, 'Dataset created successfully.', 201)
 
     except Exception as e:
         return response_formatter.error(str(e), 500)
