@@ -8,38 +8,28 @@ from domain_layer.utils.parse_token import token_parser
 
 def execute(request: IRequest, repo, entity=None):
     """
-    Creates a new user, assigns them to an organization based on the token's email, and returns the user data with the organization ID.
+    Creates a new dataset and associates it with an organization based on the organization ID found in the JWT token.
 
-    This method:
-    1. Change password string to hash and then create a user using the provided entity and query parameters.
-    2. Decodes the JWT token from the Authorization header to get the email.
-    3. Retrieves the organization by email using the Organizations repository.
-    4. Assigns the user to the organization via the OrganizationUsers repository.
-    5. Adds the organization ID to the user data.
+    Workflow:
+    1. Extracts the Authorization token from the request headers.
+    2. Decodes the token to retrieve the organization ID.
+    3. Attaches the organization ID to the dataset entity.
+    4. Creates the dataset using the provided repository.
+    5. Returns the newly created dataset data with a success response.
 
     Args:
-        request (IRequest): Request object with headers (Authorization token) and query parameters.
-        repo (Any): Repository object for creating users (must have a `post` method).
-        entity (Optional[Dict[str, Any]]): User data to create. Defaults to None.
+        request (IRequest): An object containing headers and parameters, including the Authorization token.
+        repo (Any): A repository object responsible for creating the dataset (must implement `post`).
+        entity (Optional[Dict[str, Any]]): The dataset data to be created. Must not be None.
 
     Returns:
-        Dict[str, Any]: Created user data with `organization_id` added.
+        Dict[str, Any]: A formatted success or error response containing dataset data or failure reason.
 
     Raises:
-        ValueError: If Authorization header, token email, or required IDs are missing/invalid.
-        KeyError: If required keys (e.g., `id`, `organization_id`) are missing in repository responses.
-        AttributeError: If entity or required methods are missing/invalid.
-        RuntimeError: If repository operations (post, get, transact) fail or return invalid data.
-
-    Example:
-        ```python
-        request = Request(headers={'authorization': 'Bearer <token>'}, query_params={})
-        repo = UserRepository()
-        entity = {'first_name': 'John', 'email': 'john@example.com'}
-        result = execute(request, repo, entity)
-        # Returns: {'id': 54, 'first_name': 'John', ..., 'organization_id': 123}
-        ```
+        ValueError: If the token is missing or the organization ID cannot be determined.
+        Exception: For any unexpected errors during processing.
     """
+    
     response_formatter = ResponseFormatter()
 
     if entity is None:
