@@ -39,7 +39,7 @@ class BaseLogicInjector:
         for do_endpoint in host_list:
             do_response = fl_injector_obj.call_setup_on_participants_do_fl_core(do_url=do_endpoint,
                                                                                 agreement_id=agreement_id,
-                                                                                name=str(entity_id.get('study_id', "")),
+                                                                                name=entity_id.get('study_id', ""),
                                                                                 coordinator=os.getenv('COORDINATOR'),
                                                                                 model=entity.get('model', "NN_HNC"),
                                                                                 pet=entity.get('pet'),
@@ -80,7 +80,7 @@ class FLSetupInjector:
     def call_setup_on_participants_do_fl_core(self, do_url: str, agreement_id: int, name: str, coordinator: str,
                                               model: str, pet: str, pet_config: dict, rounds: str, description: str,
                                               purpose: str, webhook_url: str, participants: List[str]) -> Union[bool, tuple[bool, dict]]:
-        _request_body = {"name": name, "agreement_id": str(agreement_id), "coordinator": coordinator, "model": model,
+        _request_body = {"name": name, "agreement_id": agreement_id, "coordinator": coordinator, "model": model,
                          "pet": pet, "pet_config": pet_config, "rounds": rounds, "webhook_url": webhook_url,
                          "participants": participants, }
 
