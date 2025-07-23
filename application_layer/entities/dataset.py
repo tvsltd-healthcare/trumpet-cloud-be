@@ -51,6 +51,48 @@ Datasets = {
             'error_code': '101',
         },
     },
+    'temporal_coverage_start': {
+        'type': {
+            'value': 'timestamp',
+            'error_code': '10011',
+        },
+    },
+    'temporal_coverage_end': {
+        'type': {
+            'value': 'timestamp',
+            'error_code': '10012',
+        },
+    },
+    'geospatial_coverage': {
+        'type': {
+            'value': 'text',
+            'error_code': '10013',
+        },
+    },
+    'doi_citation': {
+        'type': {
+            'value': 'text',
+            'error_code': '10014',
+        },
+    },
+    'provenance': {
+        'type': {
+            'value': 'text',
+            'error_code': '10015',
+        },
+    },
+    'license_title': {
+        'type': {
+            'value': 'string',
+            'error_code': '10016',
+        },
+    },
+    'license_details': {
+        'type': {
+            'value': 'text',
+            'error_code': '10017',
+        },
+    },
     'created_at': {
         'type': {
             'value': 'timestamp',

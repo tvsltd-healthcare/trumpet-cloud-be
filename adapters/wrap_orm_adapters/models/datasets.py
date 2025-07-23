@@ -16,6 +16,14 @@ class Datasets(Base):
     about = Column(Text, nullable=False, )
     statistics = Column(Text, nullable=False, )
 
+    temporal_coverage_start = Column(TIMESTAMP, nullable=True)
+    temporal_coverage_end = Column(TIMESTAMP, nullable=True)
+    geospatial_coverage = Column(Text, nullable=True, )
+    doi_citation = Column(Text, nullable=True, )
+    provenance = Column(Text, nullable=True, )
+    license_title = Column(String(255), nullable=True, )
+    license_details =  Column(Text, nullable=True, )
+
     created_at = Column(TIMESTAMP, nullable=True, default=func.now())
     updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
