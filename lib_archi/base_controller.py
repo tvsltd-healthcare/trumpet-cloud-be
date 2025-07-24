@@ -72,7 +72,6 @@ class BaseController(Generic[Entity]):
         """
         try:
             entity = self._refine_store_date(entity, request)
-            entity = self._add_uniq_id(entity)
             created_entity = self.app_service.post(entity, request)
 
             return self.response_handler.generate_response("Entity created successfully", data=created_entity,
@@ -217,10 +216,6 @@ class BaseController(Generic[Entity]):
             if not hasattr(entity, 'updated_by') or entity.updated_by is None:
                 entity.updated_by = user_id
 
-        return entity
-
-    def _add_uniq_id(self, entity: Entity) -> Entity:
-        entity.id = str(uuid.uuid4())
         return entity
 
     def _all_attrs_not_provided(self, entity: Entity) -> bool:
