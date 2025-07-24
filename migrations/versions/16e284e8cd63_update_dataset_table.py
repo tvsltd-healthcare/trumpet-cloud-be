@@ -1,8 +1,8 @@
-"""dataset model chnage
+"""update dataset table
 
-Revision ID: 6ec9ca2b6008
+Revision ID: 16e284e8cd63
 Revises: 5b8b3139e5b4
-Create Date: 2025-07-21 18:54:21.349137
+Create Date: 2025-07-24 16:06:26.154222
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '6ec9ca2b6008'
+revision: str = '16e284e8cd63'
 down_revision: Union[str, None] = '5b8b3139e5b4'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,6 +25,13 @@ def upgrade() -> None:
     op.add_column('datasets', sa.Column('organization_id', sa.Integer(), nullable=True))
     op.add_column('datasets', sa.Column('title', sa.String(length=100), nullable=False))
     op.add_column('datasets', sa.Column('about', sa.Text(), nullable=False))
+    op.add_column('datasets', sa.Column('temporal_coverage_start', sa.TIMESTAMP(), nullable=True))
+    op.add_column('datasets', sa.Column('temporal_coverage_end', sa.TIMESTAMP(), nullable=True))
+    op.add_column('datasets', sa.Column('geospatial_coverage', sa.Text(), nullable=True))
+    op.add_column('datasets', sa.Column('doi_citation', sa.Text(), nullable=True))
+    op.add_column('datasets', sa.Column('provenance', sa.Text(), nullable=True))
+    op.add_column('datasets', sa.Column('license_title', sa.String(length=255), nullable=True))
+    op.add_column('datasets', sa.Column('license_details', sa.Text(), nullable=True))
     op.create_foreign_key(None, 'datasets', 'organizations', ['organization_id'], ['id'])
     op.drop_column('datasets', 'meta_data')
     op.drop_column('datasets', 'privacy_level')
@@ -43,6 +50,13 @@ def downgrade() -> None:
     op.add_column('datasets', sa.Column('privacy_level', postgresql.ENUM('public', 'confidential', 'highly_confidential', name='datasets_privacy_level_enum', create_type=False), autoincrement=False, nullable=True))
     op.add_column('datasets', sa.Column('meta_data', sa.TEXT(), autoincrement=False, nullable=True))
     op.drop_constraint(None, 'datasets', type_='foreignkey')
+    op.drop_column('datasets', 'license_details')
+    op.drop_column('datasets', 'license_title')
+    op.drop_column('datasets', 'provenance')
+    op.drop_column('datasets', 'doi_citation')
+    op.drop_column('datasets', 'geospatial_coverage')
+    op.drop_column('datasets', 'temporal_coverage_end')
+    op.drop_column('datasets', 'temporal_coverage_start')
     op.drop_column('datasets', 'about')
     op.drop_column('datasets', 'title')
     op.drop_column('datasets', 'organization_id')
