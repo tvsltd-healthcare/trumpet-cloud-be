@@ -10,9 +10,9 @@ services:
     depends_on:
       - cloud-postgres
     ports:
-      - '9010:${PORT}'
-#    networks:
-#      - trumpet-proxy
+      - '8000:${PORT}'
+    networks:
+      - trumpet-proxy
 
   cloud-postgres:
     image: postgres:15-alpine
@@ -26,10 +26,8 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./docker/postgresql/cloud/data:/var/lib/postgresql/data/
-#    networks:
-#      - trumpet-proxy
-    ports:
-      - "5433:5432"
+    networks:
+      - trumpet-proxy
 
 #  openfga-postgres:
 #    image: postgres:14
@@ -49,7 +47,7 @@ services:
 #      retries: 5
 #    networks:
 #      - trumpet-proxy
-
+#
 #  openfga-migrate:
 #    depends_on:
 #      openfga-postgres:
@@ -77,9 +75,9 @@ services:
 #    networks:
 #      - trumpet-proxy
 
-#networks:
-#  trumpet-proxy:
-#    external: true
+networks:
+  trumpet-proxy:
+    external: true
 
 #volumes:
 #  letsencrypt:
