@@ -45,6 +45,20 @@ Datasets = {
             'error_code': '100',
         },
     },
+    'use_case': {
+        'type': {
+            'value': 'string',
+            'error_code': '9900',
+        },
+        'regex': {
+            'value': '^(HNC|SBRT|NSCLC)$',
+            'error_code': '2500',
+        },
+        'required': {
+            'value': True,
+            'error_code': '10000',
+        },
+    },
     'statistics': {
         'type': {
             'value': 'text',

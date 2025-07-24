@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, TIMESTAMP, func
+from sqlalchemy import Column, String, Integer, ForeignKey, TIMESTAMP, func, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.types import Text
 
@@ -14,6 +14,7 @@ class Datasets(Base):
 
     title = Column(String(100), nullable=False, )
     about = Column(Text, nullable=False, )
+    use_case = Column(Enum('HNC', 'SBRT', 'NSCLC', name='datasets_use_case_enum'), nullable=False)
     statistics = Column(Text, nullable=False, )
 
     temporal_coverage_start = Column(TIMESTAMP, nullable=True)

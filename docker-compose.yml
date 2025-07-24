@@ -28,6 +28,8 @@ services:
       - ./docker/postgresql/cloud/data:/var/lib/postgresql/data/
     networks:
       - trumpet-proxy
+    ports:
+      - "5432:5432"
 
 #  openfga-postgres:
 #    image: postgres:14
