@@ -1,7 +1,10 @@
 import json
 import re
 
+from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.response_formatter import ResponseFormatter
 
@@ -56,8 +59,32 @@ def execute(request: IRequest, repo, entity=None):
     # Step 4: Fetch records and return response
     collected_records = repo.get_collection(query)
 
+    _add_org_details_to_items(collected_records)
+    _parse_json_attrs(collected_records)
+
     return response_formatter.success(
         collected_records,
         message="Data retrieved successfully.",
         status_code=200
     )
+
+
+def _add_org_details_to_items(collected_records: dict):
+    unique_org_ids = {item["organization_id"] for item in collected_records if item["organization_id"] is not None}
+    unique_org_ids = list(unique_org_ids)
+
+    repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    organization_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Organizations")
+
+    orgs = organization_repo.get({'id': unique_org_ids}, is_collection=True)
+
+    org_dict = { org["id"]: org for org in orgs }
+
+    for record in collected_records:
+        org_id = record.get("organization_id")
+        record["organization_details"] = org_dict.get(org_id)
+
+
+def _parse_json_attrs(collected_records):
+    for record in collected_records:
+        record["statistics"] = json.loads(record["statistics"])
