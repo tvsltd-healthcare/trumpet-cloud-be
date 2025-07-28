@@ -63,9 +63,7 @@ def execute(request: IRequest, repo, entity=None):
         if not user_data:
             return response_formatter.error('User not found', 404)
 
-        if user_data.get("status") == "deleted":
-            continue
-        else:
+        if user_data.get("status") != "deleted":
             # append user data to user info list
             user_role = get_role_name(repo_getter, user_data.get("id"))
             user_info = {
