@@ -34,6 +34,7 @@ def execute(request: IRequest, repo, entity=None):
     datasets = repo.get_collection(ids)
 
     _add_org_details_to_items(datasets)
+    _parse_json_attrs(datasets)
 
     dataset = datasets[0] if datasets else None
 
@@ -57,3 +58,8 @@ def _add_org_details_to_items(collected_records: dict):
     for record in collected_records:
         org_id = record.get("organization_id")
         record["organization_details"] = org_dict.get(org_id)
+
+
+def _parse_json_attrs(collected_records):
+    for record in collected_records:
+        record["statistics"] = json.loads(record["statistics"])
