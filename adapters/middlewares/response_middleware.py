@@ -60,6 +60,7 @@ class ResponseMiddleware(BaseHTTPMiddleware):
                 # Try to decode and parse JSON content
                 try:
                     data = json.loads(content.decode())
+                    print(data)
                     # check if data json has key named data exists
                     if "data" in data:
                         # If data is not None, use it as the response body
@@ -101,6 +102,10 @@ class ResponseMiddleware(BaseHTTPMiddleware):
         if not model_name:
             return response_body
         else:
+            response_body_data = response_body["data"]
+            if response_body_data.get('ignore_response') is True:
+                response_body_data.pop("ignore_response", None)
+                return response_body
             # Get the attributes of the model based on the model name
             get_model_attributes = self.get_model_attributes(model_name, configs[0]['models'])
             if not get_model_attributes:

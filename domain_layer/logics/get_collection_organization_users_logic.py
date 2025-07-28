@@ -63,7 +63,9 @@ def execute(request: IRequest, repo, entity=None):
         if not user_data:
             return response_formatter.error('User not found', 404)
 
-        if user_data.get("status") != "deleted":
+        if user_data.get("status") == "deleted":
+            continue
+        else:
             # append user data to user info list
             user_role = get_role_name(repo_getter, user_data.get("id"))
             user_info = {
@@ -77,6 +79,8 @@ def execute(request: IRequest, repo, entity=None):
             }
             user_list.append(user_info)
     organization["users"] = user_list
+    # if we want to ignore the response middleware filtering, we can set a flag
+    organization["ignore_response"] = True
     return {
         "message": "Data retrieved successfully.",
         "status_code": 200,
