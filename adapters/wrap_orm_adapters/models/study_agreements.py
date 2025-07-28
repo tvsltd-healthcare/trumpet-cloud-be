@@ -9,6 +9,7 @@ class StudyAgreements(Base):
     id = Column(Integer, primary_key=True, autoincrement=True,)
     purpose = Column(String(30), nullable=True,)
     participants = Column(String(255), nullable=True,)
+    use_case = Column(Enum('HNC', 'SBRT', 'NSCLC', name='study_agreements_use_case_enum'), nullable=True)
     samples = Column(Integer, nullable=True,)
     pet = Column(Enum('None', 'CDC_DP', 'ThHE', name='study_agreements_pet_enum'), nullable=True,)
     pet_config = Column(Text, nullable=False,)

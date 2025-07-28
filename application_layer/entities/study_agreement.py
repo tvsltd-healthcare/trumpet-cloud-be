@@ -15,6 +15,20 @@ StudyAgreements = {
             'error_code': '119',
         },
     },
+    'use_case': {
+        'type': {
+            'value': 'string',
+            'error_code': '9990',
+        },
+        'regex': {
+            'value': '^(HNC|SBRT|NSCLC)$',
+            'error_code': '95500',
+        },
+        'required': {
+            'value': True,
+            'error_code': '99890',
+        },
+    },
     'participants': {
         'type': {
             'value': 'string',
