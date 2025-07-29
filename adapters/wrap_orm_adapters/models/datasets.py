@@ -25,8 +25,8 @@ class Datasets(Base):
     license_title = Column(String(255), nullable=True, )
     license_details =  Column(Text, nullable=True, )
 
-    created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
 

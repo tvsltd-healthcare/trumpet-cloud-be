@@ -15,8 +15,8 @@ class Files(Base):
     mime_type = Column(String(100), nullable=True)
     size = Column(Integer, nullable=True)
     organization_id = Column(Integer, nullable=True)
-    created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
 

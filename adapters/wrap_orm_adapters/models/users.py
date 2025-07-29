@@ -13,8 +13,8 @@ class Users(Base):
     password = Column(String(255), nullable=True,)
     status = Column(Enum('approved', 'disapproved', 'blocked', 'pending', 'deleted', name='users_status_enum'), nullable=True, default='pending')
     phone = Column(String(20), nullable=True, unique=True,)
-    created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 

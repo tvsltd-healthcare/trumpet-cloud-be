@@ -15,8 +15,8 @@ class OrganizationStudyAgreements(Base):
     status = Column(Enum('pending', 'approved', 'disapproved', name='study_agreements_status_enum'),
                              nullable=True, default='pending')
 
-    created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
 

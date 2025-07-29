@@ -9,8 +9,8 @@ class StudyUsers(Base):
     id = Column(Integer, primary_key=True, autoincrement=True,)
     study_id = Column(Integer, ForeignKey('studies.id'), nullable=True,)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=True,)
-    created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 

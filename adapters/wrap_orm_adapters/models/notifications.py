@@ -11,8 +11,8 @@ class Notifications(Base):
     is_read = Column(Boolean, nullable=False, default=False)
     type = Column(Enum('organization_approved', 'user_approved', name='notifications_type_enum'), nullable=True, )
     read_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True, )
 
