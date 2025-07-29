@@ -37,6 +37,8 @@ def execute(request: IRequest):
         
         study_agreement_repo = repo_discovery.get_repo_invoker("StudyAgreements")
         study_agreement = study_agreement_repo.get({"id": study_agreement_id})
+
+        print('got this ========== 333333')
         
         if not study_agreement:
             return response_formatter.error("Study Agreement not found.", 403)
@@ -45,6 +47,9 @@ def execute(request: IRequest):
         
         study_agreement_status = study_agreement.get('status', None)
 
+        print('got this ========== 444444')
+
+        #todo: uncommnet later 
         if study_agreement_status != 'approved':
             return response_formatter.error("Study Agreement is not approved.", 403)
         
@@ -52,11 +57,16 @@ def execute(request: IRequest):
         org_id = _get_current_user_org_id(request, repo_discovery)
         if not org_id:
             return response_formatter.error("User is not assigned to any organization.", 403)
+        
+        print('got this ========== 5555555')
 
         org_repo = repo_discovery.get_repo_invoker("Organizations")
         organization = org_repo.get({"id": org_id})
+        #todo: uncommnet later
         if not organization or organization.get("type") != "researcher":
             return response_formatter.error("Not Permitted.", 403)
+        
+        print('got this ========== 6666666')
 
         # Step 3: Check if agreement has at least one data owner
         org_agreement_repo = repo_discovery.get_repo_invoker("OrganizationStudyAgreements")
@@ -65,26 +75,76 @@ def execute(request: IRequest):
             is_collection=True
         )
 
+        print('got this ========== 7777777')
+
         if not do_org_agreements:
             return response_formatter.error("No data owner organization found study agreements found.", 404)
         
-        # Step 4: Retrive and sort data owner hosts saved in Organizations table as host list
-        do_org_ids = [
-            a.get("organization_id") for a in do_org_agreements if a.get("organization_id")
-        ]
+        org_ids = [do_org['organization_id'] for do_org in do_org_agreements]
+        dataset_ids = [do_org['dataset_id'] for do_org in do_org_agreements]
+
+        print('got this ========== 888888')
+
+        # {'3c1c414e-a117-4f8d-aad5-55e819261290': 'https://trumpetdo1.technovativesolutions.co.uk', 
+        #  '8cbd8eed-c82e-4b43-8264-faa66d144455': 'https://trumpetdo2.technovativesolutions.co.uk'}
 
         org_repo = repo_discovery.get_repo_invoker("Organizations")
+        organizations = org_repo.get({"id": org_ids, "type": "data_owner"}, is_collection=True)
 
-        data_owner_orgs = org_repo.get({"id": do_org_ids, "type": "data_owner"}, is_collection=True)
+        dataset_repo = repo_discovery.get_repo_invoker("Datasets")
+        datasets = dataset_repo.get({"id": dataset_ids}, is_collection=True)
 
-        sorted_do_orgs = sorted(data_owner_orgs, key=lambda x: x.get("id", 0))
-        host_list = [org.get("host") for org in sorted_do_orgs]
+        
+        org_id_to_host = {org['id']: org['host'] for org in organizations if 'id' in org and 'host' in org}
+        dataset_id_to_don_uid = {d['id']: d['don_uid'] for d in datasets if 'id' in d and 'don_uid' in d}
+
+        do_org_ids = {
+            a.get("dataset_id"): a.get("organization_id") for a in do_org_agreements if a.get("dataset_id") and a.get("organization_id")
+        }
+
+        do_org_ids = dict(sorted(do_org_ids.items(), key=lambda item: item[1]))
+
+        print('do_org_ids', do_org_ids)
+
+
+        host_dataset_map = {
+            dataset_id_to_don_uid[dataset_id]: org_id_to_host[org_id]
+            for dataset_id, org_id in do_org_ids.items()
+            if org_id in org_id_to_host
+        }
+
+        print('host_dataset_map', host_dataset_map)
+
+
+        # sorted_host_dataset_uid = dict(sorted(host_dataset_map.items(), key=lambda item: item[1]))
+
+        # print('sorted_host_dataset_uid', sorted_host_dataset_uid)
+        
+        # sdfdsaf
+        
+        # Step 4: Retrive and sort data owner hosts saved in Organizations table as host list
+        # do_org_ids = {
+        #     a.get("organization_id"): a.get("dataset_id") for a in do_org_agreements if a.get("dataset_id") and a.get("organization_id")
+        # }
+
+        # do_org_ids = [
+        #     a.get("organization_id") for a in do_org_agreements if a.get("organization_id")
+        # ]
+
+        # org_repo = repo_discovery.get_repo_invoker("Organizations")
+
+        # data_owner_orgs = org_repo.get({"id": do_org_ids, "type": "data_owner"}, is_collection=True)
+
+        # sorted_do_orgs = sorted(data_owner_orgs, key=lambda x: x.get("id", 0))
+        # host_list = [org.get("host") for org in sorted_do_orgs]
+        
+        # don_uid: host_url
 
         # step 5: Start Training
         injector = BaseLogicInjector()
         ids = { 'study_id': study_agreement.get('study_id') }
         agreement_id = study_agreement.get('id')
-        injector.inject_business_logic(entity=study_agreement, entity_id=ids, agreement_id=agreement_id, host_list=host_list)
+        injector.inject_business_logic(entity=study_agreement, entity_id=ids, agreement_id=agreement_id, host_dataset_map=host_dataset_map)
         
         return response_formatter.success(
             message="Training Started Successfully.",

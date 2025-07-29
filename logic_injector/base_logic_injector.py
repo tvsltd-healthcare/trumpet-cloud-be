@@ -14,11 +14,12 @@ class BaseLogicInjector:
     def __init__(self):
         pass
 
-    def inject_business_logic(self, entity_id: dict, entity: dict, agreement_id: int, host_list: list[str]):
+    def inject_business_logic(self, entity_id: dict, entity: dict, agreement_id: int, host_dataset_map: dict):
         # ToDo: generalize this for all the custom logics
         # Decode the dict from the entity
         entity = dict(entity)
-        print('host_list', host_list)
+        host_list = list(host_dataset_map.values())
+        print('host_list======', host_list)
         participants = list(map(lambda host: f"{host.removeprefix('http://').removeprefix('https://').split(':')[0]}:{FL_COMMUNICATION_PORT}",
                                 host_list)) if host_list else []
 
@@ -52,7 +53,15 @@ class BaseLogicInjector:
 
             do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_endpoint,
                                                                                          model=entity.get('model', "NN_HNC"),
+                                                                                         dataset_uid=self.get_key_by_value(host_dataset_map, do_endpoint),
                                                                                          samples=entity.get('samples', 80))
+            
+    def get_key_by_value(self, d, target_value):
+        for key, value in d.items():
+            if value == target_value:
+                return key
+        return None  # if not found
+    
 
 
 class FLSetupInjector:
@@ -94,11 +103,9 @@ class FLSetupInjector:
             return False
         return True, response.json()
 
-    def call_participants_do_fl_core_query(self, do_url: str, model: str, samples: Optional[int] = 80,
+    def call_participants_do_fl_core_query(self, do_url: str, model: str, dataset_uid: str, samples: Optional[int] = 80,
                                            query: Optional[str] = None):
-        _request_body = {"model": model, "dataset_id": "HNC"}
-        if samples:
-            _request_body["samples"] = samples
+        _request_body = {"model": model, "samples": samples, "dataset_uid": dataset_uid}
 
         response = requests.post(url=do_url + self.do_load_data_uri, json=_request_body)
         if response.status_code != 200:

@@ -7,6 +7,7 @@ from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.parse_token import token_parser
 
+DEFAULT_SAMPLE_VALUE = 80
 
 def execute(request: IRequest, repo, entity=None):
     """
@@ -33,6 +34,7 @@ def execute(request: IRequest, repo, entity=None):
     try:
         # Step 1: Create the study agreement
         ids = request.get_path_params()
+        entity.samples = entity.samples or DEFAULT_SAMPLE_VALUE
         created_agreement = repo.post(entity, ids)
 
         study_agreement_id = created_agreement.get('id')
