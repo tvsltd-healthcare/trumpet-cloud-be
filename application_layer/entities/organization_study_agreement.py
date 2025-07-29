@@ -17,6 +17,12 @@ OrganizationStudyAgreements = {
             'error_code': '7075',
         },
     },
+    'dataset_id': {
+        'type': {
+            'value': 'number',
+            'error_code': '7086',
+        },
+    },
     'status': {
         'type': {
             'value': 'string',

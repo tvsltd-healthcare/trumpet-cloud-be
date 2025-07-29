@@ -3063,6 +3063,38 @@
           "in_response": true
         },
         {
+          "column": "datasets",
+          "type": "VARCHAR",
+          "length": 255,
+          "auto_increment": false,
+          "unique": false,
+          "allow_null": true,
+          "primary_key": false,
+          "foreign_key": "",
+          "fk_reference": "",
+          "enum_or_set_values": "",
+          "default_value": "",
+          "on_delete": "",
+          "on_update": "",
+          "is_redundant": false,
+          "should_sync": false,
+          "validations": [
+            {
+              "tag": "type",
+              "rule": "string",
+              "error_code": "9005",
+              "default_message": ""
+            },
+            {
+              "tag": "required",
+              "rule": true,
+              "error_code": "9995",
+              "default_message": ""
+            }
+          ],
+          "in_response": true
+        },
+        {
           "column": "pet",
           "type": "ENUM",
           "length": 30,
@@ -4411,6 +4443,32 @@
               "tag": "type",
               "rule": "number",
               "error_code": "67",
+              "default_message": ""
+            }
+          ],
+          "in_response": true
+        },
+        {
+          "column": "dataset_id",
+          "type": "INT",
+          "length": "",
+          "auto_increment": false,
+          "unique": false,
+          "allow_null": true,
+          "primary_key": false,
+          "foreign_key": "id",
+          "fk_reference": "Datasets",
+          "enum_or_set_values": "",
+          "default_value": "",
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "is_redundant": false,
+          "should_sync": false,
+          "validations": [
+            {
+              "tag": "type",
+              "rule": "number",
+              "error_code": "7086",
               "default_message": ""
             }
           ],
