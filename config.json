@@ -2948,8 +2948,8 @@
         },
         {
           "column": "purpose",
-          "type": "VARCHAR",
-          "length": 30,
+          "type": "TEXT",
+          "length": "",
           "auto_increment": false,
           "unique": false,
           "allow_null": true,

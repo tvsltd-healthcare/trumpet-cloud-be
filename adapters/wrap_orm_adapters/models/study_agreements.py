@@ -7,7 +7,7 @@ class StudyAgreements(Base):
     __tablename__ = 'study_agreements'
 
     id = Column(Integer, primary_key=True, autoincrement=True,)
-    purpose = Column(String(30), nullable=True,)
+    purpose = Column(Text, nullable=True,)
     participants = Column(String(255), nullable=True,)
     use_case = Column(Enum('HNC', 'SBRT', 'NSCLC', name='study_agreements_use_case_enum'), nullable=True)
     samples = Column(Integer, nullable=True,)

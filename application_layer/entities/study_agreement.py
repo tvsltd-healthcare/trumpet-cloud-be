@@ -7,7 +7,7 @@ StudyAgreements = {
     },
     'purpose': {
         'type': {
-            'value': 'string',
+            'value': 'text',
             'error_code': '118',
         },
         'required': {
