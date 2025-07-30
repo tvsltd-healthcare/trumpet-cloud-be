@@ -57,23 +57,38 @@ def execute(request: IRequest, repo, entity=None):
 
     study_agreement["org_approval_status"] = org_agreements.get("status")
 
-    # get participants info
-    if study_agreement.get("participants") is not None:
-        split_participants = study_agreement.get("participants").split(",")
-        organizations_list = []
-        for participant in split_participants:
-            organization_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("Organizations")
-            organizations = organization_repo.get({"id": participant})
-            if organizations:
-                organizations_list.append(organizations)
+    datasets_string = study_agreement.get("datasets")
 
-        study_agreement["participant_organizations"] = organizations_list
+    if datasets_string:
+        dataset_ids = datasets_string.split(",")
+        dataset_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("Datasets")
+        datasets = dataset_repo.get({"id": dataset_ids}, is_collection=True)
+        _add_org_details_to_items(datasets)
+    else:
+        datasets = []
+
+    study_agreement["dataset_details"] = datasets
 
     return response_formatter.success(
         data=study_agreement,
         message="Entity retrieved successfully",
         status_code=200
     )
+
+def _add_org_details_to_items(collected_records: dict):
+    unique_org_ids = {item["organization_id"] for item in collected_records if item["organization_id"] is not None}
+    unique_org_ids = list(unique_org_ids)
+
+    repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    organization_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Organizations")
+
+    orgs = organization_repo.get({'id': unique_org_ids}, is_collection=True)
+
+    org_dict = { org["id"]: org for org in orgs }
+
+    for record in collected_records:
+        org_id = record.get("organization_id")
+        record["organization_details"] = org_dict.get(org_id)
 
 
 def _get_current_user_org_id(request: IRequest, repo_discovery_service: IAppRepoDiscoveryGetter) -> int | None:
