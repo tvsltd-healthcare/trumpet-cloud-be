@@ -5134,6 +5134,10 @@
         {
           "verb": "post",
           "url": "/api/generate-token"
+        },
+        {
+          "verb": "post",
+          "url": "/api/unpublish-dataset"
         }
       ]
     }
