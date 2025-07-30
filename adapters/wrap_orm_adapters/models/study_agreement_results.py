@@ -13,8 +13,8 @@ class StudyAgreementResults(Base):
     file_path = Column(Text, nullable=False,)
     version = Column(String(20), nullable=True,)
     status = Column(Enum('pending', 'completed', name='study_agreement_results_status_enum'), nullable=True,)
-    created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=True, default=func.now(), onupdate=func.now())
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 

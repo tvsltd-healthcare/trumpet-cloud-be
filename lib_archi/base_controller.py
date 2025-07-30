@@ -1,6 +1,6 @@
 import re
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import TypeVar, Generic, Optional, Dict
 
 from application_layer.abstractions.response_interface import IResponseHandler
@@ -206,13 +206,13 @@ class BaseController(Generic[Entity]):
 
         if request.get_method_name() == 'POST':
             if not hasattr(entity, 'created_at') or entity.created_at is None:
-                entity.created_at = datetime.now()
+                entity.created_at = datetime.now(timezone.utc)
             if not hasattr(entity, 'created_by') or entity.created_by is None:
                 entity.created_by = user_id
 
         if request.get_method_name() == 'PUT' or request.get_method_name() == 'PATCH':
             if not hasattr(entity, 'updated_at') or entity.updated_at is None:
-                entity.updated_at = datetime.now()
+                entity.updated_at = datetime.now(timezone.utc)
             if not hasattr(entity, 'updated_by') or entity.updated_by is None:
                 entity.updated_by = user_id
 
