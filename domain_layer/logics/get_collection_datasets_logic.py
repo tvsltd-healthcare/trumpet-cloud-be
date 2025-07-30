@@ -59,8 +59,9 @@ def execute(request: IRequest, repo, entity=None):
     # Step 4: Fetch records and return response
     collected_records = repo.get_collection(query)
 
-    _add_org_details_to_items(collected_records)
-    _parse_json_attrs(collected_records)
+    if collected_records:
+        _add_org_details_to_items(collected_records)
+        _parse_json_attrs(collected_records)
 
     return response_formatter.success(
         collected_records,

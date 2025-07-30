@@ -14,46 +14,70 @@ class BaseLogicInjector:
     def __init__(self):
         pass
 
-    def inject_business_logic(self, entity_id: dict, entity: dict, agreement_id: int, host_list: list[str]):
-        # ToDo: generalize this for all the custom logics
-        # Decode the dict from the entity
-        entity = dict(entity)
-        print('host_list', host_list)
-        participants = list(map(lambda host: f"{host.removeprefix('http://').removeprefix('https://').split(':')[0]}:{FL_COMMUNICATION_PORT}",
-                                host_list)) if host_list else []
+    def inject_business_logic(self, study_agreement: dict, do_org_agreements: list):
+        """
+        Args:
+            study_agreement:
+            do_org_agreements:
+        Returns:
+            None
+        """
 
-        # First call the Setup method in Trumpet Cloud's FL Core Agg
+        do_org_agreements = sorted(do_org_agreements, key=lambda do_org_agreement: do_org_agreement["organization"]["id"])
+
+        agreement_id = study_agreement.get('id')
+        study_id = study_agreement.get('study_id')
+        name = str(study_id)
+
+        purpose = study_agreement.get('purpose', "")
+        description = study_agreement.get('description', "N/A")
+
+        coordinator = os.getenv('COORDINATOR')
+        model = study_agreement.get('model', "NN_HNC")
+
+        pet = study_agreement.get('pet')
+        pet_config = study_agreement.get("pet_config")
+
+        samples = study_agreement.get('samples', 80)
+        rounds = study_agreement.get('rounds', "3")
+
+
+        participants = [prepare_fl_core_communication_url(do_org_agreement) for do_org_agreement in do_org_agreements]
+        webhook_url = os.getenv('LISTENER_WEBHOOK_URL')
+
         fl_injector_obj = FLSetupInjector()
 
         agg_response = fl_injector_obj.call_setup_on_agg_fl_core(fl_agg_core_url=os.getenv('TC_FL_CORE_BASE_URL'),
                                                                  agreement_id=agreement_id,
-                                                                 name=str(entity_id.get('study_id', "")),
-                                                                 coordinator=os.getenv('COORDINATOR'),
-                                                                 model=entity.get('model', "NN_HNC"),
-                                                                 pet=entity.get('pet'),
-                                                                 pet_config=entity.get("pet_config"),
-                                                                 rounds=entity.get('rounds', "3"),
-                                                                 webhook_url=os.getenv('LISTENER_WEBHOOK_URL'),
+                                                                 name=name,
+                                                                 coordinator=coordinator,
+                                                                 model=model,
+                                                                 pet=pet,
+                                                                 pet_config=pet_config,
+                                                                 rounds=rounds,
+                                                                 webhook_url=webhook_url,
                                                                  participants=participants)
 
-        for do_endpoint in host_list:
-            do_response = fl_injector_obj.call_setup_on_participants_do_fl_core(do_url=do_endpoint,
+        for do_org_agreement in do_org_agreements:
+            do_url = do_org_agreement['organization']['host']
+            dataset_uid = do_org_agreement['dataset']['don_uid']
+            do_response = fl_injector_obj.call_setup_on_participants_do_fl_core(do_url=do_url,
                                                                                 agreement_id=agreement_id,
-                                                                                name=entity_id.get('study_id', ""),
-                                                                                coordinator=os.getenv('COORDINATOR'),
-                                                                                model=entity.get('model', "NN_HNC"),
-                                                                                pet=entity.get('pet'),
-                                                                                pet_config=entity.get("pet_config"),
-                                                                                rounds=entity.get('rounds', "3"),
-                                                                                webhook_url=os.getenv('LISTENER_WEBHOOK_URL'),
+                                                                                name=name,
+                                                                                coordinator=coordinator,
+                                                                                model=model,
+                                                                                pet=pet,
+                                                                                pet_config=pet_config,
+                                                                                rounds=rounds,
+                                                                                webhook_url=webhook_url,
                                                                                 participants=participants,
-                                                                                purpose=entity.get('purpose', ""),
-                                                                                description=entity.get('description', "N/A"), )
+                                                                                purpose=purpose,
+                                                                                description=description)
 
-            do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_endpoint,
-                                                                                         model=entity.get('model', "NN_HNC"),
-                                                                                         samples=entity.get('samples', 80))
-
+            do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_url,
+                                                                                         model=model,
+                                                                                         dataset_uid=dataset_uid,
+                                                                                         samples=samples)
 
 class FLSetupInjector:
     setup_uri = "/setup"
@@ -94,13 +118,21 @@ class FLSetupInjector:
             return False
         return True, response.json()
 
-    def call_participants_do_fl_core_query(self, do_url: str, model: str, samples: Optional[int] = 80,
+    def call_participants_do_fl_core_query(self, do_url: str, model: str, dataset_uid: str, samples: Optional[int] = 80,
                                            query: Optional[str] = None):
-        _request_body = {"model": model, "dataset_id": "HNC"}
-        if samples:
-            _request_body["samples"] = samples
+        _request_body = {"model": model, "samples": samples, "dataset_uid": dataset_uid}
+
+        print('call_participants_do_fl_core_query request =====', _request_body)
 
         response = requests.post(url=do_url + self.do_load_data_uri, json=_request_body)
+
+        print('call_participants_do_fl_core_query request =====', response)
+
         if response.status_code != 200:
             return False
         return True, response.json()
+
+
+def prepare_fl_core_communication_url(do_org_agreement):
+    host = do_org_agreement['organization']['host']
+    return f"{host.removeprefix('http://').removeprefix('https://').split(':')[0]}:{FL_COMMUNICATION_PORT}"

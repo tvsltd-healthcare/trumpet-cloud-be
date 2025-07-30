@@ -36,3 +36,4 @@ class Datasets(Base):
     organization = relationship('Organizations', foreign_keys=[organization_id])
     study_agreement_datasets = relationship('StudyAgreementDatasets', back_populates='dataset',
                                             foreign_keys='StudyAgreementDatasets.dataset_id', lazy='dynamic')
+    organization_study_agreements = relationship('OrganizationStudyAgreements', back_populates='dataset', foreign_keys='OrganizationStudyAgreements.dataset_id', lazy='dynamic')

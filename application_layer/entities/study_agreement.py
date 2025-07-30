@@ -69,6 +69,20 @@ StudyAgreements = {
             'error_code': '130',
         },
     },
+    'datasets': {
+        'type': {
+            'value': 'string',
+            'error_code': '9005',
+        },
+        'required': {
+            'value': True,
+            'error_code': '9995',
+        },
+        'regex': {
+            'value': '^\s*\d+\s*(,\s*\d+\s*)*$',
+            'error_code': '111001',
+        }
+    },
     'model': {
         'type': {
             'value': 'string',

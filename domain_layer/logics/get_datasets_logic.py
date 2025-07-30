@@ -33,8 +33,9 @@ def execute(request: IRequest, repo, entity=None):
     ids = request.get_path_params()
     datasets = repo.get_collection(ids)
 
-    _add_org_details_to_items(datasets)
-    _parse_json_attrs(datasets)
+    if datasets:
+        _add_org_details_to_items(datasets)
+        _parse_json_attrs(datasets)
 
     dataset = datasets[0] if datasets else None
 
