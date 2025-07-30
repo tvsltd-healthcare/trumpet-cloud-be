@@ -64,7 +64,9 @@ def execute(request: IRequest):
 
         study_agreements = [_add_org_approval_to_study_agreement(study_agreement, org_agreements)
                             for study_agreement in study_agreements]
-
+        
+        _add_dataset_details_to_items(study_agreements, org_id)
+        
         return response_formatter.success(
             study_agreements,
             message="Study agreements retrieved successfully.",
@@ -78,6 +80,59 @@ def execute(request: IRequest):
 # -------------------
 # Private Helpers
 # -------------------
+
+def _fetch_dataset_id_list(collected_records):
+    dataset_ids = set()
+    
+    for item in collected_records:
+        datasets = item.get("datasets")
+        
+        if datasets:
+            item_wise_dataset_ids = [num.strip() for num in datasets.split(",") if num.strip()]
+            dataset_ids.update(item_wise_dataset_ids)
+
+    return list(dataset_ids)
+
+def _get_current_org_details(current_org_id):
+    repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    organization_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Organizations")
+    return organization_repo.get({'id': current_org_id}, is_collection=False)
+
+def _get_datasets_of_org_for_agreements(dataset_ids, current_org_details):
+    if not dataset_ids:
+        return []
+
+    repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    dataset_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Datasets")
+    current_org_datasets = dataset_repo.get({'id': dataset_ids, 'organization_id': current_org_details['id']}, is_collection=True)
+
+    for item in current_org_datasets:
+        item["organization_details"] = current_org_details
+
+    return current_org_datasets
+
+def _filter_datasets_for_agreement(study_agreement, current_org_datasets):
+    datasets_string = study_agreement.get("datasets")
+
+    if datasets_string:
+        current_study_dataset_ids = [int(item.strip()) for item in datasets_string.split(",") if item.strip()]
+        current_study_datasets = [item for item in current_org_datasets if item.get("id") in current_study_dataset_ids]
+    else:
+        current_study_datasets = []
+
+    return current_study_datasets
+
+
+def _add_dataset_details_to_items(study_agreements: list, current_org_id: int):
+    dataset_ids = _fetch_dataset_id_list(study_agreements)
+    current_org_details = _get_current_org_details(current_org_id)
+    current_org_datasets_for_provided_agreements = _get_datasets_of_org_for_agreements(dataset_ids, current_org_details)
+    
+    for study_agreement in study_agreements:
+        current_study_datasets = _filter_datasets_for_agreement(study_agreement, current_org_datasets_for_provided_agreements)
+        study_agreement["dataset_details"] = current_study_datasets
+        study_agreement.pop("datasets", None)
+
 
 def _get_current_user_org_id(request: IRequest, repo_discovery_service: IAppRepoDiscoveryGetter) -> int | None:
     """Extracts the current user's organization ID using the JWT token in the Authorization header."""
