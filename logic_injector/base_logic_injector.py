@@ -23,8 +23,6 @@ class BaseLogicInjector:
             None
         """
 
-        do_org_agreements = sorted(do_org_agreements, key=lambda do_org_agreement: do_org_agreement["organization"]["id"])
-
         agreement_id = study_agreement.get('id')
         study_id = study_agreement.get('study_id')
         name = str(study_id)
@@ -58,7 +56,7 @@ class BaseLogicInjector:
                                                                  webhook_url=webhook_url,
                                                                  participants=participants)
 
-        for do_org_agreement in do_org_agreements:
+        for index, do_org_agreement in enumerate(do_org_agreements):
             do_url = do_org_agreement['organization']['host']
             dataset_uid = do_org_agreement['dataset']['don_uid']
             do_response = fl_injector_obj.call_setup_on_participants_do_fl_core(do_url=do_url,
@@ -72,7 +70,8 @@ class BaseLogicInjector:
                                                                                 webhook_url=webhook_url,
                                                                                 participants=participants,
                                                                                 purpose=purpose,
-                                                                                description=description)
+                                                                                description=description,
+                                                                                node_id=f"{index+1}")
 
             do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_url,
                                                                                          model=model,
@@ -89,7 +88,7 @@ class FLSetupInjector:
                                   participants: List[str]) -> Union[bool, tuple[bool, dict]]:
         _request_body = {"name": name, "study_id": str(agreement_id), "coordinator": coordinator, "model": model,
                          "pet": pet, "pet_config": pet_config, "rounds": rounds, "webhook_url": webhook_url,
-                         "participants": participants, }
+                         "participants": participants, "node_id": "0"}
 
         print('call_setup_on_agg_fl_core request =====', _request_body)
 
@@ -103,10 +102,10 @@ class FLSetupInjector:
 
     def call_setup_on_participants_do_fl_core(self, do_url: str, agreement_id: int, name: str, coordinator: str,
                                               model: str, pet: str, pet_config: dict, rounds: str, description: str,
-                                              purpose: str, webhook_url: str, participants: List[str]) -> Union[bool, tuple[bool, dict]]:
+                                              purpose: str, webhook_url: str, participants: List[str], node_id: str) -> Union[bool, tuple[bool, dict]]:
         _request_body = {"name": name, "agreement_id": agreement_id, "coordinator": coordinator, "model": model,
                          "pet": pet, "pet_config": pet_config, "rounds": rounds, "webhook_url": webhook_url,
-                         "participants": participants, }
+                         "participants": participants, "node_id": node_id}
 
         print('call_setup_on_participants_do_fl_core request =====', _request_body)
 
