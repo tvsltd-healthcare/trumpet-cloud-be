@@ -93,7 +93,7 @@ class FLSetupInjector:
 
         print('call_setup_on_agg_fl_core request =====', _request_body)
 
-        response = requests.post(url=fl_agg_core_url + self.setup_uri, json=_request_body)
+        response = requests.post(url=fl_agg_core_url + self.setup_uri, json=_request_body, timeout=60)
 
         print('call_setup_on_agg_fl_core response =======', response)
 
@@ -110,7 +110,7 @@ class FLSetupInjector:
 
         print('call_setup_on_participants_do_fl_core request =====', _request_body)
 
-        response = requests.post(url=do_url + self.do_setup_uri, json=_request_body)
+        response = requests.post(url=do_url + self.do_setup_uri, json=_request_body, timeout=60)
 
         print('call_setup_on_participants_do_fl_core response =====', response)
 
@@ -124,7 +124,7 @@ class FLSetupInjector:
 
         print('call_participants_do_fl_core_query request =====', _request_body)
 
-        response = requests.post(url=do_url + self.do_load_data_uri, json=_request_body)
+        response = requests.post(url=do_url + self.do_load_data_uri, json=_request_body, timeout=60)
 
         print('call_participants_do_fl_core_query request =====', response)
 
