@@ -59,6 +59,20 @@ Datasets = {
             'error_code': '10000',
         },
     },
+    'status': {
+        'type': {
+            'value': 'string',
+            'error_code': '9770',
+        },
+        'regex': {
+            'value': '^(published|unpublished)$',
+            'error_code': '9771',
+        },
+        'required': {
+            'value': True,
+            'error_code': '9773',
+        },
+    },
     'statistics': {
         'type': {
             'value': 'text',

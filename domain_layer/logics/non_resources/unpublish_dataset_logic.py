@@ -31,11 +31,11 @@ def execute(request: IRequest):
         if not dataset:
             return response_formatter.error("Dataset could not be found!", 404)
         
-        # uncommet this block after adding status to datasets
-        # try:
-        #     dataset_status_update = dataset_repo.transact( "PATCH", data={'status': 'unpublished'}, query={'id': dataset.get('id')})
-        # except Exception as e:
-        #     return ResponseFormatter().error(str(e), 500)
+        try:
+            dataset_repo.transact( "PATCH", data={'status': 'unpublished'}, query={'id': dataset.get('id')})
+        except Exception as e:
+            return ResponseFormatter().error(str(e), 500)
+        
         return response_formatter.success( {}, 'Successfully Unpublished!', 200)
 
     except Exception as e:

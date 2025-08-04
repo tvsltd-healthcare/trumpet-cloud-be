@@ -15,6 +15,7 @@ class Datasets(Base):
     title = Column(String(100), nullable=False, )
     about = Column(Text, nullable=False, )
     use_case = Column(Enum('HNC', 'SBRT', 'NSCLC', name='datasets_use_case_enum'), nullable=False)
+    status = Column(Enum('published', 'unpublished', name='datasets_status_enum'),nullable=False, default='published', server_default='published')
     statistics = Column(Text, nullable=False, )
 
     temporal_coverage_start = Column(TIMESTAMP, nullable=True)
