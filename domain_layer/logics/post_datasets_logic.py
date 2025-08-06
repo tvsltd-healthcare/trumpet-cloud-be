@@ -49,7 +49,7 @@ def execute(request: IRequest, repo, entity=None):
         if dataset:
             try:
                 entity.status = 'published'
-                repo.transact( "PATCH", data=entity, query={'id': dataset.get('id')})
+                dataset = repo.patch(entity=entity, ids={'id': dataset.get('id')})
             except Exception as e:
                 return ResponseFormatter().error(str(e), 500)
         else:
