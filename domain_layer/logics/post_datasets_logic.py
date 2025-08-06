@@ -47,12 +47,11 @@ def execute(request: IRequest, repo, entity=None):
         dataset = repo.get({"don_uid": body['don_uid'], "organization_id": organization_id})
 
         if dataset:
-            pass
-            # uncommet this block after adding status to datasets
-            # try:
-            #     dataset_status_update = repo.transact( "PATCH", data={'status': 'published'}, query={'id': dataset.get('id')})
-            # except Exception as e:
-            #     return ResponseFormatter().error(str(e), 500)
+            try:
+                entity.status = 'published'
+                dataset = repo.patch(entity=entity, ids={'id': dataset.get('id')})
+            except Exception as e:
+                return ResponseFormatter().error(str(e), 500)
         else:
             entity.organization_id = organization_id
             dataset = repo.post(entity, ids={})
