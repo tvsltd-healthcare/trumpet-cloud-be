@@ -100,8 +100,8 @@ def seed_database():
 
     insert_data(
         [StudyAgreements(id=1, study_id=1, status="approved", purpose="Study agreement one purpose", participants="3,4",
-                         samples="1000", pet="None", pet_config = "{}", model="NN_HNC", legal="Study agreement one legal",
-                         study_privacy_budget="10000", created_by=3),
+                         samples="1000", pet="None", pet_config="{}", model="neural network", legal="Study agreement one legal",
+                         labels="HNC", created_by=3),
          OrganizationStudyAgreements(study_agreement_id=1, organization_id=2, organization_type="researcher",
                                      status="approved"),
          OrganizationStudyAgreements(study_agreement_id=1, organization_id=3, organization_type="data_owner",
