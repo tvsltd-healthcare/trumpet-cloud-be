@@ -88,6 +88,10 @@ StudyAgreements = {
             'value': 'string',
             'error_code': '1002',
         },
+        'regex': {
+            'value': '^(REG_LOG|NN)$',
+            'error_code': '1003',
+        },
     },
     'legal': {
         'type': {
@@ -95,7 +99,7 @@ StudyAgreements = {
             'error_code': '120',
         },
     },
-    'labels': {
+    'label': {
         'type': {
             'value': 'string',
             'error_code': '1002',

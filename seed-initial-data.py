@@ -98,16 +98,16 @@ def seed_database():
     insert_data([Studies(id=1, name="Study one", description="Study one description", purpose="Study one purpose",
                          status="active", organization_id=2), ], session)
 
-    insert_data(
-        [StudyAgreements(id=1, study_id=1, status="approved", purpose="Study agreement one purpose", participants="3,4",
-                         samples="1000", pet="None", pet_config="{}", model="neural network", legal="Study agreement one legal",
-                         labels="HNC", created_by=3),
-         OrganizationStudyAgreements(study_agreement_id=1, organization_id=2, organization_type="researcher",
-                                     status="approved"),
-         OrganizationStudyAgreements(study_agreement_id=1, organization_id=3, organization_type="data_owner",
-                                     status="approved"),
-         OrganizationStudyAgreements(study_agreement_id=1, organization_id=4, organization_type="data_owner",
-                                     status="approved"), ], session)
+    # insert_data(
+    #     [StudyAgreements(id=1, study_id=1, status="approved", purpose="Study agreement one purpose", participants="3,4",
+    #                      samples="1000", pet="None", pet_config="{}", model="NN", legal="Study agreement one legal",
+    #                      label="HNC", created_by=3),
+    #      OrganizationStudyAgreements(study_agreement_id=1, organization_id=2, organization_type="researcher",
+    #                                  status="approved"),
+    #      OrganizationStudyAgreements(study_agreement_id=1, organization_id=3, organization_type="data_owner",
+    #                                  status="approved"),
+    #      OrganizationStudyAgreements(study_agreement_id=1, organization_id=4, organization_type="data_owner",
+    #                                  status="approved"), ], session)
 
     for table_name in ["roles", "organizations", "users", "studies", "study_agreements"]:
         reset_sequences(table_name, "id", session)

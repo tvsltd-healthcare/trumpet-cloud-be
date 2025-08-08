@@ -3199,10 +3199,10 @@
           "foreign_key": "",
           "fk_reference": "",
           "enum_or_set_values": [
-            "logistic regression",
-            "neural network"
+            "REG_LOG",
+            "NN"
           ],
-          "default_value": "logistic regression",
+          "default_value": "REG_LOG",
           "on_delete": "",
           "on_update": "",
           "is_redundant": false,
@@ -3212,6 +3212,12 @@
               "tag": "type",
               "rule": "string",
               "error_code": "1002",
+              "default_message": ""
+            },
+            {
+              "tag": "regex",
+              "rule": "^(REG_LOG|NN)$",
+              "error_code": "1003",
               "default_message": ""
             }
           ],
@@ -3244,7 +3250,7 @@
           "in_response": true
         },
         {
-          "column": "labels",
+          "column": "label",
           "type": "ENUM",
           "length": "100",
           "auto_increment": false,

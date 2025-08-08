@@ -31,7 +31,9 @@ class BaseLogicInjector:
         description = study_agreement.get('description', "N/A")
 
         coordinator = os.getenv('COORDINATOR')
-        model = study_agreement.get('model', "NN_HNC")
+        model = study_agreement.get('model', "NN")
+
+        label = study_agreement.get('label', "HNC")
 
         pet = study_agreement.get('pet')
         pet_config = study_agreement.get("pet_config")
@@ -49,7 +51,7 @@ class BaseLogicInjector:
                                                                  agreement_id=agreement_id,
                                                                  name=name,
                                                                  coordinator=coordinator,
-                                                                 model=model,
+                                                                 model=f"{model}_{label}",
                                                                  pet=pet,
                                                                  pet_config=pet_config,
                                                                  rounds=rounds,
@@ -63,7 +65,7 @@ class BaseLogicInjector:
                                                                                 agreement_id=agreement_id,
                                                                                 name=name,
                                                                                 coordinator=coordinator,
-                                                                                model=model,
+                                                                                model=f"{model}_{label}",
                                                                                 pet=pet,
                                                                                 pet_config=pet_config,
                                                                                 rounds=rounds,
@@ -74,7 +76,7 @@ class BaseLogicInjector:
                                                                                 node_id=f"{index+1}")
 
             do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_url,
-                                                                                         model=model,
+                                                                                         model=f"{model}_{label}",
                                                                                          dataset_uid=dataset_uid,
                                                                                          samples=samples)
 
