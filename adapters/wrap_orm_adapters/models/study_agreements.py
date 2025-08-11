@@ -14,9 +14,9 @@ class StudyAgreements(Base):
     samples = Column(Integer, nullable=True,)
     pet = Column(Enum('None', 'CDC_DP', 'ThHE', name='study_agreements_pet_enum'), nullable=True,)
     pet_config = Column(Text, nullable=False,)
-    model = Column(Enum("REG_LOG", "NN", name='study_agreements_model_enum'), nullable=True, default='REG_LOG')
+    model = Column(Enum("REG_LOG", "NN", name='study_agreements_model_enum'), nullable=False)
     legal = Column(String(30), nullable=True,)
-    label = Column(Enum("HNC", "HNC_NECRO_JAW", "HNC_DYSPHAGIA", "HNC_ORAL_MUCOSITIS", name='study_agreements_label_enum'), nullable=True, default='HNC')
+    label = Column(Enum("HNC", "HNC_NECRO_JAW", "HNC_DYSPHAGIA", "HNC_ORAL_MUCOSITIS", name='study_agreements_label_enum'), nullable=False)
     expiration_date = Column(TIMESTAMP, nullable=True,)
     study_id = Column(Integer, ForeignKey('studies.id'), nullable=True,)
     status = Column(Enum('pending', 'approved', 'disapproved', name='study_agreements_status_enum'),

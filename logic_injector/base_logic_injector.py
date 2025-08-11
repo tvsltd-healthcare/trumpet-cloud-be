@@ -31,9 +31,9 @@ class BaseLogicInjector:
         description = study_agreement.get('description', "N/A")
 
         coordinator = os.getenv('COORDINATOR')
-        model = study_agreement.get('model', "NN")
+        model = study_agreement.get('model')
 
-        label = study_agreement.get('label', "HNC")
+        label = study_agreement.get('label')
 
         pet = study_agreement.get('pet')
         pet_config = study_agreement.get("pet_config")
