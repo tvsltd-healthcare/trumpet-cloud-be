@@ -89,7 +89,7 @@ StudyAgreements = {
             'error_code': '1002',
         },
         'regex': {
-            'value': '^(NN_HNC|NN_HNC_NECRO_JAW|NN_HNC_DYSPHAGIA|NN_HNC_ORAL_MUCOSITIS|REG_LOG_HNC|REG_LOG_HNC_NECRO_JAW|REG_LOG_HNC_DYSPHAGIA|REG_LOG_HNC_ORAL_MUCOSITIS)$',
+            'value': '^(REG_LOG|NN)$',
             'error_code': '1003',
         },
     },
@@ -99,10 +99,14 @@ StudyAgreements = {
             'error_code': '120',
         },
     },
-    'study_privacy_budget': {
+    'label': {
         'type': {
-            'value': 'number',
-            'error_code': '121',
+            'value': 'string',
+            'error_code': '1002',
+        },
+        'regex': {
+            'value': '^(HNC|HNC_NECRO_JAW|HNC_DYSPHAGIA|HNC_ORAL_MUCOSITIS)$',
+            'error_code': '1003',
         },
     },
     'expiration_date': {
