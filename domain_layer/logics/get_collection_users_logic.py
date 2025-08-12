@@ -55,43 +55,47 @@ def execute(request: IRequest, repo, entity=None):
     if not current_user_id:
         return response_formatter.error("Authenticated user ID not found in token.", 401)
 
-
     # Step 2: Retrieve user's organization from OrganizationUsers repo
     repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
-    organization_users_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("OrganizationUsers")
+    check_user_role = get_role_name(repo_discovery_getter, current_user_id)
+    check_admin_role = check_user_role.get('name')
 
-    organization_user = organization_users_repo.get({"user_id": current_user_id})
-    if not organization_user:
-        return response_formatter.error("User is not assigned to any organization.", 403)
-
-    current_users_organization_id = organization_user.get('organization_id')
-    if not current_users_organization_id:
-        return response_formatter.error("User has no organization ID assigned.", 403)
-
-
-    # Step 3: Get all users in the same organization
-    same_org_user_records = organization_users_repo.get({"organization_id": current_users_organization_id}, is_collection=True)
-    same_org_user_ids = [item['user_id'] for item in same_org_user_records]
-
-
-    # Step 4: Parse query and path parameters
     path_params = request.get_path_params()
     query_params = request.get_query_params()
     query_data = query_params.get('filter', {}) if isinstance(query_params, dict) else {}
 
-    query_data = re.sub(r"'([^']*)'", r'"\1"', query_data) if query_data and isinstance(query_data, str) else query_data
+    # Convert single-quoted JSON to double-quoted
+    if query_data and isinstance(query_data, str):
+        query_data = re.sub(r"'([^']*)'", r'"\1"', query_data)
 
+    # Parse JSON safely
     try:
         query_data = json.loads(query_data)
     except (json.JSONDecodeError, TypeError):
         query_data = {}
 
-    # Step 5: Combine and enforce same-org user filtering
     final_query = {**path_params, **query_data}
-    final_query['id'] = same_org_user_ids
 
+    if check_admin_role != "trumpet_admin":
+        organization_users_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("OrganizationUsers")
 
+        organization_user = organization_users_repo.get({"user_id": current_user_id})
+        if not organization_user:
+            return response_formatter.error("User is not assigned to any organization.", 403)
+
+        current_users_organization_id = organization_user.get('organization_id')
+        if not current_users_organization_id:
+            return response_formatter.error("User has no organization ID assigned.", 403)
+
+        # Get all users in the same organization
+        same_org_user_records = organization_users_repo.get({"organization_id": current_users_organization_id},
+            is_collection=True)
+        same_org_user_ids = [item['user_id'] for item in same_org_user_records]
+        final_query['id'] = same_org_user_ids
+
+    # Step 3: Fetch records
     collected_records = repo.get_collection(final_query)
+
     if not collected_records:
         return response_formatter.error("No users found in the same organization.", 404)
 
@@ -106,8 +110,4 @@ def execute(request: IRequest, repo, entity=None):
                 record['role'] = None
             updated_collection.append(record)
 
-    return response_formatter.success(
-        updated_collection,
-        message="Users retrieved successfully.",
-        status_code=200
-    )
+    return response_formatter.success(updated_collection, message="Users retrieved successfully.", status_code=200)
