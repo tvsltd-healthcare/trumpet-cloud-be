@@ -321,7 +321,7 @@
         {
           "column": "email",
           "type": "VARCHAR",
-          "length": 40,
+          "length": 255,
           "auto_increment": false,
           "unique": true,
           "allow_null": true,
@@ -1029,7 +1029,7 @@
         {
           "column": "email",
           "type": "VARCHAR",
-          "length": 40,
+          "length": 255,
           "auto_increment": false,
           "unique": true,
           "allow_null": true,

@@ -8,7 +8,7 @@ class Organizations(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True,)
     name = Column(String(30), nullable=True, unique=True,)
-    email = Column(String(40), nullable=True, unique=True,)
+    email = Column(String(255), nullable=True, unique=True,)
     address = Column(String(50), nullable=False,)
     phone = Column(String(20), nullable=False, unique=True,)
     host = Column(String(100), nullable=True, unique=True, )
