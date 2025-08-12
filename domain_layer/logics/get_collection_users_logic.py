@@ -47,7 +47,6 @@ def execute(request: IRequest, repo, entity=None):
     """
     response_formatter = ResponseFormatter()
 
-    # Step 1: Extract and decode token to get current user ID
     auth_header = request.get_headers().get('authorization')
     decoded_token = token_parser(auth_header)
     current_user_id = decoded_token.get('user_id')
@@ -55,7 +54,6 @@ def execute(request: IRequest, repo, entity=None):
     if not current_user_id:
         return response_formatter.error("Authenticated user ID not found in token.", 401)
 
-    # Step 2: Retrieve user's organization from OrganizationUsers repo
     repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     check_user_role = get_role_name(repo_discovery_getter, current_user_id)
     check_admin_role = check_user_role.get('name')
@@ -68,7 +66,6 @@ def execute(request: IRequest, repo, entity=None):
     if query_data and isinstance(query_data, str):
         query_data = re.sub(r"'([^']*)'", r'"\1"', query_data)
 
-    # Parse JSON safely
     try:
         query_data = json.loads(query_data)
     except (json.JSONDecodeError, TypeError):
@@ -87,19 +84,16 @@ def execute(request: IRequest, repo, entity=None):
         if not current_users_organization_id:
             return response_formatter.error("User has no organization ID assigned.", 403)
 
-        # Get all users in the same organization
         same_org_user_records = organization_users_repo.get({"organization_id": current_users_organization_id},
             is_collection=True)
         same_org_user_ids = [item['user_id'] for item in same_org_user_records]
         final_query['id'] = same_org_user_ids
 
-    # Step 3: Fetch records
     collected_records = repo.get_collection(final_query)
 
     if not collected_records:
         return response_formatter.error("No users found in the same organization.", 404)
 
-    # Step 6: return users role in the collection
     updated_collection = []
     for record in collected_records:
         if record.get('status') != "deleted":
