@@ -9,7 +9,7 @@ class Users(Base):
     id = Column(Integer, primary_key=True, autoincrement=True,)
     first_name = Column(String(30), nullable=True,)
     last_name = Column(String(30), nullable=True,)
-    email = Column(String(40), nullable=True, unique=True,)
+    email = Column(String(255), nullable=True, unique=True,)
     password = Column(String(255), nullable=True,)
     status = Column(Enum('approved', 'disapproved', 'blocked', 'pending', 'deleted', name='users_status_enum'), nullable=True, default='pending')
     phone = Column(String(20), nullable=True, unique=True,)
