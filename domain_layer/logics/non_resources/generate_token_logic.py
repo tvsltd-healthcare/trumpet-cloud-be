@@ -46,6 +46,9 @@ def execute(request: IRequest):
     if organizations.get("status") != "approved":
         return response_formatter.error("Organization is not approved.", 403)
 
+    if organizations.get('type') != "data_owner":
+        return response_formatter.error("Only data owner organizations can generate tokens.", 403)
+
     # generate token for organization
     auth_manager = AuthManager.get()
     token = auth_manager.generate_token({"organization_id": organization_id, "user_id": current_user_id, "type": "DATA_OWNER_TOKEN", "expiry": body.get('expiry')})
