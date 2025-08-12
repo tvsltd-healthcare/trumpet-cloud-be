@@ -35,9 +35,16 @@ def execute(request: IRequest):
     organization_user = organization_user_repo.get({"user_id": current_user_id}, False)
     if not organization_user:
         return response_formatter.error("User not found in organization.", 404)
+
     organization_id = organization_user.get("organization_id")
     if not organization_id:
         return response_formatter.error("Organization ID not found for user.", 404)
+
+    # check if organization is approved
+    organization_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("Organizations")
+    organizations = organization_repo.get({"id": organization_id}, False)
+    if organizations.get("status") != "approved":
+        return response_formatter.error("Organization is not approved.", 404)
 
     # generate token for organization
     auth_manager = AuthManager.get()
