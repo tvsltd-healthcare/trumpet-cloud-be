@@ -62,9 +62,7 @@ def execute(request: IRequest, repo, entity=None):
     query_params = request.get_query_params()
     query_data = query_params.get('filter', {}) if isinstance(query_params, dict) else {}
 
-    # Convert single-quoted JSON to double-quoted
-    if query_data and isinstance(query_data, str):
-        query_data = re.sub(r"'([^']*)'", r'"\1"', query_data)
+    query_data = re.sub(r"'([^']*)'", r'"\1"', query_data) if query_data and isinstance(query_data, str) else query_data
 
     try:
         query_data = json.loads(query_data)
