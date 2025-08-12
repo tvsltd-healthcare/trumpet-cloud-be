@@ -44,7 +44,7 @@ def execute(request: IRequest):
     organization_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("Organizations")
     organizations = organization_repo.get({"id": organization_id}, False)
     if organizations.get("status") != "approved":
-        return response_formatter.error("Organization is not approved.", 404)
+        return response_formatter.error("Organization is not approved.", 403)
 
     # generate token for organization
     auth_manager = AuthManager.get()
