@@ -9,26 +9,32 @@ from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.websocket_pool_manager import WebsocketPoolManager
 
-
 RESEARCHER_ADMIN = "researcher_admin"
 DATA_OWNER_ADMIN = "data_owner_admin"
 APPROVED_STATUS = "approved"
 
+
 @enforce_request_type()
 def execute(request: IRequest, repo, entity=None):
     response_formatter: IResponseFormatter = ResponseFormatter()
-    
+
     current_user_id = _authorize_and_get_user_id(request)
     if not current_user_id:
         return response_formatter.error("Authenticated user ID not found in token.", 401)
 
     id_dict = request.get_path_params()
     org = repo.get(id_dict)
-    
+
     if not org:
         return response_formatter.error("Organization not found.", 404)
-    
+
     org_status = org['status']
+
+    repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    organization_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Organizations")
+    organization = organization_repo_invoker.get({"host": entity.host}, False)
+    if organization:
+        return response_formatter.error("Organization with this host already exists.", 409)
 
     updated_org = repo.patch(entity, id_dict)
     updated_org_status = updated_org['status']
@@ -37,7 +43,7 @@ def execute(request: IRequest, repo, entity=None):
         admin_user_ids = _admin_user_ids_for_org(org['id'])
         _notify_user_channels(admin_user_ids, current_user_id)
 
-    return response_formatter.success( updated_org, 'Entity updated successfully', 200 )
+    return response_formatter.success(updated_org, 'Entity updated successfully', 200)
 
 
 def _authorize_and_get_user_id(request: IRequest):
@@ -68,10 +74,7 @@ def _notify_user_channels(receiver_user_ids, current_user_id):
     websocket_pool = WebsocketPoolManager.get()
 
     for receiver_user_id in receiver_user_ids:
-        websocket_notification: dict = {
-            'type': 'organization_approved',
-            'created_at': time.time() * 1000,
-        }
+        websocket_notification: dict = {'type': 'organization_approved', 'created_at': time.time() * 1000, }
 
         websocket_pool.broadcast_json(f'users/{receiver_user_id}', websocket_notification)
         _save_notification_to_db(websocket_notification, receiver_user_id, current_user_id)
@@ -87,5 +90,5 @@ def _save_notification_to_db(websocket_notification, receiver_user_id, current_u
     notification_dict['created_by'] = current_user_id
     notification_dict['updated_by'] = current_user_id
 
-    notificatoins_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("Notifications")
-    notificatoins_repo.transact("POST", data=notification_dict)
+    notifications_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("Notifications")
+    notifications_repo.transact("POST", data=notification_dict)
