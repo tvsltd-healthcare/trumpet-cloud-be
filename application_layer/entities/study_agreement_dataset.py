@@ -11,7 +11,7 @@ StudyAgreementDatasets = {
             'error_code': '129',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '130',
         },
     },

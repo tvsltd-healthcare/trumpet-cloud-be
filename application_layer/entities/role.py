@@ -11,7 +11,7 @@ Roles = {
             'error_code': '35',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '36',
         },
         'max': {
