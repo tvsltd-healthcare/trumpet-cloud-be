@@ -33,7 +33,7 @@ OrganizationStudyAgreements = {
             'error_code': '7025',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '26',
         },
     },

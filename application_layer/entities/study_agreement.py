@@ -11,7 +11,7 @@ StudyAgreements = {
             'error_code': '118',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '119',
         },
     },
@@ -25,7 +25,7 @@ StudyAgreements = {
             'error_code': '95500',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '99890',
         },
     },
@@ -33,10 +33,6 @@ StudyAgreements = {
         'type': {
             'value': 'string',
             'error_code': '1005',
-        },
-        'required': {
-            'value': True,
-            'error_code': '999',
         },
         'regex': {
             'value': '^\s*\d+\s*(,\s*\d+\s*)*$',
@@ -65,7 +61,7 @@ StudyAgreements = {
             'error_code': '1000',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '130',
         },
     },
@@ -75,7 +71,7 @@ StudyAgreements = {
             'error_code': '9005',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '9995',
         },
         'regex': {
@@ -131,7 +127,7 @@ StudyAgreements = {
             'error_code': '5007',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '5008',
         },
     },

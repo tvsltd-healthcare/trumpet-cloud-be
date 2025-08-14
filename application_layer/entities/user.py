@@ -11,7 +11,7 @@ Users = {
             'error_code': '43',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '44',
         },
         'max': {
@@ -25,7 +25,7 @@ Users = {
             'error_code': '46',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '47',
         },
         'max': {
@@ -39,7 +39,7 @@ Users = {
             'error_code': '49',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '50',
         },
         'regex': {
@@ -57,7 +57,7 @@ Users = {
             'error_code': '53',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '54',
         },
         'max': {
@@ -75,7 +75,7 @@ Users = {
             'error_code': '57',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '58',
         },
     },
@@ -85,7 +85,7 @@ Users = {
             'error_code': '59',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '60',
         },
         'max': {

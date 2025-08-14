@@ -78,7 +78,7 @@ def seed_database():
 
                  Users(id=3, first_name="researcher-one", last_name="researcher-org-one", password=user_password,
                        email="researcher-one@researcher-one.org", status="approved"),
-                 OrganizationUsers(organization_id=2, user_id=3), UserRoles(user_id=2, role_id=4), ], session)
+                 OrganizationUsers(organization_id=2, user_id=3), UserRoles(user_id=3, role_id=4), ], session)
 
     insert_data(
         [Organizations(id=3, name="do-org-one", email="do-admin-one@do-one.org", address="europe", phone="004400003",
