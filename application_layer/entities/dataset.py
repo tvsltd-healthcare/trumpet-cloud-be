@@ -11,7 +11,7 @@ Datasets = {
             'error_code': '960',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '961',
         }
     },
@@ -27,7 +27,7 @@ Datasets = {
             'error_code': '962',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '97',
         },
         'max': {
@@ -41,7 +41,7 @@ Datasets = {
             'error_code': '99',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '100',
         },
     },
@@ -55,7 +55,7 @@ Datasets = {
             'error_code': '2500',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '10000',
         },
     },
@@ -69,7 +69,7 @@ Datasets = {
             'error_code': '9771',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '9773',
         },
     },

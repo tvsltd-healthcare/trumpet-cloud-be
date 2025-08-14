@@ -11,7 +11,7 @@ Studies = {
             'error_code': '81',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '82',
         },
         'max': {
@@ -35,7 +35,7 @@ Studies = {
             'error_code': '86',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '87',
         },
     },
@@ -45,7 +45,7 @@ Studies = {
             'error_code': '88',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '89',
         },
     },
@@ -55,7 +55,7 @@ Studies = {
             'error_code': '90',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '91',
         },
     },

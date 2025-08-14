@@ -17,7 +17,7 @@ StudyAgreementResults = {
             'error_code': '145',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '146',
         },
     },
@@ -33,7 +33,7 @@ StudyAgreementResults = {
             'error_code': '147',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '148',
         },
         'max': {
@@ -51,7 +51,7 @@ StudyAgreementResults = {
             'error_code': '1501',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '151',
         },
     },

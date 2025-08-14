@@ -11,7 +11,7 @@ Organizations = {
             'error_code': '11',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '12',
         },
         'max': {
@@ -25,7 +25,7 @@ Organizations = {
             'error_code': '14',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '15',
         },
         'max': {
@@ -43,7 +43,7 @@ Organizations = {
             'error_code': '18',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '19',
         },
         'max': {
@@ -57,7 +57,7 @@ Organizations = {
             'error_code': '21',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '22',
         },
         'max': {
@@ -85,7 +85,7 @@ Organizations = {
             'error_code': '25',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '26',
         },
     },
@@ -99,7 +99,7 @@ Organizations = {
             'error_code': '28',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '29',
         },
     },

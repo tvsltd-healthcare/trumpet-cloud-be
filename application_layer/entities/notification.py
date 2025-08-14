@@ -17,7 +17,7 @@ Notifications = {
             'error_code': '1504',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '1505',
         },
     },

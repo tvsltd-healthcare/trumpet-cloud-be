@@ -11,7 +11,7 @@ Files = {
             'error_code': '2',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '3',
         },
         'regex': {
@@ -29,7 +29,7 @@ Files = {
             'error_code': '256',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '5',
         },
     },
@@ -43,7 +43,7 @@ Files = {
             'error_code': '256',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '5',
         },
     },
@@ -57,7 +57,7 @@ Files = {
             'error_code': '11',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '12',
         },
     },
@@ -71,7 +71,7 @@ Files = {
             'error_code': '14',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '15',
         },
     },
@@ -81,7 +81,7 @@ Files = {
             'error_code': '16',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '17',
         },
     },
