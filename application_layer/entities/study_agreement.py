@@ -34,10 +34,6 @@ StudyAgreements = {
             'value': 'string',
             'error_code': '1005',
         },
-        'required': {
-            'value': 'true',
-            'error_code': '999',
-        },
         'regex': {
             'value': '^\s*\d+\s*(,\s*\d+\s*)*$',
             'error_code': '111001',

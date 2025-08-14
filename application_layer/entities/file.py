@@ -28,10 +28,6 @@ Files = {
             'value': 255,
             'error_code': '256',
         },
-        'required': {
-            'value': 'true',
-            'error_code': '5',
-        },
     },
     'path': {
         'type': {
