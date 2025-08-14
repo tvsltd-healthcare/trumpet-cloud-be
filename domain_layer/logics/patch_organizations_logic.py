@@ -34,7 +34,12 @@ def execute(request: IRequest, repo, entity=None):
     organization_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Organizations")
     organization = organization_repo_invoker.get({"host": entity.host}, False)
     if organization and organization.get('id') != org['id']:
-        return response_formatter.error("Organization with this host already exists.", 409)
+        errors = [{
+            "field": "host",
+            "message": "Organization with this host already exists.",
+            "error_code": "101"
+        }]
+        return response_formatter.validation_error(message="Organization with this host already exists.", status_code=409, errors=errors)
 
     updated_org = repo.patch(entity, id_dict)
     updated_org_status = updated_org['status']
