@@ -41,23 +41,10 @@ class ResponseHandler(IResponseHandler):
             "status_code": _status_code if _status_code else status_code,
         }
         if isinstance(data, (dict, list)) and data:
-            #TODO: Need to address nested response issue.
-            # {
-            #     "message": "message",
-            #     "status_code": 404,
-            #     "data": {
-            #         "status_code": 404,
-            #         "message": "message"
-            #     }
-            # }
-            # Possible sollution
-            # data_obj = data.get("data", data)
-            # response["data"] = data_obj
+            #TODO: Need to test all the nested response issue. Fro resource and non resource API.
             if data.get("status_code") is None or data['status_code'] < 400:
                 response["data"] = data if _data is None else _data
 
-        # if _status_code is not None and _status_code >= 400:
-        #     raise Exception(f"{_message} with status code {_status_code}")
 
         if errors is not None:
             response["errors"] = errors
