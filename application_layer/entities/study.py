@@ -34,19 +34,11 @@ Studies = {
             'value': '^(active|paused|completed)$',
             'error_code': '86',
         },
-        'required': {
-            'value': 'true',
-            'error_code': '87',
-        },
     },
     'result': {
         'type': {
             'value': 'text',
             'error_code': '88',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '89',
         },
     },
     'purpose': {
