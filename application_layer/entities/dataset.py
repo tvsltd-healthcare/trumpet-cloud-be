@@ -67,11 +67,7 @@ Datasets = {
         'regex': {
             'value': '^(published|unpublished)$',
             'error_code': '9771',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '9773',
-        },
+        }
     },
     'statistics': {
         'type': {

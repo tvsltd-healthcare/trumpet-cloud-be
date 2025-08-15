@@ -49,11 +49,7 @@ StudyAgreementResults = {
         'regex': {
             'value': '^(pending|completed)$',
             'error_code': '1501',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '151',
-        },
+        }
     },
     'created_at': {
         'type': {

@@ -31,11 +31,7 @@ OrganizationStudyAgreements = {
         'regex': {
             'value': '^(approved|disapproved|pending)$',
             'error_code': '7025',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '26',
-        },
+        }
     },
     'created_at': {
         'type': {
