@@ -38,10 +38,6 @@ Users = {
             'value': 'string',
             'error_code': '49',
         },
-        'required': {
-            'value': 'true',
-            'error_code': '50',
-        },
         'regex': {
             'value': '^[A-Za-z0-9._%-].*@[A-Za-z0-9._%-].*\\.[A-Za-z]{2,}$',
             'error_code': '51',
@@ -73,10 +69,6 @@ Users = {
         'regex': {
             'value': '^(approved|disapproved|blocked|pending)$',
             'error_code': '57',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '58',
         },
     },
     'phone': {
