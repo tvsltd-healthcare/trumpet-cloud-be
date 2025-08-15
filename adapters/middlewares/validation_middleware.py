@@ -7,7 +7,7 @@ from application_layer.entities import get_resource_types
 
 from adapters.utils.utils import load_config, get_model_name
 
-entity_resources = get_resource_types()
+entity_resources, patch_entity_resources = get_resource_types()
 
 
 class ValidationMiddleware(BaseHTTPMiddleware):
@@ -45,10 +45,16 @@ class ValidationMiddleware(BaseHTTPMiddleware):
 
             model_name = get_model_name(request.url.path, request.method, configs)
 
-            if model_name and model_name in entity_resources:
-                validation_result = EntityAdapter().validate(entity_name=entity_resources[model_name], data=body)
-                if validation_result is not True:
-                    return JSONResponse(content=validation_result, status_code=422)
+            if request.method == 'PATCH':
+                if model_name and model_name in patch_entity_resources:
+                    validation_result = EntityAdapter().validate(entity_name=patch_entity_resources[model_name], data=body)
+                    if validation_result is not True:
+                        return JSONResponse(content=validation_result, status_code=422)
+            else:
+                if model_name and model_name in entity_resources:
+                    validation_result = EntityAdapter().validate(entity_name=entity_resources[model_name], data=body)
+                    if validation_result is not True:
+                        return JSONResponse(content=validation_result, status_code=422)
 
         # Continue with request processing if validation passes
         return await call_next(request)

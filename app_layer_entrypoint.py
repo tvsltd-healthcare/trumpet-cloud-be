@@ -57,7 +57,7 @@ from lib_repo_discovery.repo_discovery import RepoDiscovery
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 
-entity_resources = get_resource_types()
+entity_resources, patch_entity_resources = get_resource_types()
 logic_folder_path = os.getenv("LOGIC_PATH")
 logic_map = load_logics(logic_folder_path)
 
@@ -212,6 +212,7 @@ def build_app_layer(repository: BaseRepository, server: Server) -> IRouter:
                 else:
                     router_obj.put(url=routes.get('url', ""), endpoint=controller.put, entity_class=entity_stub_obj)
             elif str.lower(route_method) == "patch":
+                entity_stub_obj = patch_entity_resources.get(model_name)
                 controller.patch.__annotations__["entity"] = entity_stub_obj
                 if routes['auth']:
                     router_obj.patch(url=routes.get('url', ""), endpoint=controller.patch, entity_class=entity_stub_obj,
