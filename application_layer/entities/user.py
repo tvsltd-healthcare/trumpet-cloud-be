@@ -15,7 +15,7 @@ Users = {
             'error_code': '44',
         },
         'max': {
-            'value': 15,
+            'value': 25,
             'error_code': '45',
         },
     },
@@ -29,7 +29,7 @@ Users = {
             'error_code': '47',
         },
         'max': {
-            'value': 15,
+            'value': 25,
             'error_code': '48',
         },
     },
