@@ -43,7 +43,7 @@ Organizations = {
             'error_code': '19',
         },
         'max': {
-            'value': 50,
+            'value': 250,
             'error_code': '20',
         },
     },
