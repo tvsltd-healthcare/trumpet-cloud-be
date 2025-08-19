@@ -16,10 +16,6 @@ StudyAgreementResults = {
             'value': 'text',
             'error_code': '145',
         },
-        'required': {
-            'value': 'true',
-            'error_code': '146',
-        },
     },
     'file_path': {
         'type': {
@@ -31,10 +27,6 @@ StudyAgreementResults = {
         'type': {
             'value': 'string',
             'error_code': '147',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '148',
         },
         'max': {
             'value': 20,
