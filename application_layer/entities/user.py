@@ -15,7 +15,7 @@ Users = {
             'error_code': '44',
         },
         'max': {
-            'value': 15,
+            'value': 25,
             'error_code': '45',
         },
     },
@@ -29,7 +29,7 @@ Users = {
             'error_code': '47',
         },
         'max': {
-            'value': 15,
+            'value': 25,
             'error_code': '48',
         },
     },
@@ -37,10 +37,6 @@ Users = {
         'type': {
             'value': 'string',
             'error_code': '49',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '50',
         },
         'regex': {
             'value': '^[A-Za-z0-9._%-].*@[A-Za-z0-9._%-].*\\.[A-Za-z]{2,}$',
@@ -73,10 +69,6 @@ Users = {
         'regex': {
             'value': '^(approved|disapproved|blocked|pending)$',
             'error_code': '57',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '58',
         },
     },
     'phone': {

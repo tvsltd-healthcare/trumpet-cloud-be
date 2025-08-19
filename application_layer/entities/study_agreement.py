@@ -84,6 +84,10 @@ StudyAgreements = {
             'value': 'string',
             'error_code': '1002',
         },
+        'required': {
+            'value': 'true',
+            'error_code': '1004',
+        },
         'regex': {
             'value': '^(REG_LOG|NN)$',
             'error_code': '1003',
@@ -98,11 +102,15 @@ StudyAgreements = {
     'label': {
         'type': {
             'value': 'string',
-            'error_code': '1002',
+            'error_code': '1011',
+        },
+        'required': {
+            'value': 'true',
+            'error_code': '1012',
         },
         'regex': {
             'value': '^(HNC|HNC_NECRO_JAW|HNC_DYSPHAGIA|HNC_ORAL_MUCOSITIS)$',
-            'error_code': '1003',
+            'error_code': '1013',
         },
     },
     'expiration_date': {
@@ -125,11 +133,7 @@ StudyAgreements = {
         'regex': {
             'value': '^(approved|disapproved|pending)$',
             'error_code': '5007',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '5008',
-        },
+        }
     },
     'created_at': {
         'type': {

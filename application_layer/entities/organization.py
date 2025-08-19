@@ -24,10 +24,6 @@ Organizations = {
             'value': 'string',
             'error_code': '14',
         },
-        'required': {
-            'value': 'true',
-            'error_code': '15',
-        },
         'max': {
             'value': 40,
             'error_code': '16',
@@ -47,7 +43,7 @@ Organizations = {
             'error_code': '19',
         },
         'max': {
-            'value': 50,
+            'value': 250,
             'error_code': '20',
         },
     },
@@ -83,11 +79,7 @@ Organizations = {
         'regex': {
             'value': '^(approved|disapproved|blocked|pending)$',
             'error_code': '25',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '26',
-        },
+        }
     },
     'type': {
         'type': {
@@ -97,10 +89,6 @@ Organizations = {
         'regex': {
             'value': '^(governance|data_owner|researcher)$',
             'error_code': '28',
-        },
-        'required': {
-            'value': 'true',
-            'error_code': '29',
         },
     },
     'created_at': {
