@@ -65,7 +65,7 @@ def seed_database():
     insert_data(
         [Organizations(id=1, name="system", email="admin@trumpetproject.eu", address="europe", phone="004400001",
                        status="approved", type="governance"),
-         Users(id=1, first_name="trumpet", last_name="admin", password=user_password, email="admin@trumpetproject.eu",
+         Users(id=1, first_name="trumpet", last_name="admin", password=user_password, email="admin@trumpetproject.eu", phone="012345678901",
                status="approved"), OrganizationUsers(organization_id=1, user_id=1), UserRoles(user_id=1, role_id=1), ],
         session)
 
@@ -73,11 +73,11 @@ def seed_database():
                                address="europe", phone="004400002", status="approved", type="researcher"),
 
                  Users(id=2, first_name="researcher-admin-one", last_name="researcher-org-one", password=user_password,
-                       email="researcher-admin-one@researcher-one.org", status="approved"),
+                       email="researcher-admin-one@researcher-one.org", phone="012345678902", status="approved"),
                  OrganizationUsers(organization_id=2, user_id=2), UserRoles(user_id=2, role_id=2),
 
                  Users(id=3, first_name="researcher-one", last_name="researcher-org-one", password=user_password,
-                       email="researcher-one@researcher-one.org", status="approved"),
+                       email="researcher-one@researcher-one.org", phone="012345678903", status="approved"),
                  OrganizationUsers(organization_id=2, user_id=3), UserRoles(user_id=3, role_id=4), ], session)
 
     insert_data(
@@ -85,14 +85,14 @@ def seed_database():
                        status="approved", type="data_owner", host="https://trumpetdo1.technovativesolutions.co.uk"),
 
          Users(id=4, first_name="do-admin-one", last_name="do-org-one", password=user_password,
-               email="do-admin-one@do-one.org", status="approved"), OrganizationUsers(organization_id=3, user_id=4),
+               email="do-admin-one@do-one.org", phone="012345678904", status="approved"), OrganizationUsers(organization_id=3, user_id=4),
          UserRoles(user_id=4, role_id=3), ], session)
 
     insert_data(
         [Organizations(id=4, name="do-org-two", email="do-admin-one@do-two.org", address="europe", phone="004400004",
                        status="approved", type="data_owner", host="https://trumpetdo2.technovativesolutions.co.uk"),
          Users(id=5, first_name="do-admin-one", last_name="do-org-two", password=user_password,
-               email="do-admin-one@do-two.org", status="approved"), OrganizationUsers(organization_id=4, user_id=5),
+               email="do-admin-one@do-two.org", phone="012345678905", status="approved"), OrganizationUsers(organization_id=4, user_id=5),
          UserRoles(user_id=5, role_id=3), ], session)
 
     insert_data([Studies(id=1, name="Study one", description="Study one description", purpose="Study one purpose",
