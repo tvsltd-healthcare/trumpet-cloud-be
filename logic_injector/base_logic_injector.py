@@ -4,15 +4,23 @@ import requests
 from typing import List, Union, Optional
 
 from dotenv import load_dotenv
+from domain_layer.auth_manager import AuthManager
 
 load_dotenv()
 
 FL_COMMUNICATION_PORT = os.getenv("FL_COMMUNICATION_PORT", 8081)
+FL_TOKEN_EXPIRY = os.getenv("FL_TOKEN_EXPIRY", 3600)
 
 
 class BaseLogicInjector:
     def __init__(self):
         pass
+
+    def generate_token(self, payload: dict):
+        auth_getter_adapter = AuthManager.get()
+        payload["expiry"] = int(FL_TOKEN_EXPIRY)
+        token_dict = auth_getter_adapter.generate_token(payload)
+        return token_dict['token']
 
     def inject_business_logic(self, study_agreement: dict, do_org_agreements: list):
         """
@@ -47,6 +55,11 @@ class BaseLogicInjector:
 
         fl_injector_obj = FLSetupInjector()
 
+        fl_core_token = self.generate_token(payload={
+            'type': 'agg_fl_core',
+            'study_agreement_id': agreement_id,
+        })
+
         agg_response = fl_injector_obj.call_setup_on_agg_fl_core(fl_agg_core_url=os.getenv('TC_FL_CORE_BASE_URL'),
                                                                  agreement_id=agreement_id,
                                                                  name=name,
@@ -56,12 +69,20 @@ class BaseLogicInjector:
                                                                  pet=pet,
                                                                  pet_config=pet_config,
                                                                  rounds=rounds,
-                                                                 webhook_url=webhook_url,
+                                                                 webhook_url=f"{webhook_url}/{fl_core_token}",
                                                                  participants=participants)
 
         for index, do_org_agreement in enumerate(do_org_agreements):
             do_url = do_org_agreement['organization']['host']
             dataset_uid = do_org_agreement['dataset']['don_uid']
+
+            do_token = self.generate_token(payload={
+                'type': 'do_fl_core',
+                'study_agreement_id': agreement_id,
+                'organization_id': do_org_agreement['organization']['id'],
+                'dataset_id': do_org_agreement['dataset']['id']
+            })
+
             do_response = fl_injector_obj.call_setup_on_participants_do_fl_core(do_url=do_url,
                                                                                 agreement_id=agreement_id,
                                                                                 name=name,
@@ -71,7 +92,7 @@ class BaseLogicInjector:
                                                                                 pet=pet,
                                                                                 pet_config=pet_config,
                                                                                 rounds=rounds,
-                                                                                webhook_url=webhook_url,
+                                                                                webhook_url=f"{webhook_url}/{do_token}",
                                                                                 participants=participants,
                                                                                 purpose=purpose,
                                                                                 description=description,
