@@ -18,7 +18,7 @@ class BaseLogicInjector:
 
     def generate_token(self, payload: dict):
         auth_getter_adapter = AuthManager.get()
-        payload["expiry"] = FL_TOKEN_EXPIRY
+        payload["expiry"] = int(FL_TOKEN_EXPIRY)
         token_dict = auth_getter_adapter.generate_token(payload)
         return token_dict['token']
 
