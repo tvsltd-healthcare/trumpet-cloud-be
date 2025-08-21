@@ -64,7 +64,8 @@ class BaseLogicInjector:
                                                                  agreement_id=agreement_id,
                                                                  name=name,
                                                                  coordinator=coordinator,
-                                                                 model=f"{model}_{label}",
+                                                                 model=model,
+                                                                 label=label,
                                                                  pet=pet,
                                                                  pet_config=pet_config,
                                                                  rounds=rounds,
@@ -86,7 +87,8 @@ class BaseLogicInjector:
                                                                                 agreement_id=agreement_id,
                                                                                 name=name,
                                                                                 coordinator=coordinator,
-                                                                                model=f"{model}_{label}",
+                                                                                model=model,
+                                                                                label=label,
                                                                                 pet=pet,
                                                                                 pet_config=pet_config,
                                                                                 rounds=rounds,
@@ -97,7 +99,7 @@ class BaseLogicInjector:
                                                                                 node_id=f"{index+1}")
 
             do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_url,
-                                                                                         model=f"{model}_{label}",
+                                                                                         model=model,
                                                                                          dataset_uid=dataset_uid,
                                                                                          samples=samples)
 
@@ -107,34 +109,34 @@ class FLSetupInjector:
     do_setup_uri = "/fl-core/setup/"
 
     def call_setup_on_agg_fl_core(self, fl_agg_core_url: str, agreement_id: int, name: str, coordinator: str,
-                                  model: str, pet: str, pet_config: dict, rounds: str, webhook_url: str,
+                                  model: str, label: str, pet: str, pet_config: dict, rounds: str, webhook_url: str,
                                   participants: List[str]) -> Union[bool, tuple[bool, dict]]:
-        _request_body = {"name": name, "study_id": str(agreement_id), "coordinator": coordinator, "model": model,
+        request_body = {"name": name, "study_id": str(agreement_id), "coordinator": coordinator, "model": model, "label": label,
                          "pet": pet, "pet_config": pet_config, "rounds": rounds, "webhook_url": webhook_url,
                          "participants": participants, "node_id": "0"}
 
-        print('call_setup_on_agg_fl_core request =====', _request_body)
+        print(f"CallingData FLCore aggregator {fl_agg_core_url + self.setup_uri} endpoint\nRequest Body:\n{request_body}")
 
-        response = requests.post(url=fl_agg_core_url + self.setup_uri, json=_request_body, timeout=60)
+        response = requests.post(url=fl_agg_core_url + self.setup_uri, json=request_body, timeout=60)
 
-        print('call_setup_on_agg_fl_core response =======', response)
+        print(f"Called FLCore aggregator Post {fl_agg_core_url+self.setup_uri} endpoint\nResponse:\n{response}")
 
         if response.status_code != 200:
             return False
         return True, response.json()
 
     def call_setup_on_participants_do_fl_core(self, do_url: str, agreement_id: int, name: str, coordinator: str,
-                                              model: str, pet: str, pet_config: dict, rounds: str, description: str,
+                                              model: str, label: str, pet: str, pet_config: dict, rounds: str, description: str,
                                               purpose: str, webhook_url: str, participants: List[str], node_id: str) -> Union[bool, tuple[bool, dict]]:
-        _request_body = {"name": name, "agreement_id": agreement_id, "coordinator": coordinator, "model": model,
+        request_body = {"name": name, "agreement_id": agreement_id, "coordinator": coordinator, "model": model, "label": label,
                          "pet": pet, "pet_config": pet_config, "rounds": rounds, "webhook_url": webhook_url,
                          "participants": participants, "node_id": node_id}
 
-        print('call_setup_on_participants_do_fl_core request =====', _request_body)
+        print(f"CallingData Owner Node Post {do_url + self.do_setup_uri} endpoint\nRequest Body:\n{request_body}")
 
-        response = requests.post(url=do_url + self.do_setup_uri, json=_request_body, timeout=60)
+        response = requests.post(url=do_url + self.do_setup_uri, json=request_body, timeout=60)
 
-        print('call_setup_on_participants_do_fl_core response =====', response)
+        print(f"Called Data Owner Node Post {do_url+self.do_setup_uri} endpoint\nResponse:\n{response}")
 
         if response.status_code != 200 or response.status_code != 201:
             return False
@@ -142,13 +144,13 @@ class FLSetupInjector:
 
     def call_participants_do_fl_core_query(self, do_url: str, model: str, dataset_uid: str, samples: Optional[int] = 80,
                                            query: Optional[str] = None):
-        _request_body = {"model": model, "samples": samples, "dataset_uid": dataset_uid}
+        request_body = {"model": model, "samples": samples, "dataset_uid": dataset_uid}
 
-        print('call_participants_do_fl_core_query request =====', _request_body)
+        print(f"CallingData Owner Node Post {do_url+self.do_load_data_uri} endpoint\nRequest Body:\n{request_body}")
 
-        response = requests.post(url=do_url + self.do_load_data_uri, json=_request_body, timeout=60)
+        response = requests.post(url=do_url + self.do_load_data_uri, json=request_body, timeout=60)
 
-        print('call_participants_do_fl_core_query request =====', response)
+        print(f"Called Data Owner Node Post {do_url+self.do_load_data_uri} endpoint\nResponse:\n{response}")
 
         if response.status_code != 200:
             return False
