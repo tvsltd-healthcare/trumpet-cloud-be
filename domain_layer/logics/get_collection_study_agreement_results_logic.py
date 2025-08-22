@@ -41,11 +41,6 @@ def execute(request: IRequest, repo, entity=None):
     check_token = check_bearer_token(request)
     if not check_token:
         return response_formatter.error("Invalid or missing token", status_code=401)
-    else:
-        get_study_agreement_id = check_token.get('study_agreement_id')
-        request_study_agreements_id = ids.get('study_agreement_id')
-        if get_study_agreement_id != int(request_study_agreements_id):
-            return response_formatter.error("Invalid token", status_code=401)
 
     # Step 1: Extract path and query params
     query = request.get_query_params()

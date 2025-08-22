@@ -11,8 +11,7 @@ def check_bearer_token(request: IRequest) -> bool | dict:
     auth_getter_adapter = AuthManager.get()
     check_token = auth_getter_adapter.validate_token(token)
     if check_token:
-        read_token_data = auth_getter_adapter.read_data(token)
-        return read_token_data
+        return True
     else:
         return False
 
