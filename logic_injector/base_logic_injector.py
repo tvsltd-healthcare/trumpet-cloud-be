@@ -99,7 +99,7 @@ class BaseLogicInjector:
                                                                                 node_id=f"{index+1}")
 
             do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_url,
-                                                                                         model=model,
+                                                                                         label=label,
                                                                                          dataset_uid=dataset_uid,
                                                                                          samples=samples)
 
@@ -142,9 +142,9 @@ class FLSetupInjector:
             return False
         return True, response.json()
 
-    def call_participants_do_fl_core_query(self, do_url: str, model: str, dataset_uid: str, samples: Optional[int] = 80,
+    def call_participants_do_fl_core_query(self, do_url: str, label: str, dataset_uid: str, samples: Optional[int] = 80,
                                            query: Optional[str] = None):
-        request_body = {"model": model, "samples": samples, "dataset_uid": dataset_uid}
+        request_body = {"label": label, "samples": samples, "dataset_uid": dataset_uid}
 
         print(f"CallingData Owner Node Post {do_url+self.do_load_data_uri} endpoint\nRequest Body:\n{request_body}")
 
