@@ -4,6 +4,7 @@ import re
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.response_formatter import ResponseFormatter
+from domain_layer.utils.check_token import check_bearer_token
 
 
 @enforce_request_type()
@@ -36,9 +37,12 @@ def execute(request: IRequest, repo, entity=None):
         }
     """
     response_formatter = ResponseFormatter()
+    ids = request.get_path_params()
+    check_token = check_bearer_token(request, ids.get('study_agreement_id'))
+    if not check_token:
+        return response_formatter.error("Invalid or missing token", status_code=401)
 
     # Step 1: Extract path and query params
-    ids = request.get_path_params()
     query = request.get_query_params()
     query = query.get('filter', {}) if isinstance(query, dict) else {}
 
