@@ -6,9 +6,14 @@ from domain_layer.utils.check_token import check_bearer_token
 def execute(request: IRequest, repo, entity=None):
     response_formatter = ResponseFormatter()
     ids = request.get_path_params()
-    check_token = check_bearer_token(request, ids.get('study_agreement_id'))
+    check_token = check_bearer_token(request)
     if not check_token:
         return response_formatter.error("Invalid or missing token", status_code=401)
+    else:
+        get_study_agreement_id = check_token.get('study_agreement_id')
+        request_study_agreements_id = ids.get('study_agreement_id')
+        if get_study_agreement_id != int(request_study_agreements_id):
+            return response_formatter.error("Invalid token", status_code=401)
     try:
         create_result = repo.post(entity, request.get_path_params())
 
