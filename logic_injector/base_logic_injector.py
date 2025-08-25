@@ -10,6 +10,7 @@ load_dotenv()
 
 FL_COMMUNICATION_PORT = os.getenv("FL_COMMUNICATION_PORT", 8081)
 FL_TOKEN_EXPIRY = os.getenv("FL_TOKEN_EXPIRY", 3600)
+FL_AGG_TOKEN = os.getenv("FL_AGG_TOKEN")
 
 
 class BaseLogicInjector:
@@ -117,7 +118,13 @@ class FLSetupInjector:
 
         print(f"CallingData FLCore aggregator {fl_agg_core_url + self.setup_uri} endpoint\nRequest Body:\n{request_body}")
 
-        response = requests.post(url=fl_agg_core_url + self.setup_uri, json=request_body, timeout=60)
+        response = requests.post(url=fl_agg_core_url + self.setup_uri,
+                                 json=request_body,
+                                 timeout=60,
+                                 headers={
+                                     "Content-Type": "application/json",
+                                     "Authorization": f'Bearer {FL_AGG_TOKEN}'}
+                                 )
 
         print(f"Called FLCore aggregator Post {fl_agg_core_url+self.setup_uri} endpoint\nResponse:\n{response}")
 
