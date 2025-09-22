@@ -37,7 +37,6 @@ class BaseLogicInjector:
         name = str(study_id)
 
         use_case = study_agreement.get('use_case')
-        print(f"{use_case=}")
         purpose = study_agreement.get('purpose', "")
         description = study_agreement.get('description', "N/A")
 
