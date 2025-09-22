@@ -36,6 +36,8 @@ class BaseLogicInjector:
         study_id = study_agreement.get('study_id')
         name = str(study_id)
 
+        use_case = study_agreement.get('use_case')
+        print(f"{use_case=}")
         purpose = study_agreement.get('purpose', "")
         description = study_agreement.get('description', "N/A")
 
@@ -100,6 +102,7 @@ class BaseLogicInjector:
                                                                                 node_id=f"{index+1}")
 
             do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_url,
+                                                                                         use_case=use_case,
                                                                                          label=label,
                                                                                          dataset_uid=dataset_uid,
                                                                                          samples=samples)
@@ -149,9 +152,9 @@ class FLSetupInjector:
             return False
         return True, response.json()
 
-    def call_participants_do_fl_core_query(self, do_url: str, label: str, dataset_uid: str, samples: Optional[int] = 80,
+    def call_participants_do_fl_core_query(self, use_case: str, do_url: str, label: str, dataset_uid: str, samples: Optional[int] = 80,
                                            query: Optional[str] = None):
-        request_body = {"label": label, "samples": samples, "dataset_uid": dataset_uid}
+        request_body = {"use_case": use_case, "label": label, "samples": samples, "dataset_uid": dataset_uid}
 
         print(f"CallingData Owner Node Post {do_url+self.do_load_data_uri} endpoint\nRequest Body:\n{request_body}")
 
