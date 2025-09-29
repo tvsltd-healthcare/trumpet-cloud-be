@@ -311,7 +311,7 @@
             },
             {
               "tag": "max_length",
-              "rule": 30,
+              "rule": 255,
               "error_code": "13",
               "default_message": ""
             }
@@ -349,7 +349,7 @@
             },
             {
               "tag": "max_length",
-              "rule": 40,
+              "rule": 255,
               "error_code": "16",
               "default_message": ""
             },
@@ -393,7 +393,7 @@
             },
             {
               "tag": "max_length",
-              "rule": 50,
+              "rule": 255,
               "error_code": "20",
               "default_message": ""
             }
@@ -469,7 +469,7 @@
             },
             {
               "tag": "max_length",
-              "rule": 100,
+              "rule": 255,
               "error_code": "23",
               "default_message": ""
             }
@@ -953,7 +953,7 @@
         {
           "column": "first_name",
           "type": "VARCHAR",
-          "length": 15,
+          "length": 255,
           "auto_increment": false,
           "unique": false,
           "allow_null": true,
@@ -981,7 +981,7 @@
             },
             {
               "tag": "max_length",
-              "rule": 15,
+              "rule": 255,
               "error_code": "45",
               "default_message": ""
             }
@@ -991,7 +991,7 @@
         {
           "column": "last_name",
           "type": "VARCHAR",
-          "length": 15,
+          "length": 255,
           "auto_increment": false,
           "unique": false,
           "allow_null": true,
@@ -1019,7 +1019,7 @@
             },
             {
               "tag": "max_length",
-              "rule": 15,
+              "rule": 255,
               "error_code": "48",
               "default_message": ""
             }
@@ -1063,7 +1063,7 @@
             },
             {
               "tag": "max_length",
-              "rule": 40,
+              "rule": 255,
               "error_code": "52",
               "default_message": ""
             }
@@ -1073,7 +1073,7 @@
         {
           "column": "password",
           "type": "VARCHAR",
-          "length": 30,
+          "length": 50,
           "auto_increment": false,
           "unique": false,
           "allow_null": true,
@@ -1101,7 +1101,7 @@
             },
             {
               "tag": "max_length",
-              "rule": 40,
+              "rule": 50,
               "error_code": "55",
               "default_message": ""
             }

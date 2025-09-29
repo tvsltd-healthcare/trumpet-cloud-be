@@ -7,8 +7,8 @@ class Users(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, autoincrement=True,)
-    first_name = Column(String(30), nullable=True,)
-    last_name = Column(String(30), nullable=True,)
+    first_name = Column(String(255), nullable=True,)
+    last_name = Column(String(255), nullable=True,)
     email = Column(String(255), nullable=True, unique=True,)
     password = Column(String(255), nullable=True,)
     status = Column(Enum('approved', 'disapproved', 'blocked', 'pending', 'deleted', name='users_status_enum'), nullable=True, default='pending')
