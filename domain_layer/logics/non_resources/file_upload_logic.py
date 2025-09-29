@@ -4,7 +4,7 @@ from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.utils.file_upload import upload_file_to_disk
-from domain_layer.utils.token_parser import token_parser
+from domain_layer.utils.parse_token import token_parser
 
 
 def create_files_body(form_data, upload_file, organization_user):

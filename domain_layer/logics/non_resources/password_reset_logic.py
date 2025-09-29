@@ -5,6 +5,7 @@ from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.utils.parse_token import token_parser
 from domain_layer.utils.password_validator import is_strong_password
 
 
@@ -39,7 +40,8 @@ def execute(request: IRequest):
     auth_getter_adapter = AuthManager.get()
     response_formatter = ResponseFormatter()
 
-    decode_token = auth_getter_adapter.read_data(body.get("token"))
+    decode_token = token_parser(body.get("token"))
+
     email = decode_token.get("email")
 
     if not email:
