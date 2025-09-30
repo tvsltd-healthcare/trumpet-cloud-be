@@ -15,7 +15,7 @@ Studies = {
             'error_code': '82',
         },
         'max': {
-            'value': 25,
+            'value': 255,
             'error_code': '83',
         },
     },

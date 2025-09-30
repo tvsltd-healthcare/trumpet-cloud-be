@@ -1852,7 +1852,7 @@
         {
           "column": "name",
           "type": "VARCHAR",
-          "length": 25,
+          "length": 255,
           "auto_increment": false,
           "unique": false,
           "allow_null": true,
@@ -1880,7 +1880,7 @@
             },
             {
               "tag": "max_length",
-              "rule": 25,
+              "rule": 255,
               "error_code": "83",
               "default_message": ""
             }
