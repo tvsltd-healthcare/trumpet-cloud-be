@@ -2257,7 +2257,7 @@
         {
           "column": "title",
           "type": "VARCHAR",
-          "length": 100,
+          "length": 255,
           "auto_increment": false,
           "unique": false,
           "allow_null": false,
@@ -2279,7 +2279,7 @@
             },
             {
               "tag": "max_length",
-              "rule": 25,
+              "rule": 255,
               "error_code": "98",
               "default_message": ""
             }
