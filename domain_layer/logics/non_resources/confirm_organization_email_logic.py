@@ -5,6 +5,7 @@ from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.auth_manager import AuthManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
+from domain_layer.utils.parse_token import token_parser
 
 
 def execute(request):
@@ -19,10 +20,10 @@ def execute(request):
     """
 
     body = request.get_json()
-    auth_getter_adapter = AuthManager.get()
     response_formatter = ResponseFormatter()
 
-    decode_token = auth_getter_adapter.read_data(body.get("token"))
+    decode_token = token_parser(body.get("token"))
+
     email = decode_token.get("email")
     role = decode_token.get("role")
     organization_type = decode_token.get("organization_type")

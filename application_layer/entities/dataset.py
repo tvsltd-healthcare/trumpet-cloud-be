@@ -31,7 +31,7 @@ Datasets = {
             'error_code': '97',
         },
         'max': {
-            'value': 100,
+            'value': 255,
             'error_code': '98',
         },
     },

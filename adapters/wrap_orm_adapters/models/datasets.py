@@ -12,7 +12,7 @@ class Datasets(Base):
     don_uid = Column(String(50), nullable=False, )
     organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=True, )
 
-    title = Column(String(100), nullable=False, )
+    title = Column(String(255), nullable=False, )
     about = Column(Text, nullable=False, )
     use_case = Column(Enum('HNC', 'SBRT', 'NSCLC', name='datasets_use_case_enum'), nullable=False)
     status = Column(Enum('published', 'unpublished', name='datasets_status_enum'),nullable=False, default='published', server_default='published')

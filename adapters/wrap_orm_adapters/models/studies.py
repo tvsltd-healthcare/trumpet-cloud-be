@@ -8,7 +8,7 @@ class Studies(Base):
     __tablename__ = 'studies'
 
     id = Column(Integer, primary_key=True, autoincrement=True,)
-    name = Column(String(25), nullable=True,)
+    name = Column(String(255), nullable=True,)
     description = Column(Text, nullable=False,)
     status = Column(Enum('active', 'paused', 'completed', name='studies_status_enum'), nullable=True, default='active')
     result = Column(Text, nullable=True,)

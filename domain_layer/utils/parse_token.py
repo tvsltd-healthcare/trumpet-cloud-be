@@ -1,3 +1,5 @@
+from jwt import ExpiredSignatureError
+
 from domain_layer.auth_manager import AuthManager
 from domain_layer.response_formatter import ResponseFormatter
 
@@ -31,5 +33,7 @@ def token_parser(token: str) -> str:
         else: 
             return ResponseFormatter.error('Missing valid authorization header.', 400)
 
+    except ExpiredSignatureError:
+        raise Exception("Token has expired!")
     except Exception as e:
-        return ResponseFormatter.error(str(e), 500)
+        raise e

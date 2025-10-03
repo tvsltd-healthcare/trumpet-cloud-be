@@ -15,7 +15,7 @@ Organizations = {
             'error_code': '12',
         },
         'max': {
-            'value': 30,
+            'value': 255,
             'error_code': '13',
         },
     },
@@ -25,7 +25,7 @@ Organizations = {
             'error_code': '14',
         },
         'max': {
-            'value': 40,
+            'value': 255,
             'error_code': '16',
         },
         'regex': {
@@ -43,7 +43,7 @@ Organizations = {
             'error_code': '19',
         },
         'max': {
-            'value': 250,
+            'value': 255,
             'error_code': '20',
         },
     },
@@ -67,7 +67,7 @@ Organizations = {
             'error_code': '21',
         },
         'max': {
-            'value': 100,
+            'value': 255,
             'error_code': '23',
         },
     },
