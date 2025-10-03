@@ -54,6 +54,8 @@ from lib_archi.non_resource_controller import NonResourceController
 from lib_archi.repository_gateway_service import RepositoryGatewayService
 from lib_repo_discovery.repo_discovery import RepoDiscovery
 
+ENVIRONMENT = os.environ.get("ENVIRONMENT", 'production')
+
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_PATH = os.path.join(FILE_PATH, 'config.json')
 
@@ -272,7 +274,7 @@ def launch_app_layer():
     Raises:
         Any exception that occurs during server startup or middleware usage.
     """
-    server = Server(Libraries.FASTAPI())
+    server = get_server(environment=ENVIRONMENT)
 
     # # Configure and apply CORS
     cors_config = CorsConfig(origins=os.getenv('ALLOWED_HOSTS', '*').split(','))
@@ -292,3 +294,19 @@ def launch_app_layer():
     cors_config.apply_to_server(server=server)
 
     server.listen(port=os.getenv("PORT", 8000), host=os.getenv("HOST", "127.0.0.1"))
+
+def get_server(environment: str):
+    if environment == 'production':
+        return Server(Libraries.FASTAPI(
+            docs_url=None,
+            redoc_url=None,
+            openapi_url=None,
+        ))
+    if environment == 'development':
+        return Server(Libraries.FASTAPI(
+            docs_url="/docs",
+            redoc_url="/redoc",
+            openapi_url="/openapi.json",
+        ))
+
+    raise Exception(f"Unknown environment: {environment}")
