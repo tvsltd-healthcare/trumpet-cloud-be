@@ -44,7 +44,7 @@ def execute(request: IRequest):
         return response.error(message="Login failed.", status_code=404)
 
     return response.success(data=_build_success_response(token, user, role_name, organization),
-        message="User successfully logged in.", status_code=200)
+        message="Login successful.", status_code=200)
 
 
 def _is_valid_password(raw_password: str, hashed_password: str) -> bool:
