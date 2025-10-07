@@ -45,7 +45,7 @@ def execute(request: IRequest):
     email = decode_token.get("email")
 
     if not email:
-        return response_formatter.error('User does not exit.', 404)
+        return response_formatter.error('User does not exists.', 404)
 
     if decode_token.get('reset_password') is not True:
         return response_formatter.error('You are not eligible to reset password.', 404)
@@ -73,4 +73,4 @@ def execute(request: IRequest):
         except Exception as e:
             return response_formatter.error(str(e), 500)
     else:
-        return response_formatter.error('User does not exit', 404)
+        return response_formatter.error('User does not exists', 404)

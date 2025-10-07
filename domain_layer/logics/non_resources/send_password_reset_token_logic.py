@@ -67,7 +67,7 @@ def execute(request: IRequest):
 
         return response_formatter.success( {}, 'Email has been sent successfully.', 200)
     else:
-        return response_formatter.error('User does not exit', 404)
+        return response_formatter.error('User does not exists', 404)
 
 
 

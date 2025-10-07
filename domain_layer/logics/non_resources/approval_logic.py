@@ -39,7 +39,7 @@ def execute(request: IRequest):
     user = user_repo.get({'id': user_id}, False)
 
     if not user:
-        return ResponseFormatter().error("User does not exit.", 404)
+        return ResponseFormatter().error("User does not exists.", 404)
 
     try:
         user_status_update = user_repo.transact( "PATCH", data={'status': status}, query={'id': user.get('id')})
