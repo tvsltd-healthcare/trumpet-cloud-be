@@ -30,15 +30,31 @@ def execute(request: IRequest, repo, entity=None):
       """
 
     response_formatter = ResponseFormatter()
-    get_params = request.get_path_params()
+
+    try:
+        path_params = request.get_path_params()
+    except KeyError:
+        return response_formatter.error(
+            message="Path parameters are missing in the request.",
+            status_code=400
+        )
+
+    try:
+        user_id  = int(path_params.get("id"))
+    except ValueError:
+        return response_formatter.error(
+            message=f"Invalid user ID",
+            status_code=400
+        )
 
     repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Users")
-    user = user_repo.get({"id": get_params.get("id")})
-    if not user:
-        return response_formatter.error("User not found.", 404)
 
-    get_user_role = get_role_name(repo_discovery_getter, get_params.get("id"))
+    user = user_repo.get({"id": user_id})
+    if not user:
+        return response_formatter.error(message="User not found.",status_code=404)
+
+    get_user_role = get_role_name(repo_discovery_getter, path_params.get("id"))
     if not get_user_role:
         return response_formatter.error("User role not found.", 404)
     user["role"] = get_user_role.get("name")
