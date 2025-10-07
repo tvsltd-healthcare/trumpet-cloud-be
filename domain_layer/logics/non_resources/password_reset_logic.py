@@ -73,4 +73,4 @@ def execute(request: IRequest):
         except Exception as e:
             return response_formatter.error(str(e), 500)
     else:
-        return response_formatter.error('User does not exists', 404)
+        return response_formatter.error('No account found for this email.', 404)
