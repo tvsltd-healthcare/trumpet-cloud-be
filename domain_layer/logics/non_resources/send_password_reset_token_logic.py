@@ -65,7 +65,7 @@ def execute(request: IRequest):
         except Exception as e:
             return response_formatter.error(str(e), 500)
 
-        return response_formatter.success( {}, 'Email has been sent successfully.', 200)
+        return response_formatter.success( {}, 'Password reset link has been sent to your email.', 200)
     else:
         return response_formatter.error('No account found for this email.', 404)
 
