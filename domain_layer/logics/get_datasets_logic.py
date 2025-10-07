@@ -30,14 +30,31 @@ def execute(request: IRequest, repo, entity=None):
       """
     response_formatter = ResponseFormatter()
 
-    ids = request.get_path_params()
-    datasets = repo.get_collection(ids)
+    try:
+        ids = request.get_path_params()
+    except KeyError:
+        return response_formatter.error(
+            message="Path parameters are missing in the request.",
+            status_code=400
+        )
 
-    if datasets:
-        _add_org_details_to_items(datasets)
-        _parse_json_attrs(datasets)
+    try:
+        int(ids.get("id"))
+    except ValueError:
+        return response_formatter.error(
+            message=f"Invalid dataset ID",
+            status_code=400
+        )
 
-    dataset = datasets[0] if datasets else None
+    dataset = repo.get(ids)
+    if not dataset:
+        return response_formatter.error(
+            message="Dataset not found.",
+            status_code=404
+        )
+
+    _add_org_details_to_items([dataset])
+    _parse_json_attrs([dataset])
 
     return response_formatter.success(
         dataset,
