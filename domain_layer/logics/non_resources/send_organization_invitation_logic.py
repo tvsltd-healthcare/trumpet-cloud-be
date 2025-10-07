@@ -36,7 +36,7 @@ def execute(request: IRequest):
         request = Request(json={"email": "john@example.com"})
         result = execute(request)
         # If user doesn't exist: {"status": "success", "message": "Successfully email send.", "data": {}}
-        # If user exists: {"status": "error", "message": "User already exists", ...}
+        # If user exists: {"status": "error", "message": "User already registered with this email.", ...}
         ```
     """
     body = request.get_json()
@@ -65,7 +65,7 @@ def execute(request: IRequest):
             email_service.send_email(email, token_value, type='varify_org')
             return response_formatter.success( {}, 'Successfully email send.', 200)
         else:
-            return response_formatter.error('User already exists', 500)
+            return response_formatter.error('User already registered with this email.', 500)
 
     except Exception as e:
         return response_formatter.error(str(e), 500)

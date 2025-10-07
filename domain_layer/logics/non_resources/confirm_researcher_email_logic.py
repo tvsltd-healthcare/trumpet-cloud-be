@@ -60,7 +60,7 @@ def execute(request):
             else:
                 return response_formatter.error('Failed to generate new token.',400)
         else:
-            return response_formatter.error('User already exists',403)
+            return response_formatter.error('User already registered with this email.',403)
 
     except Exception as e:
         return response_formatter.error(str(e), 500)
