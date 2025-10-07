@@ -11,7 +11,6 @@ python = "^3.11"
 python-dotenv = "^1.0.1"
 wrap-validate = {git = "https://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@github.com/tvsltd/wrap_validate.git", rev = "develop"}
 gunicorn = "^23.0.0"
-wrap-restify = {git = "https://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@github.com/tvsltd/wrap_restify.git", rev = "develop"}
 wrap-orm = {git = "https://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@github.com/tvsltd/wrap_orm.git", rev = "feature/crud-implementation"}
 stringcase = "^1.2.0"
 pymysql = "^1.1.1"
@@ -25,6 +24,7 @@ watchfiles = "^1.0.5"
 azure-communication-email = "^1.0.0"
 alembic = "^1.16.1"
 alembic-postgresql-enum = "^1.7.0"
+wrap-restify = {git = "https://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@github.com/tvsltd/wrap_restify.git", rev = "main"}
 
 
 [build-system]
