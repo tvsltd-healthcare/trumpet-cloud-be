@@ -29,7 +29,7 @@ def execute(request: IRequest, repo, entity=None):
     response_formatter = ResponseFormatter()
 
     try:
-        ids = request.get_path_params()
+        path_params = request.get_path_params()
     except KeyError:
         return response_formatter.error(
             message="Path parameters are missing in the request.",
@@ -37,7 +37,7 @@ def execute(request: IRequest, repo, entity=None):
         )
 
     try:
-        int(ids.get("id"))
+        int(path_params.get("id"))
     except ValueError:
         return response_formatter.error(
             message=f"Invalid organization ID",
@@ -47,25 +47,18 @@ def execute(request: IRequest, repo, entity=None):
     query = request.get_query_params()
     query = query.get('filter', {}) if isinstance(query, dict) else {}
 
-    # Step 2: Safely parse query as JSON if it's a string
     query = re.sub(r"'([^']*)'", r'"\1"', query) if query and isinstance(query,
                                                                          str) else query  # Matches single-quoted string literals like: 'hello'
-
     try:
         query = json.loads(query)
     except (json.JSONDecodeError, TypeError):
         query = {}
 
-    # Step 3: Combine path and query filters
-    query = {**ids, **query}
+    query = {**path_params, **query}
 
-    # Step 4: Fetch records and return response
     collected_records = repo.get(query)
     if not collected_records:
-        return response_formatter.error(
-            message="Organization not found.",
-            status_code=404
-        )
+        return response_formatter.error(message="Organization not found.",status_code=404)
 
     try:
         repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
