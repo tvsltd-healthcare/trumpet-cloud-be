@@ -28,8 +28,22 @@ def execute(request: IRequest, repo, entity=None):
     """
     response_formatter = ResponseFormatter()
 
-    # Step 1: Extract path and query params
-    ids = request.get_path_params()
+    try:
+        ids = request.get_path_params()
+    except KeyError:
+        return response_formatter.error(
+            message="Path parameters are missing in the request.",
+            status_code=400
+        )
+
+    try:
+        int(ids.get("id"))
+    except ValueError:
+        return response_formatter.error(
+            message=f"Invalid organization ID",
+            status_code=400
+        )
+
     query = request.get_query_params()
     query = query.get('filter', {}) if isinstance(query, dict) else {}
 
@@ -47,6 +61,11 @@ def execute(request: IRequest, repo, entity=None):
 
     # Step 4: Fetch records and return response
     collected_records = repo.get(query)
+    if not collected_records:
+        return response_formatter.error(
+            message="Organization not found.",
+            status_code=404
+        )
 
     try:
         repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
