@@ -10,6 +10,7 @@ from domain_layer.utils.parse_token import token_parser
 def execute(request: IRequest):
     response_formatter = ResponseFormatter()
     repo_discovery_service: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    user_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("Users")
     password_handler = PasswordManager.get()
 
     body = request.get_json()
@@ -24,6 +25,10 @@ def execute(request: IRequest):
     if organization_id is None:
         return response_formatter.error('Organization missing.', 400)
 
+    phone = body.get("phone")
+    if user_repo.get({"phone": phone}, is_collection=False):
+        return response_formatter.error('Phone number already registered.', 400)
+
     role_name = "researcher"
 
     try:
@@ -34,7 +39,6 @@ def execute(request: IRequest):
             'phone': body.get("phone"),
             'password': password_handler.hash_password(body.get("password")),
         }
-        user_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("Users")
         created_user = user_repo.transact("POST", data=user)
         if not created_user:
             return response_formatter.error('User creation failed: Invalid or empty response from users.', 500)
