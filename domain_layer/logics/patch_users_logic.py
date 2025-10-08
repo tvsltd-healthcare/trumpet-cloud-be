@@ -22,10 +22,12 @@ def execute(request: IRequest, repo, entity=None):
 
     id_dict = request.get_path_params()
     user = repo.get(id_dict)
-    
     if not user:
         return response_formatter.error("User not found.", 404)
-    
+
+    if repo.get({'phone': entity.phone}):
+        return response_formatter.error("This phone number is already in use. Please enter a different number.", 409)
+
     user_status = user['status']
 
     updated_user = repo.patch(entity, id_dict)
