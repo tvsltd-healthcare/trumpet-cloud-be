@@ -65,7 +65,7 @@ def execute(request: IRequest):
             email_service.send_email(email, token_value, type='varify_org')
             return response_formatter.success( {}, 'Successfully email send.', 200)
         else:
-            return response_formatter.error('User already registered with this email.', 500)
+            return response_formatter.error('Organization already registered with this email.', 400)
 
     except Exception as e:
         return response_formatter.error(str(e), 500)
