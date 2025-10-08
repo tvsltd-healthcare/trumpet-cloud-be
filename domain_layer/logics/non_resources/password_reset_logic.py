@@ -1,5 +1,4 @@
 from domain_layer.abstractions.request_interface import IRequest
-from domain_layer.auth_manager import AuthManager
 from domain_layer.password_manager import PasswordManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
@@ -37,15 +36,19 @@ def execute(request: IRequest):
     """
 
     body = request.get_json()
-    auth_getter_adapter = AuthManager.get()
     response_formatter = ResponseFormatter()
+    password_handler = PasswordManager.get()
+
+    token = body.get("token")
+    if not token:
+        return response_formatter.error('Token is required.', 400)
 
     decode_token = token_parser(body.get("token"))
 
     email = decode_token.get("email")
 
     if not email:
-        return response_formatter.error('User does not exists.', 404)
+        return response_formatter.error('Invalid token.', 404)
 
     if decode_token.get('reset_password') is not True:
         return response_formatter.error('You are not eligible to reset password.', 404)
@@ -57,10 +60,13 @@ def execute(request: IRequest):
 
     if user:
         raw_password = body.get("new_password")
-        new_password = is_strong_password(raw_password)
-        if new_password is not True:
-            return response_formatter.error(new_password, 400)
-        password_handler = PasswordManager.get()
+        password_validity = is_strong_password(raw_password)
+        if password_validity is not True:
+            return response_formatter.error(password_validity, 400)
+
+        if password_handler.verify_password(raw_password, user.get('password')):
+            return response_formatter.error('New password can’t be the same as old one.', 400)
+
         password = password_handler.hash_password(raw_password)
         password_reset_body = {"password": password}
 
