@@ -46,4 +46,4 @@ def execute(request: IRequest, repo, entity=None):
         update_status = user_repo.transact("PATCH", data=user, query={"id": get_params.get("id")})
         return response_formatter.success( message="Researcher deleted successfully", status_code=200, data={})
     else:
-        return response_formatter.error("Not researcher", 404)
+        return response_formatter.error("Admin user can not be deleted.", 404)
