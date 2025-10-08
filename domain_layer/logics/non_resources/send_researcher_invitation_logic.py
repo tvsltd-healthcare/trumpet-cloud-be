@@ -1,4 +1,6 @@
 from fastapi import HTTPException
+
+from adapters.middlewares.auth_middleware import AuthMiddleware
 from domain_layer.auth_manager import AuthManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.dependency.email_service_manager import EmailServiceManager
@@ -39,14 +41,22 @@ def execute(request: IRequest):
         # If user exists: {"status": "error", "message": "User already registered with this email.", ...}
         ```
     """
+    response_formatter = ResponseFormatter()
+
     body = request.get_json()
+
     email = body.get("email")
+    if not email:
+        return response_formatter.error('Email field is required.', 400)
+    email = email.lower()
+
     organization_id = body.get("organization_id")
-    query = { "email": email }
+    if not organization_id:
+        return response_formatter.error('Organization id field is required.', 400)
+
+    query = {"email": email}
     role = "researcher"
 
-    response_formatter = ResponseFormatter()
-    # discovery repo
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
 

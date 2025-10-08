@@ -39,15 +39,26 @@ def execute(request: IRequest):
         # If user exists: {"status": "error", "message": "User already registered with this email.", ...}
         ```
     """
+    response_formatter = ResponseFormatter()
+
     body = request.get_json()
+
     email = body.get("email")
+    if not email:
+        return response_formatter.error('Email field is required.', 400)
+    email = email.lower()
+
+    organization_type = body.get("organization_type")
+    if not organization_type:
+        return response_formatter.error('Organization type field is required.', 400)
+
+    if organization_type not in ["data_owner", "researcher"]:
+        return response_formatter.error('Invalid organization type.', 400)
+
     query = { "email": email }
 
-    organization_type = body.get("organization_type")#data_owner|researcher
     role = "data_owner_admin" if organization_type == "data_owner" else "researcher_admin"
 
-    response_formatter = ResponseFormatter()
-    # discovery repo
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
 
