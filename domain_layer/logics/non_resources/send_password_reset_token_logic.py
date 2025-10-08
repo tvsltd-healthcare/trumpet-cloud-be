@@ -41,12 +41,16 @@ def execute(request: IRequest):
         - The function depends on various domain-layer managers (AuthManager, EmailServiceManager, etc.).
         - The token is generated with a flag `reset_password: True` for downstream validation.
     """
-
+    response_formatter = ResponseFormatter()
     body = request.get_json()
+
     email = body.get("email")
+    if not email:
+        return response_formatter.error('Email field is required.', 400)
+    email = email.strip().lower()
+
     query = { "email": email }
 
-    response_formatter = ResponseFormatter()
     # discovery repo
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")

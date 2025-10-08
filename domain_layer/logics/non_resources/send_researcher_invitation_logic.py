@@ -48,7 +48,7 @@ def execute(request: IRequest):
     email = body.get("email")
     if not email:
         return response_formatter.error('Email field is required.', 400)
-    email = email.lower()
+    email = email.strip().lower()
 
     organization_id = body.get("organization_id")
     if not organization_id:
