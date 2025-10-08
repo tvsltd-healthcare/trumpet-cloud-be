@@ -47,6 +47,12 @@ def execute(request: IRequest, repo, entity=None):
     entity.email = email
     entity.type = type
 
+    if repo.get({'email': entity.email}):
+        return response_formatter.error('Organization with this email already exists.', 409)
+
+    if repo.get({'phone': entity.phone}):
+        return response_formatter.error('Organization with this phone number already exists.', 409)
+
     try:
         create_organizations = repo.post(entity, request.get_path_params())
         
