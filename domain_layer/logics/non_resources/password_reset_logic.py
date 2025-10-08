@@ -34,7 +34,6 @@ def execute(request: IRequest):
     Raises:
         This function does not explicitly raise exceptions; all exceptions are caught and returned as error responses.
     """
-
     body = request.get_json()
     response_formatter = ResponseFormatter()
     password_handler = PasswordManager.get()
@@ -43,7 +42,11 @@ def execute(request: IRequest):
     if not token:
         return response_formatter.error('Token is required.', 400)
 
-    decode_token = token_parser(body.get("token"))
+    try:
+        decode_token = token_parser(body.get("token"))
+    except Exception as e:
+        print(e)
+        return response_formatter.error('Invalid or expired password reset link.', 403)
 
     email = decode_token.get("email")
 
