@@ -26,10 +26,10 @@ def execute(request: IRequest):
         return response.error(message="Invalid Credentials.", status_code=404)
 
     if not user:
-        return response.error(message="Invalid Credentials.", status_code=404)
+        return response.error(message="Invalid username or password. Please try again!", status_code=404)
 
     if not _is_valid_password(body.get("password"), user.get("password")):
-        return response.error(message="Invalid Credentials.", status_code=404)
+        return response.error(message="Invalid username or password. Please try again!", status_code=404)
 
     token = _generate_token(user["id"])
     if not token:
