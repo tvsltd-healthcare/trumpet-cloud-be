@@ -36,7 +36,7 @@ def execute(request: IRequest, repo, entity=None):
     if updated_user_status == APPROVED_STATUS and updated_user_status != user_status:
         _notify_user_channel(user['id'], current_user_id)
 
-    return response_formatter.success( updated_user, 'Entity updated successfully', 200 )
+    return response_formatter.success( updated_user, 'Information successfully updated.', 200 )
 
 
 def _authorize_and_get_user_id(request: IRequest):

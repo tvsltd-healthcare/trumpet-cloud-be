@@ -48,7 +48,7 @@ def execute(request: IRequest, repo, entity=None):
         admin_user_ids = _admin_user_ids_for_org(org['id'])
         _notify_user_channels(admin_user_ids, current_user_id)
 
-    return response_formatter.success(updated_org, 'Entity updated successfully', 200)
+    return response_formatter.success(updated_org, 'Information successfully updated.', 200)
 
 
 def _authorize_and_get_user_id(request: IRequest):
