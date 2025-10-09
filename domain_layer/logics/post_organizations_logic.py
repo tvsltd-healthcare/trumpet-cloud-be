@@ -3,6 +3,9 @@ from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.abstractions.response_formatter_interface import IResponseFormatter
 from domain_layer.utils.enforce_request_interface import enforce_request_type
+from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
+from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
+from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 
 @enforce_request_type()
 def execute(request: IRequest, repo, entity=None):
@@ -32,6 +35,9 @@ def execute(request: IRequest, repo, entity=None):
     """
     response_formatter: IResponseFormatter = ResponseFormatter()
 
+    repo_discovery_service: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
+    user_repo: IAppRepoInvoker = repo_discovery_service.get_repo_invoker("Users")
+
     # Validate entity
     if entity is None:
         return response_formatter.error('Entity cannot be None', 400)
@@ -52,6 +58,10 @@ def execute(request: IRequest, repo, entity=None):
 
     if repo.get({'phone': entity.phone}):
         return response_formatter.error('Organization with this phone number already exists.', 409)
+
+    if user_repo.get({'phone': entity.phone}):
+        return response_formatter.error('User with this phone number already exists.', 409)
+
 
     try:
         create_organizations = repo.post(entity, request.get_path_params())
