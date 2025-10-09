@@ -3,6 +3,7 @@ import re
 
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.utils.enforce_request_interface import enforce_request_type
+from domain_layer.utils.get_query_params import get_query_params
 from domain_layer.utils.get_role import get_role_name
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
@@ -45,6 +46,7 @@ def execute(request: IRequest, repo, entity=None):
             "status_code": <int>
         }
     """
+    print("get_collection_users_logic")
     response_formatter = ResponseFormatter()
 
     auth_header = request.get_headers().get('authorization')
@@ -58,18 +60,7 @@ def execute(request: IRequest, repo, entity=None):
     check_user_role = get_role_name(repo_discovery_getter, current_user_id)
     check_admin_role = check_user_role.get('name')
 
-    path_params = request.get_path_params()
-    query_params = request.get_query_params()
-    query_data = query_params.get('filter', {}) if isinstance(query_params, dict) else {}
-
-    query_data = re.sub(r"'([^']*)'", r'"\1"', query_data) if query_data and isinstance(query_data, str) else query_data
-
-    try:
-        query_data = json.loads(query_data)
-    except (json.JSONDecodeError, TypeError):
-        query_data = {}
-
-    final_query = {**path_params, **query_data}
+    final_query = {**request.get_path_params(), **get_query_params(request)}
 
     if check_admin_role != "trumpet_admin":
         organization_users_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("OrganizationUsers")
