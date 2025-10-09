@@ -23,7 +23,7 @@ RESET_PASSWORD_EMAIL_TEMPLATE = """
         <h1>Password Reset Request</h1>
         <p>Dear User,</p>
         <p>We received a request to reset your password for your account associated with this email address.</p>
-        <p>Please click the button below to set a new password. This link will expire in 30 minutes.</p>
+        <p>Please click the button below to set a new password.</p>
 
         <p style="text-align:center;">
             <a href="{host}/password-reset?token={token}" class="verify-button">Reset Password</a>
