@@ -1,4 +1,7 @@
 import json
+
+from datetime import datetime, timedelta, timezone
+
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
@@ -58,13 +61,21 @@ def execute(request: IRequest):
 
         BaseLogicInjector().inject_business_logic(study_agreement=study_agreement, do_org_agreements=do_study_agreement_and_dataset)
 
+        next_training_time = datetime.now(timezone.utc) + timedelta(minutes=5)
+
+        study_agreement_repo.transact(
+            method="PATCH",
+            data={"next_training_time": next_training_time},
+            query={"id": study_agreement_id}
+        )
+
         return response_formatter.success(
             message="Training Started Successfully.",
             data=study_agreement,
             status_code=202
         )
     except Exception as e:
-        return response_formatter.error(f"Internal server error: {str(e)}", 500)
+        return response_formatter.error(f"Internal server error.", 500)
 
 def _get_current_user_org_id(request: IRequest, org_users_repo) -> int | None:
     """Extracts the current user's organization ID using the Authorization token."""
