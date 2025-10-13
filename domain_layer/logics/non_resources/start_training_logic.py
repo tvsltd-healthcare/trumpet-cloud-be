@@ -73,6 +73,8 @@ def execute(request: IRequest):
             query={"id": study_agreement_id}
         )
 
+        study_agreement["next_training_time"] = next_training_time
+
         return response_formatter.success(
             message="Training Started Successfully.",
             data=study_agreement,
