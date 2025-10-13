@@ -31,6 +31,10 @@ def execute(request: IRequest):
         if not study_agreement:
             return response_formatter.error("Study Agreement not found.", 403)
 
+        if study_agreement.get('next_training_time'):
+            if datetime.now(timezone.utc) < study_agreement['next_training_time']:
+                return response_formatter.error("Training already in progress.", 403)
+
         study_agreement['pet_config'] = json.loads(study_agreement['pet_config'])
         
         study_agreement_status = study_agreement.get('status', None)
