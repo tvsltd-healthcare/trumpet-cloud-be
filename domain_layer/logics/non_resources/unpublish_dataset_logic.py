@@ -11,6 +11,8 @@ from domain_layer.utils.parse_token import token_parser
 
 @enforce_request_type()
 def execute(request: IRequest):
+    # todo: auth: LGTM. VALUR FROM TOKEN
+
     try:
         response_formatter = ResponseFormatter()
 

@@ -34,6 +34,8 @@ def execute(request: IRequest):
     Raises:
         This function does not explicitly raise exceptions; all exceptions are caught and returned as error responses.
     """
+    # todo: auth: LGTM. done via token data.
+    
     body = request.get_json()
     response_formatter = ResponseFormatter()
     password_handler = PasswordManager.get()

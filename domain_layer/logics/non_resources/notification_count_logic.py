@@ -19,6 +19,7 @@ def execute(request: IRequest):
     Returns:
         ResponseFormatter: A formatted response containing the count of unread notifications.
     """
+    # todo: auth: LGTM. done via token data.
 
     response_formatter = ResponseFormatter()
     repo_discovery_service: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()

@@ -41,6 +41,8 @@ def execute(request: IRequest):
         - The function depends on various domain-layer managers (AuthManager, EmailServiceManager, etc.).
         - The token is generated with a flag `reset_password: True` for downstream validation.
     """
+    # todo: auth: LGTM 
+
     response_formatter = ResponseFormatter()
     body = request.get_json()
 

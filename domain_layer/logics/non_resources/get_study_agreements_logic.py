@@ -25,6 +25,8 @@ def execute(request: IRequest):
     Returns:
         dict: Formatted response with a list of matched study agreements, or error details.
     """
+    # todo: auth: LGTM. done via token data.
+
     response_formatter = ResponseFormatter()
     repo_discovery_service: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
 

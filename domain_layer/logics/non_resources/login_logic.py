@@ -13,6 +13,8 @@ from domain_layer.response_formatter import ResponseFormatter
 
 @enforce_request_type()
 def execute(request: IRequest):
+    # todo: auth: LGTM. done via token data.
+
     body = request.get_json()
     response_formatter: IResponseFormatter = ResponseFormatter()
 

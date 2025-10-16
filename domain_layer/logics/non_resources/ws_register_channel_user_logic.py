@@ -3,6 +3,8 @@ from domain_layer.utils.parse_token import token_parser
 from domain_layer.websocket_pool_manager import WebsocketPoolManager
 
 def execute(websocket: IWebSocketWrapper):
+    # todo: auth: LGTM. VALUR FROM TOKEN
+    
     websocket.send_json({"message": "👋 Processing Websocket Connection!"})
 
     user_token = websocket.get_query_params().get("token")

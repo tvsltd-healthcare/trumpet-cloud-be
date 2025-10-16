@@ -39,14 +39,20 @@ def execute(request: IRequest):
         # If user exists: {"status": "error", "message": "User already registered with this email.", ...}
         ```
     """
+    # todo: auth: org type and role check strictly. now any org type random will work in this endpoint
+
+    response_formatter = ResponseFormatter()
     body = request.get_json()
     email = body.get("email")
     query = { "email": email }
 
-    organization_type = body.get("organization_type")#data_owner|researcher
+    organization_type = body.get("organization_type") #data_owner|researcher
+
+    if organization_type not in ('data_owner', 'researcher'):
+        return response_formatter.error("Not allowed.", 403)
+
     role = "data_owner_admin" if organization_type == "data_owner" else "researcher_admin"
 
-    response_formatter = ResponseFormatter()
     # discovery repo
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo_invoker: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
