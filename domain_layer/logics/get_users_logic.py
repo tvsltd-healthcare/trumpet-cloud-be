@@ -1,9 +1,12 @@
 import json
 import re
 
+from application_layer.abstractions.fga_authorizer_interface import IFGAAuthorizer
 from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.authorization_manager import AuthorizationManager
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.utils.get_role import get_role_name
+from domain_layer.utils.authorization import is_supper_admin, get_user_id
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
@@ -47,6 +50,9 @@ def execute(request: IRequest, repo, entity=None):
             status_code=400
         )
 
+    if not check_permission(request, user_id):
+        return response_formatter.error("Not allowed.", 403)
+
     repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Users")
 
@@ -65,3 +71,21 @@ def execute(request: IRequest, repo, entity=None):
         status_code=200
     )
 
+
+def check_permission(request: IRequest, user_id: int):
+    current_user_id = get_user_id(request)
+
+    if is_supper_admin(current_user_id):
+        return True
+
+    authorization_handler: IFGAAuthorizer = AuthorizationManager.get()
+
+    permision = authorization_handler.check({
+            "user_type": "user",
+            "user_id": current_user_id,
+            "action": "get",
+            "resource_type": "user",
+            "resource_id": user_id,
+        })
+
+    return permision.get('allowed')

@@ -9,6 +9,13 @@ class CheckParams(TypedDict):
     resource_type: str
     action: str
 
+class AddRelationParams(TypedDict):
+    user_type: str
+    user_id: str
+    resource_id: str
+    resource_type: str
+    action: str
+
 
 class CheckResponse(TypedDict):
     allowed: bool
@@ -24,7 +31,7 @@ class IFGAAuthorizer(ABC):
         pass
 
     @abstractmethod
-    def add_relation(self, ):
+    def add_relation(self, AddRelationParams):
         pass
 
     @abstractmethod

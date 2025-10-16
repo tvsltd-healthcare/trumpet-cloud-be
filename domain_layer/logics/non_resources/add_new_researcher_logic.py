@@ -1,6 +1,7 @@
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
 from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.authorization_manager import AuthorizationManager
 from domain_layer.password_manager import PasswordManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
@@ -67,6 +68,32 @@ def execute(request: IRequest):
         role_user_repo.transact("POST", data=role_user)
         if not created_user:
             return response_formatter.error('User creation failed: Invalid or empty response from users.', 500)
+
+        authorization_handler = AuthorizationManager.get()
+
+        authorization_handler.add_relation({
+            "user_type": "user",
+            "user_id": user_assign_to_organization.get("user_id"),
+            "action": "owner",
+            "resource_type": "user",
+            "resource_id": user_assign_to_organization.get("user_id"),
+        })
+
+        authorization_handler.add_relation({
+            "user_type": "user",
+            "user_id": user_assign_to_organization.get("user_id"),
+            "action": "researcher",
+            "resource_type": "organization",
+            "resource_id": user_assign_to_organization.get("organization_id"),
+        })
+
+        authorization_handler.add_relation({
+            "user_type": "organization",
+            "user_id": user_assign_to_organization.get("organization_id"),
+            "action": "organization",
+            "resource_type": "user",
+            "resource_id": user_assign_to_organization.get("user_id"),
+        })
 
         return response_formatter.success(created_user, 'User created successfully.', 201)
 

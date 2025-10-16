@@ -1,7 +1,10 @@
 import json
 import re
 
+from application_layer.abstractions.fga_authorizer_interface import IFGAAuthorizer
 from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.authorization_manager import AuthorizationManager
+from domain_layer.utils.authorization import get_user_id, is_supper_admin
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.utils.get_role import get_role_name
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
@@ -34,6 +37,10 @@ def execute(request: IRequest, repo, entity=None):
 
     repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     get_params = request.get_path_params()
+
+    if not check_permission(request, user_id=get_params.get("id")):
+        return response_formatter.error("Not allowed.", 403)
+
     user_role = get_role_name(repo_discovery_getter, get_params.get("id"))
     if not user_role:
         return response_formatter.error("User role not found", 404)
@@ -47,3 +54,22 @@ def execute(request: IRequest, repo, entity=None):
         return response_formatter.success( message="Researcher deleted successfully", status_code=200, data={})
     else:
         return response_formatter.error("Admin user can not be deleted.", 404)
+
+
+def check_permission(request: IRequest, user_id: int):
+    current_user_id = get_user_id(request)
+
+    if is_supper_admin(current_user_id):
+        return True
+
+    authorization_handler: IFGAAuthorizer = AuthorizationManager.get()
+
+    permision = authorization_handler.check({
+            "user_type": "user",
+            "user_id": current_user_id,
+            "action": "delete",
+            "resource_type": "user",
+            "resource_id": user_id,
+        })
+
+    return permision.get('allowed')

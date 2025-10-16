@@ -23,14 +23,17 @@ Example:
     ...     "resource_id": "456"
     ... })
 """
-
+import json
+import os
 from typing import TypedDict
 
 from openfga_sdk import ClientConfiguration
 from openfga_sdk.client import ClientCheckRequest
+from openfga_sdk.client.models import ClientTuple, ClientWriteRequest
 from openfga_sdk.sync import OpenFgaClient
 
-from application_layer.abstractions.fga_authorizer_interface import IFGAAuthorizer, CheckParams, CheckResponse
+from application_layer.abstractions.fga_authorizer_interface import IFGAAuthorizer, CheckParams, CheckResponse, \
+    AddRelationParams
 
 
 class Configuration(TypedDict):
@@ -64,10 +67,20 @@ class OpenFgaAuthorization(IFGAAuthorizer):
         client_configuration = ClientConfiguration(
             api_url=configuration.get("OPENFGA_API_URL"),
             store_id=configuration.get("OPENFGA_STORE_ID"),
-            authorization_model_id=configuration.get("OPENFGA_MODEL_ID"),
+            # authorization_model_id=configuration.get("OPENFGA_MODEL_ID"),
         )
 
         self.fga_client = OpenFgaClient(client_configuration)
+        CURRENT_DIR_PATH = os.path.dirname(os.path.abspath(__file__))
+        MODEL_FILE_PATH = os.path.join(CURRENT_DIR_PATH, 'openfga_authorization_model.json')
+        with open(MODEL_FILE_PATH) as authorization_model_str:
+            authorization_model = json.load(authorization_model_str)
+            response = self.fga_client.write_authorization_model(authorization_model)
+            print(f"{response=}")
+
+        # async def write_authorization_model():
+            # body_string = "{\"schema_version\":\"1.1\",\"type_definitions\":[{\"type\":\"user\"},{\"type\":\"document\",\"relations\":{\"reader\":{\"this\":{}},\"writer\":{\"this\":{}},\"owner\":{\"this\":{}}},\"metadata\":{\"relations\":{\"reader\":{\"directly_related_user_types\":[{\"type\":\"user\"}]},\"writer\":{\"directly_related_user_types\":[{\"type\":\"user\"}]},\"owner\":{\"directly_related_user_types\":[{\"type\":\"user\"}]}}}}]}"
+            # response = await fga_client_instance.write_authorization_model(json.loads(body))
 
     def check(self, params: CheckParams) -> CheckResponse:
         """Check if a user has a specific permission on a resource.
@@ -101,12 +114,24 @@ class OpenFgaAuthorization(IFGAAuthorizer):
         """
         pass
 
-    def add_relation(self):
-        """Add a relationship between a user and a resource.
+    def add_relation(self, params: AddRelationParams):
+        try:
+            print(f"{params=}")
 
-        Not implemented yet.
-        """
-        pass
+            body = ClientWriteRequest(
+                writes=[
+                    ClientTuple(
+                        user=f"{params.get('user_type')}:{params.get('user_id')}",
+                        relation=f"{params.get('action')}",
+                        object=f"{params.get('resource_type')}:{params.get('resource_id')}",
+                    ),
+                ],
+            )
+            return self.fga_client.write(body)
+        except Exception as e:
+            print(f"Error in add_relation: {e}")
+            raise e
+
 
     def delete_relation(self):
         """Delete a relationship between a user and a resource.
