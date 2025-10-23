@@ -109,7 +109,7 @@ StudyAgreements = {
             'error_code': '1012',
         },
         'regex': {
-            'value': '^(HNC|HNC_NECRO_JAW|HNC_DYSPHAGIA|HNC_ORAL_MUCOSITIS|NSCLC_DURATION_MONTHS)$',
+            'value': '^(HNC|HNC_NECRO_JAW|HNC_DYSPHAGIA|HNC_ORAL_MUCOSITIS|NSCLC_DURATION_MONTHS|SBRT_SURVIVAL)$',
             'error_code': '1013',
         },
     },

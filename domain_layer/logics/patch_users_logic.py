@@ -36,7 +36,8 @@ def execute(request: IRequest, repo, entity=None):
     if not user:
         return response_formatter.error("User not found.", 404)
 
-    if repo.get({'phone': entity.phone}):
+    existing_user_with_phone = repo.get({'phone': entity.phone})
+    if existing_user_with_phone and existing_user_with_phone.get('id') != user.get('id'):
         return response_formatter.error("This phone number is already in use. Please enter a different number.", 409)
 
     user_status = user['status']
