@@ -2902,7 +2902,7 @@
           {
             "url": "/api/study_agreements/{study_agreement_id}/results",
             "method": "get_collection",
-            "auth": true
+            "auth": false
           },
           {
             "url": "/api/study_agreements/{study_agreement_id}/results/{id}",
