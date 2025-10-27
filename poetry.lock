@@ -2819,7 +2819,7 @@ sqlalchemy = "^2.0.35"
 type = "git"
 url = "https://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@github.com/tvsltd/wrap_orm.git"
 reference = "feature/crud-implementation"
-resolved_reference = "aefacb8966f8da213b9b6ae782257872b5d4e691"
+resolved_reference = "789a934158cafe2f4da892287c237b838b399e0b"
 
 [[package]]
 name = "wrap-restify"
