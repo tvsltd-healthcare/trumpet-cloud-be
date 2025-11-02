@@ -2152,7 +2152,10 @@
             "enum_or_set_values": [
               "None",
               "CDC_DP",
-              "ThHE"
+              "ThHE",
+              "MKHE_FED_AVG",
+              "PBACC_AGG_DDP",
+              "PBACC_AGG_SVT"
             ],
             "default_value": "",
             "on_delete": "",
@@ -2168,7 +2171,7 @@
               },
               {
                 "tag": "regex",
-                "rule": "^(None|CDC_DP|ThHE)$",
+                "rule": "^(None|CDC_DP|ThHE|MKHE_FED_AVG|PBACC_AGG_DDP|PBACC_AGG_SVT)$",
                 "error_code": "1001",
                 "default_message": ""
               }

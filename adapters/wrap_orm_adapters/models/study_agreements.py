@@ -12,7 +12,7 @@ class StudyAgreements(Base):
     use_case = Column(Enum('HNC', 'SBRT', 'NSCLC', name='study_agreements_use_case_enum'), nullable=True)
     datasets = Column(String(255), nullable=True,)
     samples = Column(Integer, nullable=True,)
-    pet = Column(Enum('None', 'CDC_DP', 'ThHE', name='study_agreements_pet_enum'), nullable=True,)
+    pet = Column(Enum('None', 'CDC_DP', 'ThHE', 'MKHE_FED_AVG', 'PBACC_AGG_DDP', 'PBACC_AGG_SVT', name='study_agreements_pet_enum'), nullable=True,)
     pet_config = Column(Text, nullable=False,)
     model = Column(Enum("REG_LOG", "NN", name='study_agreements_model_enum'), nullable=False)
     legal = Column(String(30), nullable=True,)
