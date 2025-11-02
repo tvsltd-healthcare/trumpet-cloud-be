@@ -1,5 +1,6 @@
 import os
 import time
+import uuid
 from pathlib import Path
 from domain_layer.response_formatter import ResponseFormatter
 
@@ -31,7 +32,7 @@ def upload_file_to_disk(file) -> dict:
     file_dir.mkdir(exist_ok=True)
 
     # Generate unique filename with timestamp and UUID
-    unique_filename = f"file_{time.time()}_{Path(file.filename).suffix or '.bin'}"
+    unique_filename = f"file_{uuid.uuid4()}_{Path(file.filename).suffix}"
     file_path = file_dir / unique_filename
 
     try:
