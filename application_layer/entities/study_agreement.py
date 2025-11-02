@@ -51,7 +51,7 @@ StudyAgreements = {
             'error_code': '1000',
         },
         'regex': {
-            'value': '^(None|CDC_DP|ThHE)$',
+            'value': '^(None|CDC_DP|ThHE|MKHE_FED_AVG|PBACC_AGG_DDP|PBACC_AGG_SVT)$',
             'error_code': '1001',
         },
     },
