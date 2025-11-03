@@ -56,6 +56,9 @@ def execute(request: IRequest, repo, entity=None):
     if repo.get({'email': entity.email}):
         return response_formatter.error('Organization with this email already exists.', 409)
 
+    if repo.get({'name': entity.name}):
+        return response_formatter.error('Organization with this name already exists.', 409)
+
     if repo.get({'phone': entity.phone}):
         return response_formatter.error('Organization with this phone number already exists.', 409)
 
