@@ -4785,6 +4785,10 @@
           "url": "/api/study-agreement-approval"
         },
         {
+          "verb": "post",
+          "url": "/api/approve-all-pending-agreements"
+        },
+        {
           "verb": "get",
           "url": "/api/notification/count"
         },
