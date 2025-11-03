@@ -20,6 +20,7 @@ ALLOWED_DOCUMENT_TYPES = [
     # Spreadsheets
     "application/vnd.ms-excel",                                          # .xls (and sometimes .xlsx)
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", # .xlsx
+    "application/vnd.oasis.opendocument.spreadsheet",
 
     # Presentations
     "application/vnd.ms-powerpoint",                                             # .ppt (and sometimes .pptx)
@@ -61,7 +62,7 @@ def upload_file_to_disk(file) -> dict:
             f.write(file.file.read())
 
         return {
-            "file_name": unique_filename,
+            "file_name": file.filename,
             "file_path": (f"{OUTPUT_DIR}/{unique_filename}"),
             "file_size": file.size,
             "file_mime_type": file.headers.get('content-type')
