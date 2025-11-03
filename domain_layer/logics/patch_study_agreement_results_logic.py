@@ -13,7 +13,7 @@ def execute(request: IRequest, repo, entity=None):
         update_result = repo.patch(entity, ids)
 
         if update_result:
-            return response_formatter.success(update_result, 'Entity updated successfully.', 201)
+            return response_formatter.success(update_result, 'Information successfully updated.', 201)
         else:
             return response_formatter.error('Entity update failed', 500)
 

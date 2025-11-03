@@ -1,10 +1,14 @@
 import time
+
+from application_layer.abstractions.fga_authorizer_interface import IFGAAuthorizer
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
+from domain_layer.authorization_manager import AuthorizationManager
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.abstractions.response_formatter_interface import IResponseFormatter
+from domain_layer.utils.authorization import get_user_id, is_supper_admin
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.websocket_pool_manager import WebsocketPoolManager
@@ -23,6 +27,11 @@ def execute(request: IRequest, repo, entity=None):
         return response_formatter.error("Authenticated user ID not found in token.", 401)
 
     id_dict = request.get_path_params()
+    organization_id = id_dict.get("id")
+
+    if not check_permission(request, organization_id):
+        return response_formatter.error("Not allowed.", 403)
+
     org = repo.get(id_dict)
 
     if not org:
@@ -48,7 +57,7 @@ def execute(request: IRequest, repo, entity=None):
         admin_user_ids = _admin_user_ids_for_org(org['id'])
         _notify_user_channels(admin_user_ids, current_user_id)
 
-    return response_formatter.success(updated_org, 'Entity updated successfully', 200)
+    return response_formatter.success(updated_org, 'Information successfully updated.', 200)
 
 
 def _authorize_and_get_user_id(request: IRequest):
@@ -97,3 +106,21 @@ def _save_notification_to_db(websocket_notification, receiver_user_id, current_u
 
     notifications_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("Notifications")
     notifications_repo.transact("POST", data=notification_dict)
+
+def check_permission(request: IRequest, organization_id: int):
+    current_user_id = get_user_id(request)
+
+    if is_supper_admin(current_user_id):
+        return True
+
+    authorization_handler: IFGAAuthorizer = AuthorizationManager.get()
+
+    permision = authorization_handler.check({
+            "user_type": "user",
+            "user_id": current_user_id,
+            "action": "update",
+            "resource_type": "organization",
+            "resource_id": organization_id,
+        })
+
+    return permision.get('allowed')

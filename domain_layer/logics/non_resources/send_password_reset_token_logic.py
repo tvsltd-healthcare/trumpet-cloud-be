@@ -41,12 +41,18 @@ def execute(request: IRequest):
         - The function depends on various domain-layer managers (AuthManager, EmailServiceManager, etc.).
         - The token is generated with a flag `reset_password: True` for downstream validation.
     """
-
-    body = request.get_json()
-    email = body.get("email")
-    query = { "email": email }
+    # todo: auth: LGTM 
 
     response_formatter = ResponseFormatter()
+    body = request.get_json()
+
+    email = body.get("email")
+    if not email:
+        return response_formatter.error('Email field is required.', 400)
+    email = email.strip().lower()
+
+    query = { "email": email }
+
     # discovery repo
     repo_discovery_getter_adapter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_discovery_getter_adapter.get_repo_invoker("Users")
@@ -65,9 +71,9 @@ def execute(request: IRequest):
         except Exception as e:
             return response_formatter.error(str(e), 500)
 
-        return response_formatter.success( {}, 'Email has been sent successfully.', 200)
+        return response_formatter.success( {}, 'Password reset link has been sent to your email.', 200)
     else:
-        return response_formatter.error('User does not exit', 404)
+        return response_formatter.error('No account found for this email.', 404)
 
 
 

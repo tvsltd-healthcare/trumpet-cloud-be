@@ -1,9 +1,12 @@
 import json
 import re
 
+from application_layer.abstractions.fga_authorizer_interface import IFGAAuthorizer
 from domain_layer.abstractions.request_interface import IRequest
+from domain_layer.authorization_manager import AuthorizationManager
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.utils.get_role import get_role_name
+from domain_layer.utils.authorization import is_supper_admin, get_user_id
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.abstractions.app_repo_invoker_interface import IAppRepoInvoker
@@ -30,15 +33,34 @@ def execute(request: IRequest, repo, entity=None):
       """
 
     response_formatter = ResponseFormatter()
-    get_params = request.get_path_params()
+
+    try:
+        path_params = request.get_path_params()
+    except KeyError:
+        return response_formatter.error(
+            message="Path parameters are missing in the request.",
+            status_code=400
+        )
+
+    try:
+        user_id  = int(path_params.get("id"))
+    except ValueError:
+        return response_formatter.error(
+            message=f"Invalid user ID",
+            status_code=400
+        )
+
+    if not check_permission(request, user_id):
+        return response_formatter.error("Not allowed.", 403)
 
     repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Users")
-    user = user_repo.get({"id": get_params.get("id")})
-    if not user:
-        return response_formatter.error("User not found.", 404)
 
-    get_user_role = get_role_name(repo_discovery_getter, get_params.get("id"))
+    user = user_repo.get({"id": user_id})
+    if not user:
+        return response_formatter.error(message="User not found.",status_code=404)
+
+    get_user_role = get_role_name(repo_discovery_getter, path_params.get("id"))
     if not get_user_role:
         return response_formatter.error("User role not found.", 404)
     user["role"] = get_user_role.get("name")
@@ -49,3 +71,21 @@ def execute(request: IRequest, repo, entity=None):
         status_code=200
     )
 
+
+def check_permission(request: IRequest, user_id: int):
+    current_user_id = get_user_id(request)
+
+    if is_supper_admin(current_user_id):
+        return True
+
+    authorization_handler: IFGAAuthorizer = AuthorizationManager.get()
+
+    permision = authorization_handler.check({
+            "user_type": "user",
+            "user_id": current_user_id,
+            "action": "get",
+            "resource_type": "user",
+            "resource_id": user_id,
+        })
+
+    return permision.get('allowed')

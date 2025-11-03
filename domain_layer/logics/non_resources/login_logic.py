@@ -13,38 +13,51 @@ from domain_layer.response_formatter import ResponseFormatter
 
 @enforce_request_type()
 def execute(request: IRequest):
+    # todo: auth: LGTM. done via token data.
+
     body = request.get_json()
-    response: IResponseFormatter = ResponseFormatter()
+    response_formatter: IResponseFormatter = ResponseFormatter()
 
     repo_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
     user_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("Users")
-    user = user_repo.get({"email": body.get("email")}, False)
+
+    email = body.get("email")
+    if not email:
+        return response_formatter.error(message="Email is required.", status_code=400)
+    email = email.lower().strip()
+
+    password = body.get("password")
+    if not password:
+        return response_formatter.error(message="Password is required.", status_code=400)
+
+
+    user = user_repo.get({"email": email}, False)
     if user is None:
-        return response.error(message="Invalid Credentials.", status_code=404)
+        return response_formatter.error(message="Invalid username or password. Please try again!", status_code=404)
     # todo: sign-up user with the same deleted email. need to add in future
     if user["status"] == "deleted":
-        return response.error(message="Invalid Credentials.", status_code=404)
+        return response_formatter.error(message="Invalid username or password. Please try again!", status_code=404)
 
     if not user:
-        return response.error(message="Invalid Credentials.", status_code=404)
+        return response_formatter.error(message="Invalid username or password. Please try again!", status_code=404)
 
     if not _is_valid_password(body.get("password"), user.get("password")):
-        return response.error(message="Invalid Credentials.", status_code=404)
+        return response_formatter.error(message="Invalid username or password. Please try again!", status_code=404)
 
     token = _generate_token(user["id"])
     if not token:
-        return response.error(message="Login failed.", status_code=404)
+        return response_formatter.error(message="Login failed.", status_code=404)
 
     role_name = _get_user_role_name(repo_getter, user["id"])
     if not role_name:
-        return response.error(message="Login failed.", status_code=404)
+        return response_formatter.error(message="Login failed.", status_code=404)
 
     organization = _get_user_organization_name(repo_getter, user["id"])
     if not organization:
-        return response.error(message="Login failed.", status_code=404)
+        return response_formatter.error(message="Login failed.", status_code=404)
 
-    return response.success(data=_build_success_response(token, user, role_name, organization),
-        message="User successfully logged in.", status_code=200)
+    return response_formatter.success(data=_build_success_response(token, user, role_name, organization),
+        message="Login successful.", status_code=200)
 
 
 def _is_valid_password(raw_password: str, hashed_password: str) -> bool:

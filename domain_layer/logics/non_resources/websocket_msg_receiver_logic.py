@@ -4,6 +4,8 @@ from domain_layer.websocket_pool_manager import WebsocketPoolManager
 
 
 def execute(websocket: IWebSocketWrapper, msg: str, event: str = 'message_received'):
+    # todo: auth: LGTM. VALUR FROM TOKEN
+    
     print("You can receive any websocket incoming message here and work on it")
     print("msg orint from server logi  file:::::", msg)
     

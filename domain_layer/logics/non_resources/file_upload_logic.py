@@ -55,6 +55,8 @@ def execute(request):
         dict: A JSON-serializable dictionary containing a success or error message,
               status code, and file metadata if successful.
     """
+    # todo: auth: LGTM
+
     response_formatter = ResponseFormatter()
     repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
 

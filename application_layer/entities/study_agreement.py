@@ -51,7 +51,7 @@ StudyAgreements = {
             'error_code': '1000',
         },
         'regex': {
-            'value': '^(None|CDC_DP|ThHE)$',
+            'value': '^(None|CDC_DP|ThHE|MKHE_FED_AVG|PBACC_AGG_DDP|PBACC_AGG_SVT)$',
             'error_code': '1001',
         },
     },
@@ -109,7 +109,7 @@ StudyAgreements = {
             'error_code': '1012',
         },
         'regex': {
-            'value': '^(HNC|HNC_NECRO_JAW|HNC_DYSPHAGIA|HNC_ORAL_MUCOSITIS|NSCLC_DURATION_MONTHS)$',
+            'value': '^(HNC|HNC_NECRO_JAW|HNC_DYSPHAGIA|HNC_ORAL_MUCOSITIS|NSCLC_DURATION_MONTHS|SBRT_SURVIVAL)$',
             'error_code': '1013',
         },
     },

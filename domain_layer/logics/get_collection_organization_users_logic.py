@@ -7,6 +7,7 @@ from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.utils.enforce_request_interface import enforce_request_type
 from domain_layer.response_formatter import ResponseFormatter
+from domain_layer.utils.get_query_params import get_query_params
 from domain_layer.utils.get_role import get_role_name
 
 
@@ -76,6 +77,13 @@ def execute(request: IRequest, repo, entity=None):
                 "role": user_role.get("name") if user_role else None,
             }
             user_list.append(user_info)
+
+    query_params = get_query_params(request)
+
+    filter_by_status = query_params.get("status")
+    if filter_by_status:
+        user_list = list(filter(lambda user: user.get("status") == filter_by_status, user_list))
+
     organization["users"] = user_list
     return {
         "message": "Data retrieved successfully.",

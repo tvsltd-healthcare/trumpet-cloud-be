@@ -7,6 +7,8 @@ from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.parse_token import token_parser
 from domain_layer.utils.password_validator import is_strong_password
 
+from domain_layer.authorization_manager import AuthorizationManager
+
 RESEARCHER_ADMIN = "researcher_admin"
 DATA_OWNER_ADMIN = "data_owner_admin"
 APPROVED_STATUS = "approved"
@@ -47,6 +49,7 @@ def execute(request: IRequest, repo, entity=None):
         ```
     """
     response_formatter = ResponseFormatter()
+    authorization_handler = AuthorizationManager.get()
 
     # Validate entity
     if entity is None:
@@ -78,7 +81,6 @@ def execute(request: IRequest, repo, entity=None):
             return response_formatter.error('User creation failed: Invalid or empty response from users.', 500)
         create_user.pop("password", None)
 
-        # Manage repositary
         repo_discovery_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
 
         organization_repo: IAppRepoInvoker = repo_discovery_getter.get_repo_invoker("Organizations")
@@ -104,11 +106,37 @@ def execute(request: IRequest, repo, entity=None):
         role_user = {"user_id": create_user.get("id"), "role_id": role.get("id")}
         role_user_repo.transact("POST", data=role_user)
 
-        if user_assign_to_organization:
-            return response_formatter.success(create_user, 'User created successfully.', 201)
-        else:
+        if not user_assign_to_organization:
             return response_formatter.error(
-                'Failed to assign user to organization: Invalid response from organization user', 500)
+                'Internal server error.', 500)
+
+        print(f"{user_assign_to_organization.get("user_id")=}")
+        print(f"{user_assign_to_organization.get("organization_id")=}")
+        print(f"{role.get("name")=}")
+
+        authorization_handler.add_relation({
+            "user_type": "user",
+            "user_id": user_assign_to_organization.get("user_id"),
+            "action": "owner",
+            "resource_type": "user",
+            "resource_id": user_assign_to_organization.get("user_id"),
+        })
+
+        authorization_handler.add_relation({
+            "user_type": "user",
+            "user_id": user_assign_to_organization.get("user_id"),
+            "action": admin_or_researcher(role.get("name")),
+            "resource_type": "organization",
+            "resource_id": user_assign_to_organization.get("organization_id"),
+        })
+
+        return response_formatter.success(create_user, 'User created successfully.', 201)
 
     except Exception as e:
         return response_formatter.error(str(e), 500)
+
+
+def admin_or_researcher(role_name: str) -> str:
+    if role_name in {RESEARCHER_ADMIN, DATA_OWNER_ADMIN}:
+        return "admin"
+    return "researcher"

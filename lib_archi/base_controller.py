@@ -142,7 +142,7 @@ class BaseController(Generic[Entity]):
             entity = self._refine_store_date(entity, request)
 
             updated_entity = self.app_service.patch(entity, request)
-            return self.response_handler.generate_response("Entity updated successfully", data=updated_entity)
+            return self.response_handler.generate_response("Information successfully updated.", data=updated_entity)
         except Exception as e:
             return self.response_handler.generate_response(f"{str(e)}", 400)
 

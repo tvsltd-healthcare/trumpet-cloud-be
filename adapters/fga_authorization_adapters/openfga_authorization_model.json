@@ -1,0 +1,171 @@
+{
+  "schema_version": "1.1",
+  "type_definitions": [
+    {
+      "type": "user",
+      "relations": {
+        "delete": {
+          "tupleToUserset": {
+            "tupleset": {
+              "object": "",
+              "relation": "organization"
+            },
+            "computedUserset": {
+              "object": "",
+              "relation": "admin"
+            }
+          }
+        },
+        "get": {
+          "computedUserset": {
+            "object": "",
+            "relation": "owner"
+          }
+        },
+        "organization": {
+          "this": {}
+        },
+        "owner": {
+          "union": {
+            "child": [
+              {
+                "this": {}
+              },
+              {
+                "tupleToUserset": {
+                  "tupleset": {
+                    "object": "",
+                    "relation": "organization"
+                  },
+                  "computedUserset": {
+                    "object": "",
+                    "relation": "admin"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "update": {
+          "computedUserset": {
+            "object": "",
+            "relation": "owner"
+          }
+        }
+      },
+      "metadata": {
+        "relations": {
+          "delete": {
+            "directly_related_user_types": [],
+            "module": "",
+            "source_info": null
+          },
+          "get": {
+            "directly_related_user_types": [],
+            "module": "",
+            "source_info": null
+          },
+          "organization": {
+            "directly_related_user_types": [
+              {
+                "type": "organization",
+                "condition": ""
+              }
+            ],
+            "module": "",
+            "source_info": null
+          },
+          "owner": {
+            "directly_related_user_types": [
+              {
+                "type": "user",
+                "condition": ""
+              }
+            ],
+            "module": "",
+            "source_info": null
+          },
+          "update": {
+            "directly_related_user_types": [],
+            "module": "",
+            "source_info": null
+          }
+        },
+        "module": "",
+        "source_info": null
+      }
+    },
+    {
+      "type": "organization",
+      "relations": {
+        "admin": {
+          "this": {}
+        },
+        "get": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "object": "",
+                  "relation": "admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "object": "",
+                  "relation": "researcher"
+                }
+              }
+            ]
+          }
+        },
+        "researcher": {
+          "this": {}
+        },
+        "update": {
+          "computedUserset": {
+            "object": "",
+            "relation": "admin"
+          }
+        }
+      },
+      "metadata": {
+        "relations": {
+          "admin": {
+            "directly_related_user_types": [
+              {
+                "type": "user",
+                "condition": ""
+              }
+            ],
+            "module": "",
+            "source_info": null
+          },
+          "get": {
+            "directly_related_user_types": [],
+            "module": "",
+            "source_info": null
+          },
+          "researcher": {
+            "directly_related_user_types": [
+              {
+                "type": "user",
+                "condition": ""
+              }
+            ],
+            "module": "",
+            "source_info": null
+          },
+          "update": {
+            "directly_related_user_types": [],
+            "module": "",
+            "source_info": null
+          }
+        },
+        "module": "",
+        "source_info": null
+      }
+    }
+  ],
+  "conditions": {}
+}
