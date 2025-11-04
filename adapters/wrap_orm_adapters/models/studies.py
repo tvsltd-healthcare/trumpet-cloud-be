@@ -7,14 +7,15 @@ from sqlalchemy.types import Text
 class Studies(Base):
     __tablename__ = 'studies'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
-    name = Column(String(25), nullable=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
+    name = Column(String(255), nullable=True,)
     description = Column(Text, nullable=False,)
     status = Column(Enum('active', 'paused', 'completed', name='studies_status_enum'), nullable=True, default='active')
     result = Column(Text, nullable=True,)
     purpose = Column(Text, nullable=True,)
-    created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
+    organization_id = Column(Integer, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 

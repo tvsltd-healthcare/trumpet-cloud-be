@@ -6,11 +6,11 @@ from .base import Base
 class UserRoles(Base):
     __tablename__ = 'user_roles'
 
-    id = Column(Integer, primary_key=True, nullable=True, unique=True, autoincrement=True,)
+    id = Column(Integer, primary_key=True, autoincrement=True,)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=True,)
     role_id = Column(Integer, ForeignKey('roles.id'), nullable=True,)
-    created_at = Column(TIMESTAMP, nullable=True, default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, default=func.now(), onupdate=func.now())
+    created_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now(), onupdate=func.now())
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
     updated_by = Column(Integer, ForeignKey('users.id'), nullable=True,)
 

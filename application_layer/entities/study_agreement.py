@@ -7,12 +7,26 @@ StudyAgreements = {
     },
     'purpose': {
         'type': {
-            'value': 'string',
+            'value': 'text',
             'error_code': '118',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '119',
+        },
+    },
+    'use_case': {
+        'type': {
+            'value': 'string',
+            'error_code': '9990',
+        },
+        'regex': {
+            'value': '^(HNC|SBRT|NSCLC)$',
+            'error_code': '95500',
+        },
+        'required': {
+            'value': 'true',
+            'error_code': '99890',
         },
     },
     'participants': {
@@ -20,9 +34,15 @@ StudyAgreements = {
             'value': 'string',
             'error_code': '1005',
         },
-        'required': {
-            'value': True,
-            'error_code': '999',
+        'regex': {
+            'value': '^\s*\d+\s*(,\s*\d+\s*)*$',
+            'error_code': '111001',
+        }
+    },
+    'samples': {
+        'type': {
+            'value': 'number',
+            'error_code': '1006',
         },
     },
     'pet': {
@@ -31,17 +51,45 @@ StudyAgreements = {
             'error_code': '1000',
         },
         'regex': {
-            'value': '^(None|CDC_DP|ThHE)$',
+            'value': '^(None|CDC_DP|ThHE|MKHE_FED_AVG|PBACC_AGG_DDP|PBACC_AGG_SVT)$',
             'error_code': '1001',
         },
+    },
+    'pet_config': {
+        'type': {
+            'value': 'text',
+            'error_code': '1000',
+        },
+        'required': {
+            'value': 'true',
+            'error_code': '130',
+        },
+    },
+    'datasets': {
+        'type': {
+            'value': 'string',
+            'error_code': '9005',
+        },
+        'required': {
+            'value': 'true',
+            'error_code': '9995',
+        },
+        'regex': {
+            'value': '^\s*\d+\s*(,\s*\d+\s*)*$',
+            'error_code': '111001',
+        }
     },
     'model': {
         'type': {
             'value': 'string',
             'error_code': '1002',
         },
+        'required': {
+            'value': 'true',
+            'error_code': '1004',
+        },
         'regex': {
-            'value': '^(NN|NN_FHIR)$',
+            'value': '^(REG_LOG|NN)$',
             'error_code': '1003',
         },
     },
@@ -51,10 +99,18 @@ StudyAgreements = {
             'error_code': '120',
         },
     },
-    'study_privacy_budget': {
+    'label': {
         'type': {
-            'value': 'number',
-            'error_code': '121',
+            'value': 'string',
+            'error_code': '1011',
+        },
+        'required': {
+            'value': 'true',
+            'error_code': '1012',
+        },
+        'regex': {
+            'value': '^(HNC|HNC_NECRO_JAW|HNC_DYSPHAGIA|HNC_ORAL_MUCOSITIS|NSCLC_DURATION_MONTHS|SBRT_SURVIVAL)$',
+            'error_code': '1013',
         },
     },
     'expiration_date': {
@@ -68,6 +124,16 @@ StudyAgreements = {
             'value': 'number',
             'error_code': '123',
         },
+    },
+    'status': {
+        'type': {
+            'value': 'string',
+            'error_code': '5006',
+        },
+        'regex': {
+            'value': '^(approved|disapproved|pending)$',
+            'error_code': '5007',
+        }
     },
     'created_at': {
         'type': {

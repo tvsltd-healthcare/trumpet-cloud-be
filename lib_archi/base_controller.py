@@ -1,11 +1,33 @@
+import re
 import uuid
-from datetime import datetime
-
+from datetime import datetime, timezone
 from typing import TypeVar, Generic, Optional, Dict
-from .base_application_service import BaseApplicationService
+
 from application_layer.abstractions.response_interface import IResponseHandler
+from lib_archi.abstractions.request_interface import IRequest
+from lib_archi.utils.enforce_request_interface import enforce_request_type
+from logic_injector.base_logic_injector import BaseLogicInjector
+from .base_application_service import BaseApplicationService
 
 Entity = TypeVar('Entity')
+injector = BaseLogicInjector()
+BUSINESS_LOGIC_PATHS = r"^/api/studies/\d+/agreements$"
+
+
+def path_matches(path: str) -> bool:
+    """
+        Checks if the given path matches the pattern /api/studies/{id}/agreements.
+
+        Args:
+            path (str): The URL path to be matched (excluding the base URL).
+
+        Returns:
+            bool: True if the path matches the pattern, False otherwise.
+        """
+    # Todo:: Enhance it for any path matching where we need to inject the business logic
+
+    pattern = BUSINESS_LOGIC_PATHS
+    return bool(re.match(pattern, path))
 
 
 class BaseController(Generic[Entity]):
@@ -33,7 +55,8 @@ class BaseController(Generic[Entity]):
         self.app_service: BaseApplicationService[Entity] = app_service
         self.response_handler: IResponseHandler = response_handler
 
-    def post(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    @enforce_request_type()
+    def post(self, request: IRequest, entity: Entity) -> Optional[Entity]:
         """Handles the creation of a new entity.
 
         Args:
@@ -48,14 +71,16 @@ class BaseController(Generic[Entity]):
             Optional[Entity]: The created entity, or None if creation fails.
         """
         try:
-            entity = self._refine_store_date(entity)
-            entity = self._add_uniq_id(entity)
-            created_entity = self.app_service.post(entity, ids)
-            return self.response_handler.resource_detail("Entity created successfully", data=created_entity, status_code=201)
-        except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            entity = self._refine_store_date(entity, request)
+            created_entity = self.app_service.post(entity, request)
 
-    def get(self, ids: Dict) -> Entity:
+            return self.response_handler.generate_response("Entity created successfully", data=created_entity,
+                                                           status_code=201)
+        except Exception as e:
+            return self.response_handler.generate_response(f"{str(e)}", 400)
+
+    @enforce_request_type()
+    def get(self, request: IRequest) -> Entity:
         """Retrieves an entity by its ID.
 
         Args:
@@ -69,16 +94,17 @@ class BaseController(Generic[Entity]):
             Entity: The entity corresponding to the provided ID.
         """
         try:
-            get_entity = self.app_service.get(ids)
-            
-            if get_entity is None or not bool(get_entity):
-                return self.response_handler.error_response("item not found", 404)
-            
-            return self.response_handler.resource_detail("Entity retrieved successfully", data=get_entity)
-        except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            get_entity = self.app_service.get(request)
 
-    def get_collection(self, ids: Dict) -> Entity:
+            if get_entity is None or not bool(get_entity):
+                return self.response_handler.generate_response("item not found", 404)
+
+            return self.response_handler.generate_response("Entity retrieved successfully", data=get_entity)
+        except Exception as e:
+            return self.response_handler.generate_response(f"{str(e)}", 400)
+
+    @enforce_request_type()
+    def get_collection(self, request: IRequest) -> Entity:
         """Retrieves a collection of all entities.
 
         Args:
@@ -92,12 +118,13 @@ class BaseController(Generic[Entity]):
             List[Entity]: A list of all entities.
         """
         try:
-            entities = self.app_service.get_collection(ids)
-            return self.response_handler.resource_list("Entities retrieved successfully", data=entities)
+            entities = self.app_service.get_collection(request)
+            return self.response_handler.generate_response("Entities retrieved successfully", data=entities)
         except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            return self.response_handler.generate_response(f"{str(e)}", 400)
 
-    def patch(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+    @enforce_request_type()
+    def patch(self, request: IRequest, entity: Entity) -> Optional[Entity]:
         """Partially updates an existing entity.
 
             Args:
@@ -112,13 +139,15 @@ class BaseController(Generic[Entity]):
                 Optional[Entity]: The updated entity, or None if the update fails.
             """
         try:
-            entity = self._refine_store_date(entity)
-            updated_entity = self.app_service.patch(entity, ids)
-            return self.response_handler.resource_detail("Entity updated successfully", data=updated_entity)
-        except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            entity = self._refine_store_date(entity, request)
 
-    def put(self, entity: Entity, ids: Dict) -> Optional[Entity]:
+            updated_entity = self.app_service.patch(entity, request)
+            return self.response_handler.generate_response("Information successfully updated.", data=updated_entity)
+        except Exception as e:
+            return self.response_handler.generate_response(f"{str(e)}", 400)
+
+    @enforce_request_type()
+    def put(self, request: IRequest, entity: Entity) -> Optional[Entity]:
         """Fully updates an existing entity.
 
         Args:
@@ -136,13 +165,14 @@ class BaseController(Generic[Entity]):
             if self._all_attrs_not_provided(entity):
                 raise ValueError("PUT request requires all attributes to be provided.")
 
-            entity = self._refine_store_date(entity)
-            updated_entity = self.app_service.put(entity, ids)
-            return self.response_handler.resource_detail("Entity fully updated", data=updated_entity)
+            entity = self._refine_store_date(entity, request)
+            updated_entity = self.app_service.put(entity, request)
+            return self.response_handler.generate_response("Entity fully updated", data=updated_entity)
         except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
+            return self.response_handler.generate_response(f"{str(e)}", 400)
 
-    def delete(self, ids: Dict) -> Optional[Entity]:
+    @enforce_request_type()
+    def delete(self, request: IRequest) -> Optional[Entity]:
         """Deletes an entity by its ID.
 
         Args:
@@ -155,37 +185,46 @@ class BaseController(Generic[Entity]):
         Returns:
             Optional[Entity]: The deleted entity, or None if deletion fails.
         """
+        # ids = request.get_path_params()
         try:
-            for key, value in ids.items():
-                if not value:
-                    raise ValueError(f"The value for '{key}' is null or empty.")
-
-            deleted_entity = self.app_service.delete(ids)
-            return self.response_handler.resource_detail("Entity deleted successfully")
+            deleted_entity = self.app_service.delete(request)
+            return self.response_handler.generate_response("Entity deleted successfully", data=deleted_entity)
         except Exception as e:
-            return self.response_handler.error_response(f"{str(e)}", 400)
-        
-    def _refine_store_date(self, entity: Entity) -> Entity:
-        if not hasattr(entity, 'updated_at') or entity.updated_at is None:
-            entity.updated_at = datetime.now()
+            return self.response_handler.generate_response(f"{str(e)}", 400)
+        # try:
+        #     for key, value in ids.items():
+        #         if not value:
+        #             raise ValueError(f"The value for '{key}' is null or empty.")
+        #
+        #     deleted_entity = self.app_service.delete(ids)
+        #     return self.response_handler.generate_response("Entity deleted successfully")
+        # except Exception as e:
+        #     return self.response_handler.generate_response(f"{str(e)}", 400)
 
-        if not hasattr(entity, 'created_at') or entity.created_at is None:
-            entity.created_at = datetime.now()
+    def _refine_store_date(self, entity: Entity, request: IRequest) -> Entity:
+        user_id = request.get_request().scope.get('state').get('user_id')
+
+        if request.get_method_name() == 'POST':
+            if not hasattr(entity, 'created_at') or entity.created_at is None:
+                entity.created_at = datetime.now(timezone.utc)
+            if not hasattr(entity, 'created_by') or entity.created_by is None:
+                entity.created_by = user_id
+
+        if request.get_method_name() == 'PUT' or request.get_method_name() == 'PATCH':
+            if not hasattr(entity, 'updated_at') or entity.updated_at is None:
+                entity.updated_at = datetime.now(timezone.utc)
+            if not hasattr(entity, 'updated_by') or entity.updated_by is None:
+                entity.updated_by = user_id
 
         return entity
-    
-    def _add_uniq_id(self, entity: Entity) -> Entity:
-        entity.id = str(uuid.uuid4())
-        return entity
-    
+
     def _all_attrs_not_provided(self, entity: Entity) -> bool:
-         # Convert the entity to a dictionary if it has a __dict__ attribute.
+        # Convert the entity to a dictionary if it has a __dict__ attribute.
         entity_dict = entity.__dict__ if hasattr(entity, "__dict__") else entity
 
         # Iterate over all keys and values except `id`
         for key, value in entity_dict.items():
             if key != 'id' and (value is None or value == '' or value == '0'):
                 return True
-        
+
         return False
-    

@@ -279,3 +279,5 @@ pyrightconfig.json
 
 # Custom
 docker/postgresql/cloud/data
+docker/postgresql/openfga/data
+.DS_Store

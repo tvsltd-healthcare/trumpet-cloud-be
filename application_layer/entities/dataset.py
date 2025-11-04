@@ -1,29 +1,73 @@
 Datasets = {
     'id': {
         'type': {
-            'value': 'string',
+            'value': 'number',
             'error_code': '96',
         },
     },
-    'name': {
+    'don_uid': {
+        'type': {
+            'value': 'string',
+            'error_code': '960',
+        },
         'required': {
-            'value': True,
+            'value': 'true',
+            'error_code': '961',
+        }
+    },
+    'organization_id': {
+        'type': {
+            'value': 'number',
+            'error_code': '1080',
+        },
+    },
+    'title': {
+        'type': {
+            'value': 'string',
+            'error_code': '962',
+        },
+        'required': {
+            'value': 'true',
             'error_code': '97',
         },
         'max': {
-            'value': 25,
+            'value': 255,
             'error_code': '98',
         },
     },
-    'meta_data': {
+    'about': {
         'type': {
             'value': 'text',
             'error_code': '99',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '100',
         },
+    },
+    'use_case': {
+        'type': {
+            'value': 'string',
+            'error_code': '9900',
+        },
+        'regex': {
+            'value': '^(HNC|SBRT|NSCLC)$',
+            'error_code': '2500',
+        },
+        'required': {
+            'value': 'true',
+            'error_code': '10000',
+        },
+    },
+    'status': {
+        'type': {
+            'value': 'string',
+            'error_code': '9770',
+        },
+        'regex': {
+            'value': '^(published|unpublished)$',
+            'error_code': '9771',
+        }
     },
     'statistics': {
         'type': {
@@ -31,24 +75,46 @@ Datasets = {
             'error_code': '101',
         },
     },
-    'path': {
+    'temporal_coverage_start': {
         'type': {
-            'value': 'text',
-            'error_code': '102',
+            'value': 'timestamp',
+            'error_code': '10011',
         },
     },
-    'privacy_level': {
+    'temporal_coverage_end': {
+        'type': {
+            'value': 'timestamp',
+            'error_code': '10012',
+        },
+    },
+    'geospatial_coverage': {
+        'type': {
+            'value': 'text',
+            'error_code': '10013',
+        },
+    },
+    'doi_citation': {
+        'type': {
+            'value': 'text',
+            'error_code': '10014',
+        },
+    },
+    'provenance': {
+        'type': {
+            'value': 'text',
+            'error_code': '10015',
+        },
+    },
+    'license_title': {
         'type': {
             'value': 'string',
-            'error_code': '103',
+            'error_code': '10016',
         },
-        'regex': {
-            'value': '^(public|confidential|highly_confidential)$',
-            'error_code': '104',
-        },
-        'required': {
-            'value': True,
-            'error_code': '105',
+    },
+    'license_details': {
+        'type': {
+            'value': 'text',
+            'error_code': '10017',
         },
     },
     'created_at': {

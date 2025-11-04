@@ -11,11 +11,11 @@ Organizations = {
             'error_code': '11',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '12',
         },
         'max': {
-            'value': 30,
+            'value': 255,
             'error_code': '13',
         },
     },
@@ -24,12 +24,8 @@ Organizations = {
             'value': 'string',
             'error_code': '14',
         },
-        'required': {
-            'value': True,
-            'error_code': '15',
-        },
         'max': {
-            'value': 40,
+            'value': 255,
             'error_code': '16',
         },
         'regex': {
@@ -43,11 +39,11 @@ Organizations = {
             'error_code': '18',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '19',
         },
         'max': {
-            'value': 50,
+            'value': 255,
             'error_code': '20',
         },
     },
@@ -57,11 +53,21 @@ Organizations = {
             'error_code': '21',
         },
         'required': {
-            'value': True,
+            'value': 'true',
             'error_code': '22',
         },
         'max': {
             'value': 20,
+            'error_code': '23',
+        },
+    },
+    'host': {
+        'type': {
+            'value': 'string',
+            'error_code': '21',
+        },
+        'max': {
+            'value': 255,
             'error_code': '23',
         },
     },
@@ -71,13 +77,9 @@ Organizations = {
             'error_code': '24',
         },
         'regex': {
-            'value': '^(approved|disapproved|blocked|pending_approval)$',
+            'value': '^(approved|disapproved|blocked|pending)$',
             'error_code': '25',
-        },
-        'required': {
-            'value': True,
-            'error_code': '26',
-        },
+        }
     },
     'type': {
         'type': {
@@ -85,12 +87,8 @@ Organizations = {
             'error_code': '27',
         },
         'regex': {
-            'value': '^(data_owner|researcher)$',
+            'value': '^(governance|data_owner|researcher)$',
             'error_code': '28',
-        },
-        'required': {
-            'value': True,
-            'error_code': '29',
         },
     },
     'created_at': {

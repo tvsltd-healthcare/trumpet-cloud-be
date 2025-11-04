@@ -9,14 +9,22 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.11"
 python-dotenv = "^1.0.1"
-wrap-validate = {git = "https://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@github.com/tvsltd/wrap_validate.git", rev = "develop"}
+wrap-validate = {git = "https://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@github.com/tvsltd/wrap_validate.git", rev = "develop"}
 gunicorn = "^23.0.0"
-wrap-restify = {git = "https://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@github.com/tvsltd/wrap_restify.git", rev = "develop"}
-wrap-orm = {git = "https://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@github.com/tvsltd/wrap_orm.git", rev = "feature/crud-implementation"}
+wrap-orm = {git = "https://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@github.com/tvsltd/wrap_orm.git", rev = "feature/crud-implementation"}
 stringcase = "^1.2.0"
 pymysql = "^1.1.1"
 psycopg2-binary = "^2.9.10"
 requests = "^2.32.3"
+openfga-sdk = "^0.9.1"
+wrap-auth = {git = "https://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@github.com/tvsltd/wrap-auth.git", rev="develop"}
+bcrypt = "^4.3.0"
+anyio = "^4.9.0"
+watchfiles = "^1.0.5"
+azure-communication-email = "^1.0.0"
+alembic = "^1.16.1"
+alembic-postgresql-enum = "^1.7.0"
+wrap-restify = {git = "https://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@github.com/tvsltd/wrap_restify.git", rev = "main"}
 
 
 [build-system]
