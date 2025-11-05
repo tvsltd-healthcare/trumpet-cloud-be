@@ -18,10 +18,20 @@ def execute(request: IRequest):
 
     repo_getter: IAppRepoDiscoveryGetter = RepoDiscoveryManager.get()
 
-    organizations_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("Organizations")
-    organization_users_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("OrganizationUsers")
+    auth_header = request.get_headers().get('authorization')
+    decoded_token = token_parser(auth_header)
+    print("Decoded Token:", decoded_token)
 
-    organization = get_current_user_org(request, organizations_repo, organization_users_repo)
+    body = request.get_json()
+    organization_id = body.get("organization_id")
+    if not organization_id:
+        return response_formatter.error(message="Organization ID is required.", status_code=status.HTTP_400_BAD_REQUEST)
+
+    organizations_repo: IAppRepoInvoker = repo_getter.get_repo_invoker("Organizations")
+
+    organization = organizations_repo.get(query={"id": organization_id}, is_collection=False)
+
+    print(organization)
 
     don_host_url = organization.get("host")
 
@@ -33,7 +43,7 @@ def execute(request: IRequest):
         is_don_accessible = True
 
         if response.status_code == 200:
-            message = "Successfully connected to Data Owner Node Backend."
+            message = "Successfully connect to Data Owner Node Backend."
         else:
             message = "Failed to connect to Data Owner Node Backend.",
             is_don_accessible = False
@@ -42,7 +52,7 @@ def execute(request: IRequest):
                                 headers={"Authorization": f'Bearer {FL_AGG_TOKEN}'})
 
         if response.status_code == 200:
-            message += "\nSuccessfully connected to FL Core DO."
+            message += "\nSuccessfully connect to FL Core DO."
         else:
             message += "\nFailed to connect to FL Core DO."
             is_don_accessible = False
@@ -50,27 +60,9 @@ def execute(request: IRequest):
         if is_don_accessible:
             return response_formatter.success(message=message, status_code=status.HTTP_200_OK, data=None)
         else:
-            return response_formatter.error(message=message,
-                                            status_code=status.HTTP_404_NOT_FOUND)
+            return response_formatter.error(message=message, status_code=status.HTTP_404_NOT_FOUND)
     except Exception as e:
+        print("Failed to connect to Data Owner Node.")
         print(e)
         return response_formatter.error(message="Failed to connect to Data Owner Node.",
-                                        status_code=status.HTTP_400_BAD_REQUEST)
-
-def get_current_user_org(request: IRequest, organizations_repo: IAppRepoInvoker,
-                         organization_users_repo: IAppRepoInvoker):
-    auth_header = request.get_headers().get("authorization")
-    if not auth_header:
-        raise Exception("No authorization header provided.")
-
-    decoded_token = token_parser(auth_header)
-
-    user_id = decoded_token.get("user_id")
-
-    organization_users = organization_users_repo.get(query={"user_id": user_id}, is_collection=False)
-
-    organization_id = organization_users.get("organization_id")
-
-    organization = organizations_repo.get(query={"id": organization_id}, is_collection=False)
-
-    return organization
+                                        status_code=status.HTTP_404_NOT_FOUND)
