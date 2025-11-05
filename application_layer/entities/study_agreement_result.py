@@ -11,6 +11,12 @@ StudyAgreementResults = {
             'error_code': '144',
         },
     },
+    'organization_id': {
+        'type': {
+            'value': 'number',
+            'error_code': '156',
+        },
+    },
     'specification': {
         'type': {
             'value': 'text',

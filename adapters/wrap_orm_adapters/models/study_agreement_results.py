@@ -9,6 +9,7 @@ class StudyAgreementResults(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True,)
     study_agreement_id = Column(Integer, ForeignKey('study_agreements.id'), nullable=True,)
+    organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=True,)
     specification = Column(Text, nullable=True,)
     file_path = Column(Text, nullable=False,)
     version = Column(String(20), nullable=True,)

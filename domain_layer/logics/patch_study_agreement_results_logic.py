@@ -1,6 +1,7 @@
 from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.check_token import check_bearer_token
+from domain_layer.utils.parse_token import token_parser
 
 
 def execute(request: IRequest, repo, entity=None):
@@ -10,7 +11,15 @@ def execute(request: IRequest, repo, entity=None):
     if not check_token:
         return response_formatter.error("Invalid or missing token", status_code=401)
     try:
+        decode_token = token_parser(request.get_headers()['authorization'])
+
         update_result = repo.patch(entity, ids)
+
+        if decode_token.get("study_agreement_id") is not None:
+            ids["study_agreement_id"] = decode_token.get("study_agreement_id")
+
+        if decode_token.get("organization_id") is not None:
+            ids["organization_id"] = decode_token.get("organization_id")
 
         if update_result:
             return response_formatter.success(update_result, 'Information successfully updated.', 201)
