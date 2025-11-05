@@ -1,5 +1,6 @@
-import requests
+import os
 
+import requests
 from starlette import status
 
 from domain_layer.abstractions.app_repo_discovery_getter_interface import IAppRepoDiscoveryGetter
@@ -8,6 +9,8 @@ from domain_layer.abstractions.request_interface import IRequest
 from domain_layer.repo_discovery_manager import RepoDiscoveryManager
 from domain_layer.response_formatter import ResponseFormatter
 from domain_layer.utils.parse_token import token_parser
+
+FL_AGG_TOKEN = os.getenv("FL_AGG_TOKEN")
 
 
 def execute(request: IRequest):
@@ -26,18 +29,36 @@ def execute(request: IRequest):
 
     try:
         response = requests.get(f"{don_host_url}/ping", timeout=5)
-        if response.status_code != 200:
-            return response_formatter.error(message="Failed to connect to Data Owner Node.", status_code=status.HTTP_400_BAD_REQUEST)
 
-        print("response", response)
+        is_don_accessible = True
+
+        if response.status_code == 200:
+            message = "Successfully connected to Data Owner Node Backend."
+        else:
+            message = "Failed to connect to Data Owner Node Backend.",
+            is_don_accessible = False
+
+        response = requests.get(f"{don_host_url}:8081/health", timeout=5,
+                                headers={"Authorization": f'Bearer {FL_AGG_TOKEN}'})
+
+        if response.status_code == 200:
+            message += "\nSuccessfully connected to FL Core DO."
+        else:
+            message += "\nFailed to connect to FL Core DO."
+            is_don_accessible = False
+
+        if is_don_accessible:
+            return response_formatter.success(message=message, status_code=status.HTTP_200_OK, data=None)
+        else:
+            return response_formatter.error(message=message,
+                                            status_code=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         print(e)
-        return response_formatter.error(message="Failed to connect to Data Owner Node.", status_code=status.HTTP_400_BAD_REQUEST)
+        return response_formatter.error(message="Failed to connect to Data Owner Node.",
+                                        status_code=status.HTTP_400_BAD_REQUEST)
 
-    return response_formatter.success(message="Successfully connect to Data Owner Node.", status_code=status.HTTP_200_OK, data=None)
-
-
-def get_current_user_org(request: IRequest, organizations_repo: IAppRepoInvoker, organization_users_repo: IAppRepoInvoker):
+def get_current_user_org(request: IRequest, organizations_repo: IAppRepoInvoker,
+                         organization_users_repo: IAppRepoInvoker):
     auth_header = request.get_headers().get("authorization")
     if not auth_header:
         raise Exception("No authorization header provided.")
@@ -46,14 +67,10 @@ def get_current_user_org(request: IRequest, organizations_repo: IAppRepoInvoker,
 
     user_id = decoded_token.get("user_id")
 
-    print({"user_id": user_id})
-
     organization_users = organization_users_repo.get(query={"user_id": user_id}, is_collection=False)
 
-    organization_id =  organization_users.get("organization_id")
+    organization_id = organization_users.get("organization_id")
 
     organization = organizations_repo.get(query={"id": organization_id}, is_collection=False)
-
-    print("organization", organization)
 
     return organization
