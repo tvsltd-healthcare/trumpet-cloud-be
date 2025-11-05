@@ -100,6 +100,7 @@ def execute(request: IRequest):
             status_code=202
         )
     except Exception as e:
+        print("Start Train Error", e)
         return response_formatter.error(f"Internal server error.", 500)
 
 def _get_current_user_org_id(request: IRequest, org_users_repo) -> int | None:

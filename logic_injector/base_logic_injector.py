@@ -118,7 +118,7 @@ class FLSetupInjector:
                          "pet": pet, "pet_config": pet_config, "rounds": rounds, "webhook_url": webhook_url,
                          "participants": participants, "node_id": "0"}
 
-        print(f"CallingData FLCore aggregator {fl_agg_core_url + self.setup_uri} endpoint\nRequest Body:\n{request_body}")
+        print(f"Calling FLCore aggregator {fl_agg_core_url + self.setup_uri} endpoint\nRequest Body:\n{request_body}")
 
         response = requests.post(url=fl_agg_core_url + self.setup_uri,
                                  json=request_body,
@@ -141,7 +141,7 @@ class FLSetupInjector:
                          "pet": pet, "pet_config": pet_config, "rounds": rounds, "webhook_url": webhook_url,
                          "participants": participants, "node_id": node_id}
 
-        print(f"CallingData Owner Node Post {do_url + self.do_setup_uri} endpoint\nRequest Body:\n{request_body}")
+        print(f"Calling Data Owner Node Post {do_url + self.do_setup_uri} endpoint\nRequest Body:\n{request_body}")
 
         response = requests.post(url=do_url + self.do_setup_uri, json=request_body, timeout=60)
 
@@ -155,7 +155,7 @@ class FLSetupInjector:
                                            query: Optional[str] = None):
         request_body = {"use_case": use_case, "label": label, "samples": samples, "dataset_uid": dataset_uid}
 
-        print(f"CallingData Owner Node Post {do_url+self.do_load_data_uri} endpoint\nRequest Body:\n{request_body}")
+        print(f"Calling Data Owner Node Post {do_url+self.do_load_data_uri} endpoint\nRequest Body:\n{request_body}")
 
         response = requests.post(url=do_url + self.do_load_data_uri, json=request_body, timeout=60)
 
