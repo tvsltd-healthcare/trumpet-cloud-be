@@ -63,7 +63,7 @@ def upload_file_to_disk(file) -> dict:
 
         return {
             "file_name": file.filename,
-            "file_path": (f"{OUTPUT_DIR}/{unique_filename}"),
+            "file_path": unique_filename,
             "file_size": file.size,
             "file_mime_type": file.headers.get('content-type')
         }
