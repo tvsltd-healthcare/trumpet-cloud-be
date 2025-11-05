@@ -4796,6 +4796,10 @@
           "verb": "post",
           "url": "/api/start-training"
         },
+    {
+          "verb": "post",
+          "url": "/api/check-don-connection"
+        },
         {
           "verb": "websocket",
           "url": "/api/ws/register/channel/user"
