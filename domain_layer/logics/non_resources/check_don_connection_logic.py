@@ -47,7 +47,12 @@ def execute(request: IRequest):
         else:
             message = "Failed to connect to Data Owner Node Backend.",
             is_don_accessible = False
+    except Exception as e:
+        print("Failed to connect to Data Owner Node Backend.")
+        message = "Failed to connect to Data Owner Node Backend.",
+        is_don_accessible = False
 
+    try:
         response = requests.get(f"{don_host_url}:8081/health", timeout=5,
                                 headers={"Authorization": f'Bearer {FL_AGG_TOKEN}'})
 
@@ -57,12 +62,11 @@ def execute(request: IRequest):
             message += "\nFailed to connect to FL Core DO."
             is_don_accessible = False
 
-        if is_don_accessible:
-            return response_formatter.success(message=message, status_code=status.HTTP_200_OK, data=None)
-        else:
-            return response_formatter.error(message=message, status_code=status.HTTP_404_NOT_FOUND)
     except Exception as e:
-        print("Failed to connect to Data Owner Node.")
-        print(e)
-        return response_formatter.error(message="Failed to connect to Data Owner Node.",
-                                        status_code=status.HTTP_404_NOT_FOUND)
+        message += "\nFailed to connect to FL Core DO."
+        is_don_accessible = False
+
+    if is_don_accessible:
+        return response_formatter.success(message=message, status_code=status.HTTP_200_OK, data=None)
+    else:
+        return response_formatter.error(message=message, status_code=status.HTTP_404_NOT_FOUND)
