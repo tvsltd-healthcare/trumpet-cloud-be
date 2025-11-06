@@ -57,13 +57,13 @@ def execute(request: IRequest):
                                 headers={"Authorization": f'Bearer {FL_AGG_TOKEN}'})
 
         if response.status_code == 200:
-            message += "\nSuccessfully connect to FL Core DO."
+            message += "<br /> Successfully connect to FL Core DO."
         else:
-            message += "\nFailed to connect to FL Core DO."
+            message += "<br /> Failed to connect to FL Core DO."
             is_don_accessible = False
 
     except Exception as e:
-        message += "\nFailed to connect to FL Core DO."
+        message += "<br /> Failed to connect to FL Core DO."
         is_don_accessible = False
 
     if is_don_accessible:
