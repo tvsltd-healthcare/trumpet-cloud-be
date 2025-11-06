@@ -38,7 +38,7 @@ def execute(request: IRequest):
         if not user_has_access_to_target_org(file_org_id, current_user_id, current_org_id):
             return ResponseFormatter().error("Not allowed.", 403)
 
-        file_path = Path(OUTPUT_DIR).absolute() / file.get('filename')
+        file_path = Path(OUTPUT_DIR).absolute() / file.get('path')
 
         return FileResponse(file_path)  # type: ignore
 
