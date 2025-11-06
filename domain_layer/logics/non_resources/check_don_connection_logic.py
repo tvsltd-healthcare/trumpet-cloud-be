@@ -61,7 +61,7 @@ def execute(request: IRequest):
                                 headers={"Authorization": f'Bearer {FL_AGG_TOKEN}'})
 
         if response.status_code == 200:
-            messages.append("DON Backend connected.")
+            messages.append("FL Core DO connected.")
         else:
             print("FL Core DO connection failed.", response.status_code)
             messages.append("FL Core DO connection failed.")
