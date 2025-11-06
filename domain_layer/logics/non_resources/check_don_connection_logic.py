@@ -43,13 +43,15 @@ def execute(request: IRequest):
         is_don_accessible = True
 
         if response.status_code == 200:
-            message = "Successfully connect to Data Owner Node Backend."
+            message = "Data Owner Node Backend connected."
         else:
-            message = "Failed to connect to Data Owner Node Backend.",
+            print("Data Owner Node Backend connection failed.", response.status_code)
+            message = "Data Owner Node Backend connection failed.",
             is_don_accessible = False
     except Exception as e:
-        print("Failed to connect to Data Owner Node Backend.")
-        message = "Failed to connect to Data Owner Node Backend.",
+        print("Data Owner Node Backend connection failed.")
+        print(e)
+        message = "Data Owner Node Backend connection failed.",
         is_don_accessible = False
 
     try:
@@ -57,13 +59,16 @@ def execute(request: IRequest):
                                 headers={"Authorization": f'Bearer {FL_AGG_TOKEN}'})
 
         if response.status_code == 200:
-            message += "<br /> Successfully connect to FL Core DO."
+            message += "<br /> FL Core DO connected."
         else:
-            message += "<br /> Failed to connect to FL Core DO."
+            print("FL Core DO connection failed.", response.status_code)
+            message += "<br /> FL Core DO connection failed."
             is_don_accessible = False
 
     except Exception as e:
-        message += "<br /> Failed to connect to FL Core DO."
+        print("FL Core DO connection failed.")
+        print(e)
+        message += "<br /> FL Core DO connection failed."
         is_don_accessible = False
 
     if is_don_accessible:
