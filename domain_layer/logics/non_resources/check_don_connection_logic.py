@@ -1,4 +1,5 @@
 import os
+import json
 
 import requests
 from starlette import status
@@ -37,21 +38,22 @@ def execute(request: IRequest):
 
     print("don_host_url", don_host_url)
 
+    is_don_accessible = True
+    messages = []
+
     try:
         response = requests.get(f"{don_host_url}/ping", timeout=5)
 
-        is_don_accessible = True
-
         if response.status_code == 200:
-            message = "DON Backend connected."
+            messages.append("DON Backend connected.")
         else:
             print("DON Backend connection failed.", response.status_code)
-            message = "DON Backend connection failed."
+            messages.append("DON Backend connection failed.")
             is_don_accessible = False
     except Exception as e:
         print("DON Backend connection failed.")
         print(e)
-        message = "DON Backend connection failed."
+        messages.append("DON Backend connection failed.")
         is_don_accessible = False
 
     try:
@@ -59,18 +61,19 @@ def execute(request: IRequest):
                                 headers={"Authorization": f'Bearer {FL_AGG_TOKEN}'})
 
         if response.status_code == 200:
-            message += "<br /> FL Core DO connected."
+            messages.append("DON Backend connected.")
         else:
             print("FL Core DO connection failed.", response.status_code)
-            message += "<br /> FL Core DO connection failed."
+            messages.append("FL Core DO connection failed.")
             is_don_accessible = False
 
     except Exception as e:
         print("FL Core DO connection failed.")
         print(e)
-        message += "<br /> FL Core DO connection failed."
+        messages.append("FL Core DO connection failed.")
         is_don_accessible = False
 
+    message = json.dumps(messages)
     if is_don_accessible:
         print(f"DON Connections established. {is_don_accessible=} {message=}")
         return response_formatter.success(message=message, status_code=status.HTTP_200_OK, data=None)
