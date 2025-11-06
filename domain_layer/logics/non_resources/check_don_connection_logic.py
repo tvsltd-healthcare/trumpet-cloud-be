@@ -43,15 +43,15 @@ def execute(request: IRequest):
         is_don_accessible = True
 
         if response.status_code == 200:
-            message = "Data Owner Node Backend connected."
+            message = "DON Backend connected."
         else:
-            print("Data Owner Node Backend connection failed.", response.status_code)
-            message = "Data Owner Node Backend connection failed.",
+            print("DON Backend connection failed.", response.status_code)
+            message = "DON Backend connection failed."
             is_don_accessible = False
     except Exception as e:
-        print("Data Owner Node Backend connection failed.")
+        print("DON Backend connection failed.")
         print(e)
-        message = "Data Owner Node Backend connection failed.",
+        message = "DON Backend connection failed."
         is_don_accessible = False
 
     try:
@@ -72,6 +72,8 @@ def execute(request: IRequest):
         is_don_accessible = False
 
     if is_don_accessible:
+        print(f"DON Connections established. {is_don_accessible=} {message=}")
         return response_formatter.success(message=message, status_code=status.HTTP_200_OK, data=None)
     else:
+        print(f"DON Connections failed. {is_don_accessible=} {message=}")
         return response_formatter.error(message=message, status_code=status.HTTP_404_NOT_FOUND)
