@@ -71,6 +71,12 @@ Organizations = {
             'error_code': '23',
         },
     },
+    'don_auth_token': {
+        'type': {
+            'value': 'string',
+            'error_code': '26',
+        },
+    },
     'status': {
         'type': {
             'value': 'string',
