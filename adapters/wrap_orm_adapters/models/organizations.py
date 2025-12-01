@@ -12,6 +12,7 @@ class Organizations(Base):
     address = Column(String(255), nullable=False,)
     phone = Column(String(20), nullable=False, unique=True,)
     host = Column(String(255), nullable=True, unique=True, )
+    don_auth_token = Column(String(255), nullable=True, )
     status = Column(Enum('approved', 'disapproved', 'blocked', 'pending', name='organizations_status_enum'), nullable=True, default='pending')
     type = Column(Enum('governance', 'data_owner', 'researcher', name='organizations_type_enum'), nullable=True,)
     created_at = Column(TIMESTAMP(timezone=True), nullable=True, default=func.now())

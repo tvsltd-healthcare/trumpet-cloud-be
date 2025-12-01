@@ -78,7 +78,9 @@ class BaseLogicInjector:
             do_url = do_org_agreement['organization']['host']
             dataset_uid = do_org_agreement['dataset']['don_uid']
 
-            do_token = self.generate_token(payload={
+            don_auth_token = do_org_agreement['organization'].get('don_auth_token')
+
+            trumpet_listener_auth_token = self.generate_token(payload={
                 'type': 'do_fl_core',
                 'study_agreement_id': agreement_id,
                 'organization_id': do_org_agreement['organization']['id'],
@@ -86,6 +88,7 @@ class BaseLogicInjector:
             })
 
             do_response = fl_injector_obj.call_setup_on_participants_do_fl_core(do_url=do_url,
+                                                                                don_auth_token=don_auth_token,
                                                                                 agreement_id=agreement_id,
                                                                                 name=name,
                                                                                 coordinator=coordinator,
@@ -94,13 +97,14 @@ class BaseLogicInjector:
                                                                                 pet=pet,
                                                                                 pet_config=pet_config,
                                                                                 rounds=rounds,
-                                                                                webhook_url=f"{webhook_url}/{do_token}",
+                                                                                webhook_url=f"{webhook_url}/{trumpet_listener_auth_token}",
                                                                                 participants=participants,
                                                                                 purpose=purpose,
                                                                                 description=description,
                                                                                 node_id=f"{index+1}")
 
             do_upload_data_response = fl_injector_obj.call_participants_do_fl_core_query(do_url=do_url,
+                                                                                         don_auth_token=don_auth_token,
                                                                                          use_case=use_case,
                                                                                          label=label,
                                                                                          dataset_uid=dataset_uid,
@@ -134,7 +138,7 @@ class FLSetupInjector:
             return False
         return True, response.json()
 
-    def call_setup_on_participants_do_fl_core(self, do_url: str, agreement_id: int, name: str, coordinator: str,
+    def call_setup_on_participants_do_fl_core(self, do_url: str, don_auth_token: str, agreement_id: int, name: str, coordinator: str,
                                               model: str, label: str, pet: str, pet_config: dict, rounds: str, description: str,
                                               purpose: str, webhook_url: str, participants: List[str], node_id: str) -> Union[bool, tuple[bool, dict]]:
         request_body = {"name": name, "agreement_id": agreement_id, "coordinator": coordinator, "model": model, "label": label,
@@ -143,7 +147,12 @@ class FLSetupInjector:
 
         print(f"Calling Data Owner Node Post {do_url + self.do_setup_uri} endpoint\nRequest Body:\n{request_body}")
 
-        response = requests.post(url=do_url + self.do_setup_uri, json=request_body, timeout=60)
+        response = requests.post(url=do_url + self.do_setup_uri,
+                                 json=request_body, timeout=60,
+                                 headers={
+                                     "Content-Type": "application/json",
+                                     "Authorization": f'Bearer {don_auth_token}'}
+                                 )
 
         print(f"Called Data Owner Node Post {do_url+self.do_setup_uri} endpoint\nResponse:\n{response}")
 
@@ -151,13 +160,18 @@ class FLSetupInjector:
             return False
         return True, response.json()
 
-    def call_participants_do_fl_core_query(self, use_case: str, do_url: str, label: str, dataset_uid: str, samples: Optional[int] = 80,
+    def call_participants_do_fl_core_query(self, use_case: str, do_url: str, don_auth_token: str, label: str, dataset_uid: str, samples: Optional[int] = 80,
                                            query: Optional[str] = None):
         request_body = {"use_case": use_case, "label": label, "samples": samples, "dataset_uid": dataset_uid}
 
         print(f"Calling Data Owner Node Post {do_url+self.do_load_data_uri} endpoint\nRequest Body:\n{request_body}")
 
-        response = requests.post(url=do_url + self.do_load_data_uri, json=request_body, timeout=60)
+        response = requests.post(url=do_url + self.do_load_data_uri,
+                                 json=request_body, timeout=60,
+                                 headers={
+                                     "Content-Type": "application/json",
+                                     "Authorization": f'Bearer {don_auth_token}'}
+                                 )
 
         print(f"Called Data Owner Node Post {do_url+self.do_load_data_uri} endpoint\nResponse:\n{response}")
 

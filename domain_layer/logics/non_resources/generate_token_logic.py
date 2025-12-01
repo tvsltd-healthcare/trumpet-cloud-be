@@ -64,8 +64,15 @@ def execute(request: IRequest):
     # generate token for organization
     auth_manager = AuthManager.get()
     token = auth_manager.generate_token({"organization_id": organization_id, "user_id": current_user_id, "type": "DATA_OWNER_TOKEN", "expiry": body.get('expiry')})
+
+    access_token = token.get("token")
+    if not access_token:
+        return response_formatter.error("Failed to generate token.", 500)
+
+    organization_repo.transact("PATCH", data={"don_auth_token": access_token}, query={'id': organization_id})
+
     token_data = {
-        "access_token": token["token"],
+        "access_token": access_token,
         "expires_in": int(time.time()) + int(token["expires"])
     }
     return response_formatter.success(
