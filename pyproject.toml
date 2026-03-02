@@ -25,6 +25,7 @@ azure-communication-email = "^1.0.0"
 alembic = "^1.16.1"
 alembic-postgresql-enum = "^1.7.0"
 wrap-restify = {git = "https://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@github.com/tvsltd/wrap_restify.git", rev = "main"}
+azure-core = "^1.38.0"
 
 
 [build-system]
