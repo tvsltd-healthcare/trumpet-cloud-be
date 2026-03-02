@@ -27,6 +27,7 @@ alembic-postgresql-enum = "^1.7.0"
 wrap-restify = {git = "https://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@github.com/tvsltd/wrap_restify.git", rev = "main"}
 azure-core = "^1.38.0"
 urllib3 = "2.6.3"
+python-multipart = "0.0.22"
 
 
 [build-system]
