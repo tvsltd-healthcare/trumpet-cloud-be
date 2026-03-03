@@ -9,7 +9,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.11"
 python-dotenv = "^1.0.1"
-wrap-validate = {git = "https://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@github.com/tvsltd/wrap_validate.git", rev = "develop"}
+wrap-validate = {git = "https://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@github.com/tvsltd-healthcare/wrap_validate.git", rev = "main"}
 gunicorn = "^23.0.0"
 wrap-orm = {git = "https://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@github.com/tvsltd-healthcare/wrap_orm.git", rev = "main"}
 stringcase = "^1.2.0"

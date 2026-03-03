@@ -2162,8 +2162,8 @@ pydantic = "^2.8.2"
 
 [package.source]
 type = "git"
-url = "https://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@github.com/tvsltd/wrap_validate.git"
-reference = "develop"
+url = "https://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@github.com/tvsltd-healthcare/wrap_validate.git"
+reference = "main"
 resolved_reference = "34e9bf0572f0cac825174c02f37704b2f8c6b177"
 
 [[package]]
@@ -2308,4 +2308,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "c91b303f188929dd4bd24dfb5860222218f9fec9281c55cff7264dc0698767ab"
+content-hash = "772ce95fef1c4ca10dab501f63599d12d669011cd8067d953e5460de24531e08"
