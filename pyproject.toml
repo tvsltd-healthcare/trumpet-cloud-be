@@ -24,7 +24,7 @@ watchfiles = "^1.0.5"
 azure-communication-email = "^1.0.0"
 alembic = "^1.16.1"
 alembic-postgresql-enum = "^1.7.0"
-wrap-restify = {git = "https://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@github.com/tvsltd/wrap_restify.git", rev = "main"}
+wrap-restify = {git = "https://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@github.com/tvsltd-healthcare/wrap_restify.git", rev = "main"}
 azure-core = "^1.38.0"
 urllib3 = "2.6.3"
 python-multipart = "0.0.22"
