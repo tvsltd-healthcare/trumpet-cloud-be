@@ -29,6 +29,7 @@ azure-core = "^1.38.0"
 urllib3 = "2.6.3"
 python-multipart = "0.0.22"
 aiohttp = "3.13.3"
+pyjwt = ">=2.12.1"
 
 
 [build-system]
