@@ -28,7 +28,7 @@ wrap-restify = {git = "https://github_pat_11BZZLZQI0WbZfGI8VJnI5_1s1VIslowYhNnNL
 azure-core = "^1.38.0"
 urllib3 = "2.6.3"
 python-multipart = "0.0.22"
-aiohttp = "3.13.3"
+aiohttp = "3.13.5"
 pyjwt = ">=2.12.1"
 
 
