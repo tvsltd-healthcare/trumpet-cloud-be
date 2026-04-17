@@ -3,6 +3,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     restart: on-failure
     container_name: cloud-backend
     env_file:

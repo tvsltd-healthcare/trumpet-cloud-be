@@ -3,7 +3,7 @@ from typing import Callable, List, Dict, Optional, Any, Union
 
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import JSONResponse, Response, StreamingResponse
+from starlette.responses import JSONResponse, Response
 from adapters.utils.utils import load_config, get_model_name
 
 
@@ -52,10 +52,10 @@ class ResponseMiddleware(BaseHTTPMiddleware):
         if isinstance(response, Response):
             try:
                 # Read the body content, handling StreamingResponse differently
-                if isinstance(response, StreamingResponse):
-                    content = b"".join([chunk async for chunk in response.body_iterator])
-                else:
+                try:
                     content = await response.body()
+                except Exception:
+                    content = b"".join([chunk async for chunk in response.body_iterator])
 
                 # Try to decode and parse JSON content
                 try:
