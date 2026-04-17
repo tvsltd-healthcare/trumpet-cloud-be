@@ -21,7 +21,7 @@ class SmtpEmailService(IEmailService):
         Args:
             to_email (str): The recipient's email address.
             body (str): A token or value to inject into the email template (e.g., a reset token).
-            type (str): The type of email to send (e.g., 'reset_password', 'varify_org', etc.),
+            type (str): The type of email to send (e.g., 'reset_password', 'verify_org', etc.),
                         used to look up the corresponding template and subject.
 
         Raises:

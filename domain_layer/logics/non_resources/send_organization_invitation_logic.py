@@ -90,7 +90,7 @@ def execute(request: IRequest):
             token_value = token["token"] if isinstance(token, dict) else token
 
             email_service = EmailServiceManager.get()
-            email_service.send_email(email, token_value, type='varify_org')
+            email_service.send_email(email, token_value, type='verify_org')
             return response_formatter.success( {}, 'Successfully email send.', 200)
         else:
             return response_formatter.error('Organization already registered with this email.', 400)

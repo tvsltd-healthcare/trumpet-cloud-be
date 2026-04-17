@@ -15,23 +15,27 @@ REGISTRATION_APPROVED_EMAIL_TEMPLATE = """
 </head>
 <body>
     <div class="header">
-        <img src="https://trumpetcloud.technovativesolutions.co.uk/images/logo-white-lg.png" alt="TRUMPET Project Logo tajal" />
+        <img src="https://trumpetcloud.technovativesolutions.co.uk/images/logo-white-lg.png" alt="TRUMPET Project Logo" />
     </div>
     <div class="content">
         <h1>Registration Approved</h1>
         <p>Dear User,</p>
-        <p>Your registration has been approved successfully.</p>
+        <p>Your registration has been approved.</p>
         <p>You can now log in and start using the system.</p>
         <p>If you have any questions, feel free to reach out to our support team.</p>
         <p>Best regards,<br/>System Admin</p>
     </div>
     <div class="footer">
         <p>
-            This is an automated message from the researcher server system.<br/>
-            Please do not reply to this email.
+            Funded by the European Union’s Horizon Europe Programme<br/>
+            Grant Agreement No. 101070038
         </p>
         <p>
-            Email: <a href="mailto:no-reply@system-domain">no-reply@system-domain</a>
+            Website: <a href="https://trumpetproject.eu">trumpetproject.eu</a><br/>
+            Email: <a href="mailto:info@trumpetproject.eu">info@trumpetproject.eu</a>
+        </p>
+        <p>
+            &copy; 2025 Istituto Romagnolo per lo Studio dei Tumori “Dino Amadori” – IRST S.r.l.
         </p>
     </div>
 </body>
