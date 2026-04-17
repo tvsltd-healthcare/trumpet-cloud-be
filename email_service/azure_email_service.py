@@ -21,7 +21,7 @@ class AzureEmailService(IEmailService):
             to_email (str): The recipient's email address.
             body (str): The dynamic token or value to inject into the email template.
             type (str): The type of email to send, which determines the subject and template
-                        (e.g., 'reset_password', 'varify_org', 'approved_registration').
+                        (e.g., 'reset_password', 'verify_org', 'approved_registration').
 
         Raises:
             Exception: If the email fails to send via Azure Communication Services.

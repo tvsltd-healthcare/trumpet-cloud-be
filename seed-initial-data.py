@@ -49,6 +49,11 @@ def seed_database():
     database = os.getenv("DB_NAME")
     host = os.getenv("DB_HOST")
     port = os.getenv("DB_PORT")
+    admin_email = os.getenv("INITIAL_ADMIN_EMAIL", "admin@trumpetproject.eu")
+    admin_phone = os.getenv("INITIAL_ADMIN_PHONE", "012345678901")
+    admin_first_name = os.getenv("INITIAL_ADMIN_FIRST_NAME", "Trumpet")
+    admin_last_name = os.getenv("INITIAL_ADMIN_LAST_NAME", "Admin")
+    admin_address = os.getenv("INITIAL_ADMIN_ADDRESS", "Europe")
 
     user_password = bcrypt.hashpw(os.getenv("TRUMPET_ADMIN_PASSWORD").encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
@@ -67,11 +72,11 @@ def seed_database():
 
     insert_data(
         [
-            Organizations(id=1, name="system", email="admin@trumpetproject.eu", address="europe", phone="004400001",
+            Organizations(id=1, name=admin_first_name, email=admin_email, address=admin_address, phone=admin_phone,
                           status="approved", type="governance"),
-            Users(id=1, first_name="trumpet", last_name="admin", password=user_password,
-                  email="admin@trumpetproject.eu",
-                  phone="012345678901", status="approved"),
+            Users(id=1, first_name=admin_first_name, last_name=admin_last_name, password=user_password,
+                  email=admin_email,
+                  phone=admin_phone, status="approved"),
             OrganizationUsers(organization_id=1, user_id=1),
             UserRoles(user_id=1, role_id=1), ],
         session)

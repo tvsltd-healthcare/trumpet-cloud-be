@@ -30,8 +30,9 @@ ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
-        # deps for installing poetry
-        curl
+        curl \
+        git \
+    && rm -rf /var/lib/apt/lists/*
 
 
 # install poetry - respects $POETRY_VERSION & $POETRY_HOME
@@ -42,10 +43,18 @@ WORKDIR $PYSETUP_PATH
 COPY ./poetry.lock ./
 COPY ./pyproject.toml ./
 
-# Install dependencies without development dependencies and without installing the current project
+# Build argument for GitHub token
+ARG GITHUB_TOKEN
+
+# Configure git to use the token for private repos
+RUN git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+
+# Install dependencies
 RUN poetry install --no-root --no-dev
 
-# mountpoint of our code
+# Clean up git credentials from the image
+RUN git config --global --unset url."https://${GITHUB_TOKEN}@github.com/".insteadOf
+
 WORKDIR /home/code
 
 COPY ./ .

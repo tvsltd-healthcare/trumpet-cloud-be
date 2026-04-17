@@ -1,4 +1,4 @@
-VARIFY_ORG_EMAIL_TEMPLATE = """
+VERIFY_ORG_EMAIL_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>

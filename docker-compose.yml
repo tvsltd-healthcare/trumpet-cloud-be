@@ -3,6 +3,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     restart: on-failure
     container_name: cloud-backend
     env_file:
@@ -24,6 +26,8 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - '5432:5432'
     volumes:
       - ./docker/postgresql/cloud/data:/var/lib/postgresql/data/
     networks:

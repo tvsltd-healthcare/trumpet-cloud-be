@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Dev Framework Playground"
+name = "trumpet-cloud-backend"
 version = "0.1.0"
 description = ""
 authors = ["Nurujjaman Nur <nur@technovativesolutions.co.uk>"]
@@ -9,28 +9,31 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.11"
 python-dotenv = "^1.0.1"
-wrap-validate = {git = "https://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@github.com/tvsltd-healthcare/wrap_validate.git", rev = "main"}
 gunicorn = "^23.0.0"
-wrap-orm = {git = "https://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@github.com/tvsltd-healthcare/wrap_orm.git", rev = "main"}
 stringcase = "^1.2.0"
 pymysql = "^1.1.1"
 psycopg2-binary = "^2.9.10"
 requests = "^2.32.3"
 openfga-sdk = "^0.9.1"
-wrap-auth = {git = "https://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@github.com/tvsltd/wrap-auth.git", rev="develop"}
 bcrypt = "^4.3.0"
 anyio = "^4.9.0"
 watchfiles = "^1.0.5"
 azure-communication-email = "^1.0.0"
 alembic = "^1.16.1"
 alembic-postgresql-enum = "^1.7.0"
-wrap-restify = {git = "https://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@github.com/tvsltd-healthcare/wrap_restify.git", rev = "main"}
 azure-core = "^1.38.0"
 urllib3 = "2.6.3"
 python-multipart = "0.0.22"
 aiohttp = "3.13.5"
 pyjwt = ">=2.12.1"
+inflect = "^7.0.0"
+uvicorn = {extras = ["standard"], version = "^0.37.0"}
 
+# Private packages (authentication handled via git config)
+wrap-validate = {git = "https://github.com/tvsltd-healthcare/wrap_validate.git", rev = "main"}
+wrap-orm = {git = "https://github.com/tvsltd-healthcare/wrap_orm.git", rev = "feature/crud-implementation"}
+wrap-auth = {git = "https://github.com/tvsltd-healthcare/wrap-auth.git", rev = "develop"}
+wrap-restify = {git = "https://github.com/tvsltd-healthcare/wrap_restify.git", rev = "main"}
 
 [build-system]
 requires = ["poetry-core"]

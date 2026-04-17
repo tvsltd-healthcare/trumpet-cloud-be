@@ -3,6 +3,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     restart: on-failure
     container_name: cloud-backend
     env_file:
@@ -29,51 +31,51 @@ services:
     networks:
       - trumpet-proxy
 
-#  openfga-postgres:
-#    image: postgres:14
-#    container_name: openfga-postgres
-#    env_file:
-#      - ./.env
-#    environment:
-#      - POSTGRES_DB=${OPENFGA_POSTGRES_DB}
-#      - POSTGRES_USER=${OPENFGA_POSTGRES_ADMIN_USER}
-#      - POSTGRES_PASSWORD=${OPENFGA_POSTGRES_ADMIN_USER_PASSWORD}
-#    volumes:
-#      - ./docker/postgresql/openfga/data:/var/lib/postgresql/data/
-#    healthcheck:
-#      test: [ "CMD-SHELL", "pg_isready -U ${OPENFGA_POSTGRES_ADMIN_USER} -d ${OPENFGA_POSTGRES_DB}" ]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 5
-#    networks:
-#      - trumpet-proxy
-#
-#  openfga-migrate:
-#    depends_on:
-#      openfga-postgres:
-#        condition: service_healthy
-#    image: openfga/openfga:v1.8
-#    container_name: openfga-migrate
-#    command: migrate
-#    environment:
-#      - OPENFGA_DATASTORE_ENGINE=postgres
-#      - OPENFGA_DATASTORE_URI=postgres://${OPENFGA_POSTGRES_ADMIN_USER}:${OPENFGA_POSTGRES_ADMIN_USER_PASSWORD}@openfga-postgres:5432/${OPENFGA_POSTGRES_DB}?sslmode=disable
-#    networks:
-#      - trumpet-proxy
-#
-#  openfga:
-#    depends_on:
-#      openfga-migrate:
-#        condition: service_completed_successfully
-#    image: openfga/openfga:v1.8
-#    container_name: openfga
-#    environment:
-#      - OPENFGA_DATASTORE_ENGINE=postgres
-#      - OPENFGA_DATASTORE_URI=postgres://${OPENFGA_POSTGRES_ADMIN_USER}:${OPENFGA_POSTGRES_ADMIN_USER_PASSWORD}@openfga-postgres:5432/${OPENFGA_POSTGRES_DB}?sslmode=disable
-#      - OPENFGA_LOG_FORMAT=json
-#    command: run
-#    networks:
-#      - trumpet-proxy
+  openfga-postgres:
+    image: postgres:14
+    container_name: openfga-postgres
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_DB=${OPENFGA_POSTGRES_DB}
+      - POSTGRES_USER=${OPENFGA_POSTGRES_ADMIN_USER}
+      - POSTGRES_PASSWORD=${OPENFGA_POSTGRES_ADMIN_USER_PASSWORD}
+    volumes:
+      - ./docker/postgresql/openfga/data:/var/lib/postgresql/data/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${OPENFGA_POSTGRES_ADMIN_USER} -d ${OPENFGA_POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - trumpet-proxy
+
+  openfga-migrate:
+    depends_on:
+      openfga-postgres:
+        condition: service_healthy
+    image: openfga/openfga:v1.8
+    container_name: openfga-migrate
+    command: migrate
+    environment:
+      - OPENFGA_DATASTORE_ENGINE=postgres
+      - OPENFGA_DATASTORE_URI=postgres://${OPENFGA_POSTGRES_ADMIN_USER}:${OPENFGA_POSTGRES_ADMIN_USER_PASSWORD}@openfga-postgres:5432/${OPENFGA_POSTGRES_DB}?sslmode=disable
+    networks:
+      - trumpet-proxy
+
+  openfga:
+    depends_on:
+      openfga-migrate:
+        condition: service_completed_successfully
+    image: openfga/openfga:v1.8
+    container_name: openfga
+    environment:
+      - OPENFGA_DATASTORE_ENGINE=postgres
+      - OPENFGA_DATASTORE_URI=postgres://${OPENFGA_POSTGRES_ADMIN_USER}:${OPENFGA_POSTGRES_ADMIN_USER_PASSWORD}@openfga-postgres:5432/${OPENFGA_POSTGRES_DB}?sslmode=disable
+      - OPENFGA_LOG_FORMAT=json
+    command: run
+    networks:
+      - trumpet-proxy
 
 networks:
   trumpet-proxy:
