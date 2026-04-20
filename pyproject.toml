@@ -31,8 +31,8 @@ uvicorn = {extras = ["standard"], version = "^0.37.0"}
 
 # Private packages (authentication handled via git config)
 wrap-validate = {git = "https://github.com/tvsltd-healthcare/wrap_validate.git", rev = "main"}
-wrap-orm = {git = "https://github.com/tvsltd-healthcare/wrap_orm.git", rev = "feature/crud-implementation"}
-wrap-auth = {git = "https://github.com/tvsltd-healthcare/wrap-auth.git", rev = "develop"}
+wrap-orm = {git = "https://github.com/tvsltd-healthcare/wrap_orm.git", rev = "main"}
+wrap-auth = {git = "https://github.com/tvsltd-healthcare/wrap-auth.git", rev = "main"}
 wrap-restify = {git = "https://github.com/tvsltd-healthcare/wrap_restify.git", rev = "main"}
 
 [build-system]
