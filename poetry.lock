@@ -2037,20 +2037,20 @@ rsa = ["cryptography"]
 
 [[package]]
 name = "pytest"
-version = "8.4.2"
+version = "9.0.3"
 description = "pytest: simple powerful testing with Python"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "pytest-8.4.2-py3-none-any.whl", hash = "sha256:872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79"},
-    {file = "pytest-8.4.2.tar.gz", hash = "sha256:86c0d0b93306b961d58d62a4db4879f27fe25513d4b969df351abdddb3c30e01"},
+    {file = "pytest-9.0.3-py3-none-any.whl", hash = "sha256:2c5efc453d45394fdd706ade797c0a81091eccd1d6e4bccfcd476e2b8e0ab5d9"},
+    {file = "pytest-9.0.3.tar.gz", hash = "sha256:b86ada508af81d19edeb213c681b1d48246c1a91d304c6c81a427674c17eb91c"},
 ]
 
 [package.dependencies]
 colorama = {version = ">=0.4", markers = "sys_platform == \"win32\""}
-iniconfig = ">=1"
-packaging = ">=20"
+iniconfig = ">=1.0.1"
+packaging = ">=22"
 pluggy = ">=1.5,<2"
 pygments = ">=2.7.2"
 
@@ -2108,14 +2108,14 @@ cli = ["click (>=5.0)"]
 
 [[package]]
 name = "python-multipart"
-version = "0.0.22"
+version = "0.0.26"
 description = "A streaming multipart parser for Python"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "python_multipart-0.0.22-py3-none-any.whl", hash = "sha256:2b2cd894c83d21bf49d702499531c7bafd057d730c201782048f7945d82de155"},
-    {file = "python_multipart-0.0.22.tar.gz", hash = "sha256:7340bef99a7e0032613f56dc36027b959fd3b30a787ed62d310e951f7c3a3a58"},
+    {file = "python_multipart-0.0.26-py3-none-any.whl", hash = "sha256:c0b169f8c4484c13b0dcf2ef0ec3a4adb255c4b7d18d8e420477d2b1dd03f185"},
+    {file = "python_multipart-0.0.26.tar.gz", hash = "sha256:08fadc45918cd615e26846437f50c5d6d23304da32c341f289a617127b081f17"},
 ]
 
 [[package]]
@@ -2743,7 +2743,7 @@ develop = false
 [package.dependencies]
 oauthlib = "^3.2.2"
 pyjwt = "^2.10.1"
-pytest = "^8.2.2"
+pytest = "^9.0.3"
 pytest-cov = "^5.0.0"
 requests-oauthlib = "^2.0.0"
 
@@ -2751,7 +2751,7 @@ requests-oauthlib = "^2.0.0"
 type = "git"
 url = "https://github.com/tvsltd-healthcare/wrap-auth.git"
 reference = "main"
-resolved_reference = "d13df549c2673be2712ef88c801873bd828c6cf5"
+resolved_reference = "d86d07697211ea212b5864db95f550b937421fa9"
 
 [[package]]
 name = "wrap-orm"
@@ -2786,14 +2786,14 @@ develop = false
 
 [package.dependencies]
 fastapi = "0.135.1"
-pytest = "^8.2.2"
+pytest = "^9.0.3"
 pytest-cov = "^5.0.0"
 
 [package.source]
 type = "git"
 url = "https://github.com/tvsltd-healthcare/wrap_restify.git"
 reference = "main"
-resolved_reference = "752157e0bee1c220f7990b5036da360a9238bf37"
+resolved_reference = "9ec1c511ead70c50d618409206be476c6618f528"
 
 [[package]]
 name = "wrap-validate"
@@ -2980,4 +2980,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "2ce5d0ca11ba66b2340ee3ccec97d2d5c3ad49cfb08bf926f05fde4f908efbba"
+content-hash = "4ab314a49be0b68f4fa945679b31112f1d26940d75b74169559fe539ba39fab0"
