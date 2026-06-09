@@ -24,7 +24,7 @@ alembic-postgresql-enum = "^1.7.0"
 azure-core = "^1.38.0"
 urllib3 = "2.7.0"
 python-multipart = "^0.0.27"
-aiohttp = "3.13.5"
+aiohttp = "3.14.1"
 pyjwt = ">=2.12.1"
 inflect = "^7.0.0"
 uvicorn = {extras = ["standard"], version = "^0.37.0"}
